@@ -8,6 +8,10 @@
   var natural = null;           // null: 아직 모름, true/false
   var player = new Audio();     // 하나를 계속 써야 아이폰·아이패드에서 자동 재생이 막히지 않는다
   var unlocked = false;
+  // 말하기 시작·끝을 화면에 알린다 (도란이 입 모양 애니메이션용)
+  function emit(name) { try { window.dispatchEvent(new Event('booktalk:' + name)); } catch (e) {} }
+  player.addEventListener('playing', function () { if (player.src.indexOf('SUQzBAAAAAAAI1RTU0U') < 0) emit('speak'); });
+  ['ended', 'pause', 'error'].forEach(function (ev) { player.addEventListener(ev, function () { emit('quiet'); }); });
 
   function unlock() {
     if (unlocked) return;
@@ -26,6 +30,8 @@
       window.speechSynthesis.cancel();
       var u = new SpeechSynthesisUtterance(text);
       u.lang = 'en-US'; u.rate = 0.92;
+      u.onstart = function () { emit('speak'); };
+      u.onend = u.onerror = function () { emit('quiet'); };
       window.speechSynthesis.speak(u);
     } catch (e) {}
   }
@@ -55,6 +61,7 @@
       });
     },
     stop: function () {
+      emit('quiet');
       try { player.pause(); } catch (e) {}
       try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch (e) {}
     },

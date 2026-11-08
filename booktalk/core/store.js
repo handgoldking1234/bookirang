@@ -22,6 +22,7 @@
       list = list.slice(0, 400);
       adapter().set(key(), JSON.stringify(list));
       return list;
-    }
+    },
+    clear: function () { adapter().set(key(), '[]'); return []; }
   };
 })();

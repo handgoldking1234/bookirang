@@ -20,6 +20,22 @@
   var host = Object.assign({}, defaults, h);
   host.child = Object.assign({}, defaults.child, h.child || {});
   host.features = Object.assign({}, defaults.features, h.features || {});
+  // 단독 앱에서는 '내 정보'에서 고친 값을 이 기기에 저장해 두고 쓴다 (하루5분 안에서는 호스트 값이 우선)
+  var PKEY = 'booktalk.profile';
+  if (host.mode === 'standalone') {
+    try { Object.assign(host.child, JSON.parse(localStorage.getItem(PKEY) || '{}')); } catch (e) {}
+  }
   window.BookTalk = window.BookTalk || {};
   window.BookTalk.host = host;
+  window.BookTalk.profile = {
+    editable: host.mode === 'standalone',
+    save: function (c) {
+      if (host.mode !== 'standalone') return host.child;
+      host.child.name = String(c.name || host.child.name).slice(0, 12);
+      host.child.grade = c.grade || host.child.grade;
+      host.child.level = Math.min(5, Math.max(1, Number(c.level) || host.child.level));
+      try { localStorage.setItem(PKEY, JSON.stringify({ name: host.child.name, grade: host.child.grade, level: host.child.level })); } catch (e) {}
+      return host.child;
+    }
+  };
 })();
