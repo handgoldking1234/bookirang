@@ -25,14 +25,14 @@ button{font-family:inherit;cursor:pointer}
 <div style="display: flex; justify-content: space-between; align-items: center">
 <span style="display: flex; align-items: center; gap: 8px">
 <svg width="32" height="32" viewBox="0 0 36 36" aria-hidden="true"><rect width="36" height="36" rx="11" fill="#0E6B2C"/><path d="M9 11h6a3 3 0 0 1 3 3v12a2.2 2.2 0 0 0-2.2-2.2H9z" fill="#FFFFFF"/><path d="M27 11h-6a3 3 0 0 0-3 3v12a2.2 2.2 0 0 1 2.2-2.2H27z" fill="#FFFFFF"/><circle cx="29" cy="7" r="4.5" fill="#F27A1A"/></svg>
-<span style="font-size: 24px; font-weight: 900; letter-spacing: -1px; color: #0E6B2C">북이랑</span>
+<span style="font-size: 24px; font-weight: 900; letter-spacing: -1px; color: #0E6B2C">{{ appName }}</span>
 </span>
 <div style="display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: #FFF0E3; font-size: 13px; font-weight: 700; color: #B4530B">
 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>5일 연속
 </div>
 </div>
 <div style="display: flex; flex-direction: column; gap: 4px">
-<span style="font-size: 15px; color: #5C6B60">안녕, 서윤아!</span>
+<span style="font-size: 15px; color: #5C6B60">안녕, {{ childName }}!</span>
 <b style="font-size: 26px; line-height: 1.3; letter-spacing: -0.5px">오늘은 어떤 이야기를<br>읽었어?</b>
 </div>
 <button onClick="{{ goScan }}" style="border: 0; background: #0E6B2C; color: #FFFFFF; border-radius: 24px; padding: 24px 22px; display: flex; align-items: center; gap: 18px; text-align: left">
@@ -93,7 +93,7 @@ button{font-family:inherit;cursor:pointer}
 <sc-if value="{{ isPlan }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="flex: 1; overflow-y: auto; padding: 20px 20px 24px; display: flex; flex-direction: column; gap: 16px">
 <div style="display: flex; flex-direction: column; gap: 6px">
-<b style="font-size: 24px; letter-spacing: -0.5px">서윤이 맞춤 2주 플랜</b>
+<b style="font-size: 24px; letter-spacing: -0.5px">{{ childName }} 맞춤 2주 플랜</b>
 <span style="font-size: 13px; color: #5C6B60; line-height: 1.6">최근 북토킹 4번의 문장 길이, 어휘, 이해도를 보고 하루 한 권씩 골랐어요.</span>
 </div>
 <div style="display: flex; gap: 8px; flex-wrap: wrap">
@@ -166,7 +166,7 @@ button{font-family:inherit;cursor:pointer}
 <sc-if value="{{ busy }}" hint-placeholder-val="{{ false }}">
 <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; text-align: center; padding: 60px 0">
 <div style="width: 64px; height: 64px; border-radius: 50%; border: 6px solid #E7F3EA; border-top-color: #0E6B2C; animation: spin 0.9s linear infinite"></div>
-<b style="font-size: 18px">도란이가 글을 읽고 있어요</b>
+<b style="font-size: 18px">{{ tutorName }}가 글을 읽고 있어요</b>
 <span style="font-size: 14px; color: #5C6B60; line-height: 1.6">사진 속 글자를 텍스트로 옮기고<br>이야기할 질문을 준비하는 중이에요</span>
 </div>
 </sc-if>
@@ -233,7 +233,7 @@ button{font-family:inherit;cursor:pointer}
 </sc-for>
 </div>
 <div style="background: #F4F6F4; border-radius: 16px; padding: 14px 16px; font-size: 13px; line-height: 1.6; color: #2E3A31">질문은 아이 대답에 맞춰 그때그때 만들어져요<br><span style="color: #5C6B60">마음 열기 → 내용 확인 → 생각 말하기 · 약 10~15분</span></div>
-<button onClick="{{ startTalk }}" style="border: 0; min-height: 56px; border-radius: 999px; background: #0E6B2C; color: #FFFFFF; font-size: 17px; font-weight: 800">도란이랑 이야기 시작</button>
+<button onClick="{{ startTalk }}" style="border: 0; min-height: 56px; border-radius: 999px; background: #0E6B2C; color: #FFFFFF; font-size: 17px; font-weight: 800">{{ tutorName }}랑 이야기 시작</button>
 </div>
 </sc-if>
 
@@ -259,7 +259,7 @@ button{font-family:inherit;cursor:pointer}
 </div>
 </sc-for>
 <sc-if value="{{ thinking }}" hint-placeholder-val="{{ false }}">
-<div style="align-self: flex-start; background: #F4F6F4; color: #5C6B60; border-radius: 18px 18px 18px 4px; padding: 12px 16px; font-size: 14px">도란이가 생각 중…</div>
+<div style="align-self: flex-start; background: #F4F6F4; color: #5C6B60; border-radius: 18px 18px 18px 4px; padding: 12px 16px; font-size: 14px">{{ tutorName }}가 생각 중…</div>
 </sc-if>
 <sc-if value="{{ showHint }}" hint-placeholder-val="{{ false }}">
 <div style="align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; background: #FFF0E3; color: #8A3E06; border-radius: 999px; padding: 8px 12px; font-size: 13px; font-weight: 700">
@@ -445,7 +445,7 @@ button{font-family:inherit;cursor:pointer}
 <sc-if value="{{ isStats }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="flex: 1; overflow-y: auto; padding: 20px 20px 24px; display: flex; flex-direction: column; gap: 16px">
 <div style="display: flex; justify-content: space-between; align-items: center">
-<b style="font-size: 24px; letter-spacing: -0.5px">서윤이의 성장</b>
+<b style="font-size: 24px; letter-spacing: -0.5px">{{ childName }}의 성장</b>
 <div style="display: flex; background: #F4F6F4; border-radius: 999px; padding: 4px">
 <button onClick="{{ setWeek }}" style="{{ weekBtn }}">주간</button>
 <button onClick="{{ setMonth }}" style="{{ monthBtn }}">월간</button>
@@ -516,8 +516,8 @@ button{font-family:inherit;cursor:pointer}
 <span style="font-size: 12px; color: #5C6B60">{{ boardDesc }} · 집계 11.01 ~ 11.08</span>
 <div style="background: #0E6B2C; color: #FFF; border-radius: 16px; padding: 14px 16px; display: flex; align-items: center; gap: 12px">
 <span style="width: 28px; font-weight: 900; font-size: 16px; text-align: center">{{ myRank }}</span>
-<span style="width: 40px; height: 40px; border-radius: 50%; background: #E8650A; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 900">서</span>
-<span style="flex: 1; display: flex; flex-direction: column"><b style="font-size: 15px">서윤 <span style="font-size: 11px; padding: 2px 6px; border-radius: 6px; background: #FFF; color: #0E6B2C; margin-left: 4px">나</span></b><span style="font-size: 12px; color: #D3E9D9">초5 · Lv.3</span></span>
+<span style="width: 40px; height: 40px; border-radius: 50%; background: #E8650A; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 900">{{ childInit }}</span>
+<span style="flex: 1; display: flex; flex-direction: column"><b style="font-size: 15px">{{ childName }} <span style="font-size: 11px; padding: 2px 6px; border-radius: 6px; background: #FFF; color: #0E6B2C; margin-left: 4px">나</span></b><span style="font-size: 12px; color: #D3E9D9">{{ childMeta }}</span></span>
 <b style="font-size: 17px">{{ myScore }}</b>
 </div>
 <div style="display: flex; flex-direction: column">
@@ -591,12 +591,12 @@ button{font-family:inherit;cursor:pointer}
 
 <!-- ===== TAB BAR ===== -->
 <sc-if value="{{ showTabs }}" hint-placeholder-val="{{ true }}">
-<nav aria-label="하단 메뉴" style="flex: none; height: 80px; padding-bottom: 14px; background: #FFFFFF; border-top: 1px solid #E3E8E4; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr))">
+<nav aria-label="하단 메뉴" style="{{ tabBarStyle }}">
 <button onClick="{{ goHome }}" style="{{ tabHome }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>홈</button>
-<button onClick="{{ goPlan }}" style="{{ tabPlan }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>추천</button>
+<sc-if value="{{ hasPlan }}" hint-placeholder-val="{{ true }}"><button onClick="{{ goPlan }}" style="{{ tabPlan }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>추천</button></sc-if>
 <button onClick="{{ goReport }}" style="{{ tabReport }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>리포트</button>
 <button onClick="{{ goStats }}" style="{{ tabStats }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>성장</button>
-<button onClick="{{ goRank }}" style="{{ tabRank }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>랭킹</button>
+<sc-if value="{{ hasRank }}" hint-placeholder-val="{{ true }}"><button onClick="{{ goRank }}" style="{{ tabRank }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>랭킹</button></sc-if>
 </nav>
 </sc-if>
 
@@ -606,11 +606,11 @@ button{font-family:inherit;cursor:pointer}
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    var saved = [];
-    try { saved = JSON.parse(localStorage.getItem('bookirang.sessions') || '[]'); } catch (e) { saved = []; }
+    var BT = window.BookTalk;
+    var saved = BT.store.load();
     this.state = {
       screen: 'home', period: 'week', review: 0, rtab: 'sum', sub: 'board', kind: 'read', same: false,
-      level: 3,
+      level: BT.host.child.level,
       analysis: null, pages: 0, busy: false, err: '',
       messages: [], hint: false, hintText: '', hintsUsed: 0, kidTurns: 0, stage: '마음 열기', done: false,
       listening: false, thinking: false, startedAt: 0, endedAt: 0,
@@ -621,8 +621,7 @@ class Component extends DCLogic {
 
   /* ---------- 서버 호출 ---------- */
   api(payload) {
-    return fetch('/api/claude', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload) })
-      .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error(j.error || '서버 오류'); return j; }); });
+    return window.BookTalk.api.call(payload);
   }
 
   /* ---------- 사진 줄여서 base64로 ---------- */
@@ -730,7 +729,7 @@ class Component extends DCLogic {
   finishTalk() {
     var self = this;
     var end = Date.now();
-    var st = this.calcStats(this.state.messages, this.state.analysis, this.state.startedAt, end, this.state.hintsUsed, this.state.kidTurns);
+    var st = window.BookTalk.stats.calc(this.state.messages, this.state.analysis, this.state.startedAt, end, this.state.hintsUsed, this.state.kidTurns);
     var cur = { id: end, date: new Date(end).toISOString().slice(0, 10), title: this.state.analysis.title, stats: st, report: null };
     this.setState({ screen: 'done', endedAt: end, current: cur, reportBusy: true, rtab: 'sum' });
     this.saveSession(cur);
@@ -740,44 +739,14 @@ class Component extends DCLogic {
         var c = Object.assign({}, self.state.current, { report: r });
         self.setState({ current: c, reportBusy: false });
         self.saveSession(c);
+        var host = window.BookTalk.host;
+        if (typeof host.onSessionComplete === 'function') { try { host.onSessionComplete(c); } catch (e) {} }
       })
       .catch(function (er) { self.setState({ reportBusy: false, err: '리포트를 만들지 못했어요: ' + er.message }); });
   }
 
   saveSession(cur) {
-    var list = this.state.sessions.filter(function (s) { return s.id !== cur.id; });
-    list.unshift(cur);
-    list = list.slice(0, 400);
-    try { localStorage.setItem('bookirang.sessions', JSON.stringify(list)); } catch (e) {}
-    this.state.sessions = list;
-  }
-
-  /* ---------- 단어·문장 통계 ---------- */
-  calcStats(msgs, a, start, end, hints, turns) {
-    var STOP = 'a an the and or but so to of in on at for with is am are was were be been it its this that i you he she we they me my your his her our their them us do does did not no yes yeah oh um uh very really just there here what why how when where who because like'.split(' ');
-    var stop = {}; STOP.forEach(function (w) { stop[w] = 1; });
-    var kid = msgs.filter(function (m) { return m.role === 'kid'; }).map(function (m) { return m.text; });
-    var tutor = msgs.filter(function (m) { return m.role === 'tutor'; }).map(function (m) { return m.text; });
-    var tok = function (s) { return (s.toLowerCase().match(/[a-z']+/g) || []); };
-    var kidWords = [].concat.apply([], kid.map(tok));
-    var tutorWords = [].concat.apply([], tutor.map(tok));
-    var freq = {};
-    kidWords.forEach(function (w) { freq[w] = (freq[w] || 0) + 1; });
-    var uniq = Object.keys(freq).length;
-    var top = Object.keys(freq).filter(function (w) { return !stop[w] && w.length > 1; })
-      .sort(function (x, y) { return freq[y] - freq[x]; }).slice(0, 6).map(function (w) { return [w, freq[w]]; });
-    var sentences = kid.reduce(function (n, t) { var p = t.split(/[.!?]+/).filter(function (x) { return x.trim(); }).length; return n + Math.max(1, p); }, 0);
-    var kidText = ' ' + kid.join(' ').toLowerCase() + ' ';
-    var bookWords = ((a && a.words) || []).map(function (w) { var e = (w.en || '').toLowerCase(); return [w.en, e && kidText.indexOf(e.split(' ')[0]) > -1]; });
-    return {
-      total: kidWords.length, unique: uniq, top: top, sentences: sentences, turns: turns,
-      avg: sentences ? Math.round(kidWords.length / sentences * 10) / 10 : 0,
-      ratio: (kidWords.length + tutorWords.length) ? Math.round(kidWords.length / (kidWords.length + tutorWords.length) * 100) : 0,
-      minutes: Math.max(1, Math.round((end - start) / 60000)),
-      hints: hints, self: turns ? Math.max(0, Math.round((1 - hints / turns) * 100)) : 100,
-      ttr: kidWords.length ? Math.round(uniq / kidWords.length * 100) : 0,
-      bookWords: bookWords, words: Object.keys(freq)
-    };
+    this.state.sessions = window.BookTalk.store.save(cur);
   }
 
   afterRender() {
@@ -851,45 +820,26 @@ class Component extends DCLogic {
     var fixesForReview = rp.fixes.length ? rp.fixes : [{ from: 'They sing song.', to: 'They sing songs.' }];
     var r = Math.min(s.review, fixesForReview.length - 1);
 
-    /* --- 주간·월간·연간 통계 --- */
-    var now = new Date();
-    var dayKey = function (d) { return d.toISOString().slice(0, 10); };
-    var buckets = [];
-    if (s.period === 'week') {
-      for (var i = 6; i >= 0; i--) { var d = new Date(now); d.setDate(now.getDate() - i); buckets.push({ label: ['일', '월', '화', '수', '목', '금', '토'][d.getDay()], match: dayKey(d) }); }
-    } else if (s.period === 'month') {
-      for (var j = 3; j >= 0; j--) { var e2 = new Date(now); e2.setDate(now.getDate() - j * 7); var st2 = new Date(e2); st2.setDate(e2.getDate() - 6); buckets.push({ label: (4 - j) + '주', from: dayKey(st2), to: dayKey(e2) }); }
-    } else {
-      for (var k = 11; k >= 0; k--) { var m2 = new Date(now.getFullYear(), now.getMonth() - k, 1); buckets.push({ label: (m2.getMonth() + 1) + '월', ym: m2.getFullYear() + '-' + String(m2.getMonth() + 1).padStart(2, '0') }); }
-    }
-    var inB = function (sess, b) { if (b.match) return sess.date === b.match; if (b.ym) return sess.date.slice(0, 7) === b.ym; return sess.date >= b.from && sess.date <= b.to; };
+    /* --- 주간·월간·연간 통계 (계산은 BookTalk.stats.aggregate) --- */
     var hasReal = s.sessions.length > 0;
-    var sampleVals = { week: [12, 0, 15, 21, 0, 20, 18], month: [54, 61, 72, 86], year: [40, 52, 61, 58, 70, 77, 81, 66, 90, 98, 112, 86] }[s.period];
-    var vals = buckets.map(function (b, i) {
-      if (!hasReal) return sampleVals[i] || 0;
-      return s.sessions.filter(function (x) { return inB(x, b); }).reduce(function (n, x) { return n + x.stats.sentences; }, 0);
-    });
+    var ag = window.BookTalk.stats.aggregate(s.sessions, s.period, new Date());
+    var sample = {
+      week: { values: [12, 0, 15, 21, 0, 20, 18], books: 4, minutes: 52, words: 23, vocab: 412 },
+      month: { values: [54, 61, 72, 86], books: 12, minutes: 186, words: 71, vocab: 412 },
+      year: { values: [40, 52, 61, 58, 70, 77, 81, 66, 90, 98, 112, 86], books: 98, minutes: 1240, words: 388, vocab: 412 }
+    }[s.period];
+    var vals = hasReal ? ag.values : sample.values;
     var vmax = Math.max.apply(null, vals.concat([1]));
-    var bars = buckets.map(function (b, i) {
+    var bars = ag.labels.map(function (label, i) {
       var h = Math.max(4, Math.round(vals[i] / vmax * 100));
-      var last = i === buckets.length - 1;
-      return { v: vals[i], label: b.label, style: 'width:100%;max-width:30px;height:' + h + 'px;border-radius:6px;background:' + (last ? G : (vals[i] ? '#9CC7A8' : '#EEF1EE')) };
+      var last = i === ag.labels.length - 1;
+      return { v: vals[i], label: label, style: 'width:100%;max-width:30px;height:' + h + 'px;border-radius:6px;background:' + (last ? G : (vals[i] ? '#9CC7A8' : '#EEF1EE')) };
     });
-    var inPeriod = s.sessions.filter(function (x) { return buckets.some(function (b) { return inB(x, b); }); });
-    var vocabSet = {}; s.sessions.forEach(function (x) { (x.stats.words || []).forEach(function (w) { vocabSet[w] = 1; }); });
     var periodName = { week: '이번 주', month: '최근 4주', year: '최근 12개월' }[s.period];
-    var agg = hasReal ? {
-      books: inPeriod.length, minutes: inPeriod.reduce(function (n, x) { return n + x.stats.minutes; }, 0),
-      newWords: inPeriod.reduce(function (n, x) { return n + x.stats.unique; }, 0), vocab: Object.keys(vocabSet).length
-    } : { week: { books: 4, minutes: 52, newWords: 23, vocab: 412 }, month: { books: 12, minutes: 186, newWords: 71, vocab: 412 }, year: { books: 98, minutes: 1240, newWords: 388, vocab: 412 } }[s.period];
-    var skillBase = hasReal && inPeriod.length ? {
-      amount: Math.min(100, Math.round(inPeriod.reduce(function (n, x) { return n + x.stats.ratio; }, 0) / inPeriod.length * 1.4)),
-      complete: Math.min(100, Math.round(inPeriod.reduce(function (n, x) { return n + x.stats.avg; }, 0) / inPeriod.length * 10)),
-      variety: Math.round(inPeriod.reduce(function (n, x) { return n + x.stats.ttr; }, 0) / inPeriod.length),
-      self: Math.round(inPeriod.reduce(function (n, x) { return n + x.stats.self; }, 0) / inPeriod.length)
-    } : { amount: 78, complete: 64, variety: 58, self: 71 };
+    var agg = hasReal ? { books: ag.books, minutes: ag.minutes, newWords: ag.words, vocab: ag.vocab } : { books: sample.books, minutes: sample.minutes, newWords: sample.words, vocab: sample.vocab };
+    var skillBase = hasReal && ag.books ? ag.skills : { amount: 78, length: 64, variety: 58, self: 71 };
     var skills = [
-      { name: '말하기 양', v: skillBase.amount, c: G }, { name: '문장 길이', v: skillBase.complete, c: B },
+      { name: '말하기 양', v: skillBase.amount, c: G }, { name: '문장 길이', v: skillBase.length, c: B },
       { name: '어휘 다양성', v: skillBase.variety, c: O }, { name: '스스로 말하기', v: skillBase.self, c: '#0A4F20' }
     ].map(function (k) { return { name: k.name, v: k.v, style: 'width:' + k.v + '%;height:100%;border-radius:4px;background:' + k.c }; });
 
@@ -910,6 +860,8 @@ class Component extends DCLogic {
     var miles = [10, 30, 50, 100, 200].map(function (n) { var got = totalBooks >= n; var p = Math.min(100, Math.round(totalBooks / n * 100)); return { n: n, name: n + '권 클럽', state: got ? '달성!' : (totalBooks + '/' + n + '권'), badge: 'width:52px;height:52px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;' + (got ? 'background:' + O + ';color:#FFF' : 'background:#F4F6F4;color:#767676;border:2px dashed #C9D1CB'), bar: 'display:block;height:100%;border-radius:4px;width:' + p + '%;background:' + (got ? O : G) }; });
     var hall = [{ month: '2026년 10월', reader: '지호', books: '완독 18권', steady: '하린', days: '27일 출석' }, { month: '2026년 9월', reader: '민서', books: '완독 15권', steady: '서준', days: '25일 출석' }, { month: '2026년 8월', reader: '하린', books: '완독 14권', steady: '하린', days: '24일 출석' }];
 
+    var host = window.BookTalk.host;
+    var tabs = ['home', 'plan', 'report', 'stats', 'rank'].filter(function (t) { return (t !== 'plan' || host.features.plan) && (t !== 'rank' || host.features.rank); });
     var a = s.analysis || { title: '', topic: '', difficulty: '', passage: '', words: [] };
     var st0 = (s.current && s.current.stats) || { sentences: 0, unique: 0, minutes: 0 };
 
@@ -917,7 +869,11 @@ class Component extends DCLogic {
       isHome: s.screen === 'home', isScan: s.screen === 'scan', isConfirm: s.screen === 'confirm', isTalk: s.screen === 'talk',
       isDone: s.screen === 'done', isReport: s.screen === 'report', isStats: s.screen === 'stats', isShelf: s.screen === 'shelf',
       isReview: s.screen === 'review', isPlan: s.screen === 'plan', isRank: s.screen === 'rank',
-      showTabs: ['home', 'plan', 'report', 'stats', 'rank'].indexOf(s.screen) > -1,
+      showTabs: tabs.indexOf(s.screen) > -1,
+      tabBarStyle: 'flex:none;height:80px;padding-bottom:14px;background:#FFFFFF;border-top:1px solid #E3E8E4;display:grid;grid-template-columns:repeat(' + tabs.length + ',minmax(0,1fr))',
+      hasPlan: host.features.plan, hasRank: host.features.rank,
+      childName: host.child.name, childMeta: host.child.grade + ' · Lv.' + host.child.level, childInit: host.child.name.charAt(0),
+      appName: host.appName, tutorName: host.tutorName,
       goHome: go('home'), goConfirm: go('confirm'), goReport: go('report'), goStats: go('stats'), goShelf: go('shelf'),
       goReview: go('review'), goPlan: go('plan'), goRank: go('rank'),
       goScan: function () { self.setState({ screen: 'scan', err: '', analysis: s.screen === 'confirm' ? s.analysis : null, pages: s.screen === 'confirm' ? s.pages : 0 }); },

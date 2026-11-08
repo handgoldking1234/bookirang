@@ -1,8 +1,10 @@
-// 북이랑 Claude 연결용 Vercel 서버리스 함수
-// 필요한 환경변수: ANTHROPIC_API_KEY (필수), CLAUDE_MODEL (선택, 기본 claude-sonnet-5-5)
+// 북토킹 모듈 · 서버 로직 (프레임워크 무관)
+// 어떤 서버(Vercel, Next.js API Route, Supabase Edge 등)에서도 handleBookTalk(body, options)만 부르면 된다.
+// options: { apiKey (필수), model (선택, 기본 claude-sonnet-5-5) }
 
 const API_URL = 'https://api.anthropic.com/v1/messages';
-const MODEL = process.env.CLAUDE_MODEL || 'claude-sonnet-5-5';
+const DEFAULT_MODEL = 'claude-sonnet-5-5';
+let OPTS = { apiKey: '', model: DEFAULT_MODEL };
 
 const LEVELS = {
   1: '초급: 아주 짧고 쉬운 문장(5단어 안팎), 예/아니오나 고르기 질문 위주',
@@ -21,10 +23,10 @@ async function callClaude({ system, messages, maxTokens = 1024 }) {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
-      'x-api-key': process.env.ANTHROPIC_API_KEY,
+      'x-api-key': OPTS.apiKey,
       'anthropic-version': '2023-06-01'
     },
-    body: JSON.stringify({ model: MODEL, max_tokens: maxTokens, system, messages })
+    body: JSON.stringify({ model: OPTS.model || DEFAULT_MODEL, max_tokens: maxTokens, system, messages })
   });
   const data = await res.json();
   if (!res.ok) {
@@ -112,24 +114,13 @@ async function report(body) {
   return parseJson(text);
 }
 
-module.exports = async function handler(req, res) {
-  if (req.method !== 'POST') {
-    res.status(405).json({ error: 'POST만 가능해요' });
-    return;
-  }
-  if (!process.env.ANTHROPIC_API_KEY) {
-    res.status(500).json({ error: '서버에 ANTHROPIC_API_KEY가 설정되지 않았어요' });
-    return;
-  }
-  try {
-    const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
-    let out;
-    if (body.task === 'analyze') out = await analyze(body);
-    else if (body.task === 'chat') out = await chat(body);
-    else if (body.task === 'report') out = await report(body);
-    else throw new Error('알 수 없는 요청이에요');
-    res.status(200).json(out);
-  } catch (e) {
-    res.status(500).json({ error: e.message || '오류가 났어요' });
-  }
-};
+async function handleBookTalk(body, options) {
+  OPTS = Object.assign({ model: DEFAULT_MODEL }, options || {});
+  if (!OPTS.apiKey) throw new Error('서버에 ANTHROPIC_API_KEY가 설정되지 않았어요');
+  if (body.task === 'analyze') return analyze(body);
+  if (body.task === 'chat') return chat(body);
+  if (body.task === 'report') return report(body);
+  throw new Error('알 수 없는 요청이에요');
+}
+
+module.exports = { handleBookTalk };
