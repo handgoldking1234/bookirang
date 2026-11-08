@@ -11,6 +11,7 @@ body{margin:0;background:#FFFFFF}
 *{box-sizing:border-box}
 button{font-family:inherit;cursor:pointer}
 .scroll::-webkit-scrollbar{display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 <style>
 html,body{height:100%}
@@ -47,11 +48,11 @@ body{display:block;background:#FFFFFF !important}
 </div>
 <button onClick="{{ goScan }}" style="border: 0; background: #0E6B2C; color: #FFFFFF; border-radius: 24px; padding: 24px 22px; display: flex; align-items: center; gap: 18px; text-align: left">
 <span style="width: 60px; height: 60px; flex: none; border-radius: 18px; background: #FFFFFF; color: #0E6B2C; display: flex; align-items: center; justify-content: center">
-<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
 </span>
 <span style="display: flex; flex-direction: column; gap: 4px">
-<b style="font-size: 21px">찰칵! 책 찍기</b>
-<span style="font-size: 14px; color: #D3E9D9">한 쪽만 찍어도 이야기가 시작돼요</span>
+<b style="font-size: 21px">책 올리기</b>
+<span style="font-size: 14px; color: #D3E9D9">읽은 쪽을 찍거나 사진으로 올려요</span>
 </span>
 </button>
 
@@ -66,7 +67,7 @@ body{display:block;background:#FFFFFF !important}
 </button>
 
 <button onClick="{{ goReview }}" style="border: 1px solid #F6D3B5; background: #FFF8F2; color: #16201A; border-radius: 20px; padding: 16px; display: flex; align-items: center; gap: 14px; text-align: left">
-<span style="width: 44px; height: 44px; flex: none; border-radius: 14px; background: #F27A1A; color: #2B1600; display: flex; align-items: center; justify-content: center">
+<span style="width: 44px; height: 44px; flex: none; border-radius: 14px; background: #E8650A; color: #FFFFFF; display: flex; align-items: center; justify-content: center">
 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>
 </span>
 <span style="flex: 1; display: flex; flex-direction: column; gap: 2px">
@@ -142,7 +143,7 @@ body{display:block;background:#FFFFFF !important}
 <span style="padding: 5px 10px; border-radius: 999px; background: #FFF; font-size: 12px">porcine</span>
 <span style="padding: 5px 10px; border-radius: 999px; background: #FFF; font-size: 12px">toast</span>
 </div>
-<button onClick="{{ goScan }}" style="border: 0; min-height: 52px; border-radius: 999px; background: #0E6B2C; color: #FFF; font-size: 16px; font-weight: 800">다 읽었으면 찰칵!</button>
+<button onClick="{{ goScan }}" style="border: 0; min-height: 52px; border-radius: 999px; background: #0E6B2C; color: #FFF; font-size: 16px; font-weight: 800">다 읽었으면 책 올리기</button>
 </div>
 <div style="display: flex; flex-direction: column; gap: 4px">
 <b style="font-size: 15px; padding-bottom: 6px">2주 도서 목록</b>
@@ -164,34 +165,52 @@ body{display:block;background:#FFFFFF !important}
 </div>
 </sc-if>
 
-<!-- ===== SCAN ===== -->
+<!-- ===== UPLOAD (책 올리기) ===== -->
 <sc-if value="{{ isScan }}" hint-placeholder-val="{{ false }}">
-<div style="flex: 1; background: #0E1410; color: #FFFFFF; display: flex; flex-direction: column">
-<div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 12px">
-<button aria-label="닫기" onClick="{{ goHome }}" style="width: 44px; height: 44px; border: 0; border-radius: 50%; background: #2A332D; color: #FFF; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
-<span style="font-size: 15px; font-weight: 700">책 찍기 · 1/3쪽</span>
-<span style="width: 44px"></span>
+<div class="scroll" style="flex: 1; overflow-y: auto; padding: 16px 20px 28px; display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; align-items: center; gap: 8px">
+<button aria-label="닫기" onClick="{{ goHome }}" style="width: 44px; height: 44px; border: 0; border-radius: 50%; background: #F4F6F4; color: #16201A; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+<b style="font-size: 17px; flex: 1">책 올리기</b>
+<sc-if value="{{ hasPages }}" hint-placeholder-val="{{ false }}"><span style="padding: 5px 10px; border-radius: 999px; background: #E7F3EA; color: #0B5E25; font-size: 12px; font-weight: 700">올린 쪽 {{ pageCount }}</span></sc-if>
 </div>
-<div style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px">
-<div style="width: 290px; height: 420px; position: relative; border-radius: 12px; background: #EDE8DA; transform: rotate(-2deg); padding: 36px 28px; display: flex; flex-direction: column; gap: 12px">
-<div style="height: 14px; width: 70%; background: #3A3A3A; border-radius: 4px"></div>
-<div style="height: 8px; width: 100%; background: #9C9486; border-radius: 4px"></div>
-<div style="height: 8px; width: 94%; background: #9C9486; border-radius: 4px"></div>
-<div style="height: 8px; width: 98%; background: #9C9486; border-radius: 4px"></div>
-<div style="height: 8px; width: 80%; background: #9C9486; border-radius: 4px"></div>
-<div style="height: 90px; width: 100%; background: #C9D7E8; border-radius: 8px"></div>
-<div style="height: 8px; width: 96%; background: #9C9486; border-radius: 4px"></div>
-<div style="height: 8px; width: 90%; background: #9C9486; border-radius: 4px"></div>
-<div style="height: 8px; width: 60%; background: #9C9486; border-radius: 4px"></div>
-<div style="position: absolute; inset: -10px; border: 3px solid #F27A1A; border-radius: 16px"></div>
+
+<sc-if value="{{ busy }}" hint-placeholder-val="{{ false }}">
+<div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; text-align: center; padding: 60px 0">
+<div style="width: 64px; height: 64px; border-radius: 50%; border: 6px solid #E7F3EA; border-top-color: #0E6B2C; animation: spin 0.9s linear infinite"></div>
+<b style="font-size: 18px">도란이가 글을 읽고 있어요</b>
+<span style="font-size: 14px; color: #5C6B60; line-height: 1.6">사진 속 글자를 텍스트로 옮기고<br>이야기할 질문을 준비하는 중이에요</span>
 </div>
+</sc-if>
+
+<sc-if value="{{ notBusy }}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 18px">
+<div style="background: #F4F6F4; border-radius: 24px; padding: 28px 20px; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center">
+<div style="width: 140px; height: 180px; border-radius: 10px; background: #FFFFFF; border: 3px dashed #E8650A; padding: 20px 16px; display: flex; flex-direction: column; gap: 8px">
+<div style="height: 10px; width: 70%; background: #3A3A3A; border-radius: 3px"></div>
+<div style="height: 6px; width: 100%; background: #C9D1CB; border-radius: 3px"></div>
+<div style="height: 6px; width: 92%; background: #C9D1CB; border-radius: 3px"></div>
+<div style="height: 6px; width: 96%; background: #C9D1CB; border-radius: 3px"></div>
+<div style="height: 44px; width: 100%; background: #E8F0FE; border-radius: 6px"></div>
+<div style="height: 6px; width: 88%; background: #C9D1CB; border-radius: 3px"></div>
+<div style="height: 6px; width: 60%; background: #C9D1CB; border-radius: 3px"></div>
 </div>
-<span style="text-align: center; font-size: 14px; color: #C8D2CB; padding-bottom: 16px">글자가 잘 보이게 틀 안에 맞춰 주세요</span>
-<div style="display: flex; justify-content: space-around; align-items: center; padding: 8px 32px 40px">
-<button aria-label="갤러리에서 고르기" style="width: 48px; height: 48px; border: 0; border-radius: 12px; background: #2A332D; color: #FFF; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></button>
-<button aria-label="촬영" onClick="{{ goConfirm }}" style="width: 80px; height: 80px; border-radius: 50%; border: 5px solid #FFF; background: #0E6B2C"></button>
-<span style="width: 48px"></span>
+<b style="font-size: 18px">{{ uploadTitle }}</b>
+<span style="font-size: 14px; color: #5C6B60; line-height: 1.6">글자가 잘 보이게 한 번에 한 쪽씩 올려 주세요.<br>사진 속 영어 글을 텍스트로 바꿔 대화에 써요.</span>
 </div>
+<sc-if value="{{ err }}" hint-placeholder-val="{{ false }}"><div role="alert" style="background: #FFF0E3; color: #8A3E06; border-radius: 14px; padding: 12px 14px; font-size: 14px; line-height: 1.5">{{ err }}</div></sc-if>
+<label style="min-height: 56px; border-radius: 999px; background: #0E6B2C; color: #FFFFFF; font-size: 17px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>카메라로 찍어 올리기
+<input type="file" accept="image/*" capture="environment" onChange="{{ onPhoto }}" style="display: none">
+</label>
+<label style="min-height: 56px; border-radius: 999px; background: #FFFFFF; border: 1px solid #CFDDF8; color: #1A56C4; font-size: 17px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>앨범에서 사진 고르기
+<input type="file" accept="image/*" onChange="{{ onPhoto }}" style="display: none">
+</label>
+<sc-if value="{{ hasPages }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ goConfirm }}" style="border: 0; background: none; color: #0E6B2C; font-size: 15px; font-weight: 700; min-height: 44px">올린 글 확인하러 가기</button>
+</sc-if>
+</div>
+</sc-if>
 </div>
 </sc-if>
 
@@ -202,26 +221,30 @@ body{display:block;background:#FFFFFF !important}
 <button aria-label="뒤로" onClick="{{ goScan }}" style="width: 44px; height: 44px; border: 0; border-radius: 50%; background: #F4F6F4; color: #16201A; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
 <b style="font-size: 17px">이 글로 이야기할까요?</b>
 </div>
-<div style="background: #F4F6F4; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<div style="background: #F4F6F4; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
 <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px">
-<b style="font-size: 20px; font-family: 'Plus Jakarta Sans', sans-serif">The Singing Whales</b>
-<span style="padding: 5px 10px; border-radius: 999px; background: #E7F3EA; color: #0B5E25; font-size: 12px; font-weight: 700; flex: none">딱 맞는 난이도</span>
+<b style="font-size: 20px; font-family: 'Plus Jakarta Sans', sans-serif">{{ a.title }}</b>
+<span style="padding: 5px 10px; border-radius: 999px; background: #E7F3EA; color: #0B5E25; font-size: 12px; font-weight: 700; flex: none">{{ a.difficulty }}</span>
 </div>
-<span style="font-size: 14px; color: #5C6B60; line-height: 1.6">주제: 혹등고래가 노래하는 이유와 따뜻한 바다로의 이동</span>
-<div style="font-size: 14px; line-height: 1.7; color: #2E3A31; font-family: 'Plus Jakarta Sans', sans-serif; background: #FFFFFF; border-radius: 12px; padding: 14px">Humpback whales are famous for their songs. A song can last for many minutes, and whales may repeat it for hours…</div>
+<span style="font-size: 14px; color: #5C6B60; line-height: 1.6">주제: {{ a.topic }}</span>
+<label for="passageBox" style="font-size: 13px; font-weight: 700; color: #2E3A31">읽어 온 글 · 틀린 글자는 바로 고칠 수 있어요</label>
+<textarea id="passageBox" rows="8" style="width: 100%; font-size: 14px; line-height: 1.7; color: #2E3A31; font-family: 'Plus Jakarta Sans', sans-serif; background: #FFFFFF; border: 1px solid #E3E8E4; border-radius: 12px; padding: 14px; resize: vertical">{{ a.passage }}</textarea>
+<label style="align-self: flex-start; min-height: 44px; display: inline-flex; align-items: center; gap: 8px; color: #1A56C4; font-size: 14px; font-weight: 700; cursor: pointer">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>다음 쪽 더 올리기
+<input type="file" accept="image/*" onChange="{{ onPhoto }}" style="display: none">
+</label>
 </div>
 <div style="display: flex; flex-direction: column; gap: 10px">
-<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 15px">먼저 듣고 따라 말해요</b><span style="font-size: 12px; color: #5C6B60">핵심 단어 5개</span></div>
+<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 15px">먼저 듣고 따라 말해요</b><span style="font-size: 12px; color: #5C6B60">핵심 단어 {{ wordCount }}개</span></div>
 <sc-for list="{{ words }}" as="w" hint-placeholder-count="3">
 <div style="display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid #E3E8E4; border-radius: 14px">
-<button aria-label="발음 듣기" style="width: 40px; height: 40px; flex: none; border: 0; border-radius: 50%; background: #E8F0FE; color: #1A56C4; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg></button>
+<button aria-label="발음 듣기" onClick="{{ w.say }}" style="width: 40px; height: 40px; flex: none; border: 0; border-radius: 50%; background: #E8F0FE; color: #1A56C4; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg></button>
 <span style="flex: 1; display: flex; flex-direction: column"><b style="font-size: 15px; font-family: 'Plus Jakarta Sans', sans-serif">{{ w.en }}</b><span style="font-size: 12px; color: #5C6B60">{{ w.ko }}</span></span>
-<span style="font-size: 12px; font-weight: 700; color: #0E6B2C">따라 말하기</span>
 </div>
 </sc-for>
 </div>
-<div style="background: #F4F6F4; border-radius: 16px; padding: 14px 16px; font-size: 13px; line-height: 1.6; color: #2E3A31">질문 6개 준비 · 약 12분<br><span style="color: #5C6B60">마음 열기 1 → 내용 확인 2 → 생각 말하기 3</span></div>
-<button onClick="{{ goTalk }}" style="border: 0; min-height: 56px; border-radius: 999px; background: #0E6B2C; color: #FFFFFF; font-size: 17px; font-weight: 800">도란이랑 이야기 시작</button>
+<div style="background: #F4F6F4; border-radius: 16px; padding: 14px 16px; font-size: 13px; line-height: 1.6; color: #2E3A31">질문은 아이 대답에 맞춰 그때그때 만들어져요<br><span style="color: #5C6B60">마음 열기 → 내용 확인 → 생각 말하기 · 약 10~15분</span></div>
+<button onClick="{{ startTalk }}" style="border: 0; min-height: 56px; border-radius: 999px; background: #0E6B2C; color: #FFFFFF; font-size: 17px; font-weight: 800">도란이랑 이야기 시작</button>
 </div>
 </sc-if>
 
@@ -230,12 +253,15 @@ body{display:block;background:#FFFFFF !important}
 <div style="flex: 1; display: flex; flex-direction: column; min-height: 0">
 <div style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid #E3E8E4">
 <button aria-label="그만하기" onClick="{{ goHome }}" style="width: 44px; height: 44px; border: 0; border-radius: 50%; background: #F4F6F4; color: #16201A; display: flex; align-items: center; justify-content: center; flex: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
-<div style="flex: 1; display: flex; flex-direction: column; gap: 6px">
-<span style="font-size: 13px; color: #5C6B60">The Singing Whales · {{ stageLabel }}</span>
+<div style="flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0">
+<span style="font-size: 13px; color: #5C6B60; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{ a.title }} · {{ stageLabel }}</span>
 <div style="height: 6px; border-radius: 3px; background: #E3E8E4; overflow: hidden"><div style="{{ progressStyle }}"></div></div>
 </div>
+<sc-if value="{{ canFinish }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ finishTalk }}" style="border: 0; flex: none; min-height: 40px; padding: 0 14px; border-radius: 999px; background: #E7F3EA; color: #0B5E25; font-size: 13px; font-weight: 800">마치기</button>
+</sc-if>
 </div>
-<div class="scroll" style="flex: 1; overflow-y: auto; padding: 18px 16px; display: flex; flex-direction: column; gap: 12px; font-family: 'Plus Jakarta Sans', 'Noto Sans KR', sans-serif">
+<div id="chat" class="scroll" style="flex: 1; overflow-y: auto; padding: 18px 16px; display: flex; flex-direction: column; gap: 12px; font-family: 'Plus Jakarta Sans', 'Noto Sans KR', sans-serif">
 <span style="align-self: center; font-size: 12px; color: #5C6B60; background: #F4F6F4; padding: 6px 12px; border-radius: 999px">틀려도 괜찮아, 끝까지 말해 보는 게 중요해!</span>
 <sc-for list="{{ shown }}" as="m" hint-placeholder-count="2">
 <div style="{{ m.wrap }}">
@@ -243,19 +269,28 @@ body{display:block;background:#FFFFFF !important}
 <sc-if value="{{ m.fix }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; color: #1A56C4; font-weight: 700; padding: 4px 6px">고쳐 말하기 · {{ m.fix }}</span></sc-if>
 </div>
 </sc-for>
+<sc-if value="{{ thinking }}" hint-placeholder-val="{{ false }}">
+<div style="align-self: flex-start; background: #F4F6F4; color: #5C6B60; border-radius: 18px 18px 18px 4px; padding: 12px 16px; font-size: 14px">도란이가 생각 중…</div>
+</sc-if>
 <sc-if value="{{ showHint }}" hint-placeholder-val="{{ false }}">
-<div style="align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; background: #FFF0E3; color: #B4530B; border-radius: 999px; padding: 8px 12px; font-size: 13px; font-weight: 700">
+<div style="align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; background: #FFF0E3; color: #8A3E06; border-radius: 999px; padding: 8px 12px; font-size: 13px; font-weight: 700">
 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>{{ hintText }}
 </div>
 </sc-if>
+<sc-if value="{{ err }}" hint-placeholder-val="{{ false }}"><div role="alert" style="background: #FFF0E3; color: #8A3E06; border-radius: 14px; padding: 10px 12px; font-size: 13px; font-family: 'Noto Sans KR', sans-serif">{{ err }}</div></sc-if>
 </div>
-<div style="padding: 12px 16px 28px; display: flex; flex-direction: column; align-items: center; gap: 10px; border-top: 1px solid #E3E8E4">
+<div style="padding: 10px 16px 24px; display: flex; flex-direction: column; align-items: center; gap: 10px; border-top: 1px solid #E3E8E4">
 <div style="display: flex; align-items: center; gap: 28px">
 <button aria-label="힌트 보기" onClick="{{ toggleHint }}" style="width: 48px; height: 48px; border: 0; border-radius: 50%; background: #FFF0E3; color: #B4530B; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></button>
-<button aria-label="누르고 말하기" onClick="{{ speak }}" style="width: 76px; height: 76px; border: 0; border-radius: 50%; background: #0E6B2C; color: #FFF; display: flex; align-items: center; justify-content: center"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg></button>
-<button aria-label="다시 듣기" style="width: 48px; height: 48px; border: 0; border-radius: 50%; background: #E8F0FE; color: #1A56C4; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg></button>
+<button aria-label="누르고 말하기" onClick="{{ speak }}" style="{{ micStyle }}"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg></button>
+<button aria-label="도란이 말 다시 듣기" onClick="{{ replay }}" style="width: 48px; height: 48px; border: 0; border-radius: 50%; background: #E8F0FE; color: #1A56C4; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg></button>
 </div>
 <span style="font-size: 13px; color: #5C6B60">{{ speakLabel }}</span>
+<form onSubmit="{{ sendTyped }}" style="width: 100%; display: flex; gap: 8px">
+<label for="typed" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">영어로 입력하기</label>
+<input id="typed" type="text" autocomplete="off" placeholder="말 대신 영어로 써도 돼요" style="flex: 1; min-width: 0; min-height: 44px; border: 1px solid #E3E8E4; border-radius: 999px; padding: 0 16px; font-size: 15px; font-family: inherit">
+<button type="submit" style="flex: none; min-height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: #0E6B2C; color: #FFF; font-size: 14px; font-weight: 800">보내기</button>
+</form>
 </div>
 </div>
 </sc-if>
@@ -265,13 +300,14 @@ body{display:block;background:#FFFFFF !important}
 <div style="flex: 1; display: flex; flex-direction: column; padding: 16px 20px 28px; gap: 18px">
 <div style="display: flex; align-items: center; gap: 8px">
 <button aria-label="닫기" onClick="{{ goHome }}" style="width: 44px; height: 44px; border: 0; border-radius: 50%; background: #F4F6F4; color: #16201A; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
-<b style="font-size: 17px">다시 말하기 · {{ reviewNo }}/3</b>
+<b style="font-size: 17px">다시 말하기 · {{ reviewNo }}/{{ reviewTotal }}</b>
 </div>
 <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 20px; text-align: center">
-<span style="font-size: 14px; color: #5C6B60">어제 이렇게 말했어요</span>
+<span style="font-size: 14px; color: #5C6B60">지난번에 이렇게 말했어요</span>
 <s style="font-size: 18px; color: #8A968D; font-family: 'Plus Jakarta Sans', sans-serif">{{ reviewFrom }}</s>
 <span style="font-size: 14px; color: #5C6B60">이번엔 이렇게 말해 볼까요?</span>
 <b style="font-size: 24px; line-height: 1.4; color: #0E6B2C; font-family: 'Plus Jakarta Sans', sans-serif">{{ reviewTo }}</b>
+<button onClick="{{ sayReview }}" style="align-self: center; border: 1px solid #CFDDF8; background: #FFF; color: #1A56C4; min-height: 44px; padding: 0 18px; border-radius: 999px; font-size: 14px; font-weight: 700">먼저 들어 보기</button>
 </div>
 <button onClick="{{ nextReview }}" style="border: 0; min-height: 56px; border-radius: 999px; background: #0E6B2C; color: #FFF; font-size: 17px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>{{ reviewBtn }}</button>
 </div>
@@ -283,7 +319,7 @@ body{display:block;background:#FFFFFF !important}
 <svg width="170" height="150" viewBox="0 0 200 180" role="img" aria-label="도란이">
 <path d="M100 48 C74 28 36 28 16 40 L16 156 C38 144 76 144 100 164 Z" fill="#FFFFFF"/>
 <path d="M100 48 C126 28 164 28 184 40 L184 156 C162 144 124 144 100 164 Z" fill="#E7F3EA"/>
-<path d="M100 48 L100 164" stroke="#F27A1A" stroke-width="4"/>
+<path d="M100 48 L100 164" stroke="#E8650A" stroke-width="4"/>
 <path d="M50 92 Q62 80 74 92" stroke="#0A3A18" stroke-width="5" fill="none" stroke-linecap="round"/>
 <path d="M126 92 Q138 80 150 92" stroke="#0A3A18" stroke-width="5" fill="none" stroke-linecap="round"/>
 <circle cx="44" cy="116" r="8" fill="#F9B98A"/><circle cx="156" cy="116" r="8" fill="#F9B98A"/>
@@ -291,11 +327,11 @@ body{display:block;background:#FFFFFF !important}
 </svg>
 <b style="font-size: 30px; line-height: 1.3; letter-spacing: -1px">오늘도 멋지게<br>이야기했어!</b>
 <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; width: 100%">
-<div style="background: #FFFFFF; color: #16201A; border-radius: 16px; padding: 14px 8px; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 24px; color: #0E6B2C">18</b><span style="font-size: 12px; color: #5C6B60">말한 문장</span></div>
-<div style="background: #FFFFFF; color: #16201A; border-radius: 16px; padding: 14px 8px; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 24px; color: #1A56C4">58</b><span style="font-size: 12px; color: #5C6B60">쓴 단어 종류</span></div>
-<div style="background: #FFFFFF; color: #16201A; border-radius: 16px; padding: 14px 8px; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 24px; color: #B4530B">12분</b><span style="font-size: 12px; color: #5C6B60">대화 시간</span></div>
+<div style="background: #FFFFFF; color: #16201A; border-radius: 16px; padding: 14px 8px; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 24px; color: #0E6B2C">{{ st.sentences }}</b><span style="font-size: 12px; color: #5C6B60">말한 문장</span></div>
+<div style="background: #FFFFFF; color: #16201A; border-radius: 16px; padding: 14px 8px; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 24px; color: #1A56C4">{{ st.unique }}</b><span style="font-size: 12px; color: #5C6B60">쓴 단어 종류</span></div>
+<div style="background: #FFFFFF; color: #16201A; border-radius: 16px; padding: 14px 8px; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 24px; color: #B4530B">{{ st.minutes }}분</b><span style="font-size: 12px; color: #5C6B60">대화 시간</span></div>
 </div>
-<span style="font-size: 14px; color: #D3E9D9">2주 플랜 5/14 완료 · 책장에 1권 추가</span>
+<span style="font-size: 14px; color: #D3E9D9">{{ doneNote }}</span>
 <button onClick="{{ goReport }}" style="width: 100%; border: 0; min-height: 56px; border-radius: 999px; background: #FFFFFF; color: #0E6B2C; font-size: 17px; font-weight: 800">리포트 보기</button>
 <button onClick="{{ goHome }}" style="border: 0; background: none; color: #FFFFFF; font-size: 15px; font-weight: 700; min-height: 44px">홈으로</button>
 </div>
@@ -305,8 +341,8 @@ body{display:block;background:#FFFFFF !important}
 <sc-if value="{{ isReport }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="flex: 1; overflow-y: auto; padding: 20px 20px 24px; display: flex; flex-direction: column; gap: 16px">
 <div style="display: flex; flex-direction: column; gap: 4px">
-<span style="font-size: 13px; color: #5C6B60">오늘의 이야기 · 11월 8일</span>
-<b style="font-size: 24px; letter-spacing: -0.5px">The Singing Whales</b>
+<span style="font-size: 13px; color: #5C6B60">오늘의 이야기 · {{ rp.date }}</span>
+<b style="font-size: 24px; letter-spacing: -0.5px">{{ rp.title }}</b>
 </div>
 <div style="display: flex; background: #F4F6F4; border-radius: 999px; padding: 4px">
 <button onClick="{{ setRSum }}" style="{{ rSumBtn }}">요약</button>
@@ -314,22 +350,32 @@ body{display:block;background:#FFFFFF !important}
 <button onClick="{{ setRFix }}" style="{{ rFixBtn }}">교정</button>
 </div>
 
+<sc-if value="{{ reportBusy }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; align-items: center; gap: 12px; background: #F4F8FF; border-radius: 14px; padding: 12px 14px; font-size: 14px; color: #1A56C4">
+<div style="width: 20px; height: 20px; flex: none; border-radius: 50%; border: 3px solid #CFDDF8; border-top-color: #1F6FEB; animation: spin 0.9s linear infinite"></div>도란이가 리포트를 쓰고 있어요
+</div>
+</sc-if>
+
 <sc-if value="{{ rSum }}" hint-placeholder-val="{{ true }}">
 <div style="display: flex; flex-direction: column; gap: 14px">
 <div style="background: #0E6B2C; color: #FFFFFF; border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 10px">
-<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 15px">내가 말한 시간</b><b style="font-size: 26px">68%</b></div>
-<div style="height: 10px; border-radius: 5px; background: rgba(255,255,255,0.25); overflow: hidden"><div style="width: 68%; height: 100%; background: #FFFFFF; border-radius: 5px"></div></div>
-<span style="font-size: 12px; color: #D3E9D9">12분 중 약 8분을 서윤이가 말했어요</span>
+<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 15px">내가 말한 비율</b><b style="font-size: 26px">{{ rp.ratio }}%</b></div>
+<div style="height: 10px; border-radius: 5px; background: rgba(255,255,255,0.25); overflow: hidden"><div style="{{ rp.ratioStyle }}"></div></div>
+<span style="font-size: 12px; color: #D3E9D9">대화에 나온 단어 중 아이가 말한 단어의 비율이에요 · 대화 {{ rp.minutes }}분</span>
 </div>
 <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
-<div style="background: #F4F6F4; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #5C6B60">말한 문장</span><b style="font-size: 26px; color: #0E6B2C">18</b><span style="font-size: 11px; color: #5C6B60">지난번보다 +4</span></div>
-<div style="background: #F4F6F4; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #5C6B60">평균 문장 길이</span><b style="font-size: 26px; color: #0E6B2C">6.2단어</b><span style="font-size: 11px; color: #5C6B60">지난번 5.1단어</span></div>
-<div style="background: #F4F6F4; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #5C6B60">스스로 말하기</span><b style="font-size: 26px; color: #0E6B2C">94%</b><span style="font-size: 11px; color: #5C6B60">힌트 1회 사용</span></div>
-<div style="background: #F4F6F4; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #5C6B60">내용 이해</span><b style="font-size: 26px; color: #0E6B2C">2/2</b><span style="font-size: 11px; color: #5C6B60">확인 질문 모두 맞힘</span></div>
+<div style="background: #F4F6F4; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #5C6B60">말한 문장</span><b style="font-size: 26px; color: #0E6B2C">{{ rp.sentences }}</b><span style="font-size: 11px; color: #5C6B60">{{ rp.turns }}번 대답했어요</span></div>
+<div style="background: #F4F6F4; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #5C6B60">평균 문장 길이</span><b style="font-size: 26px; color: #0E6B2C">{{ rp.avg }}단어</b><span style="font-size: 11px; color: #5C6B60">길수록 자세히 말한 거예요</span></div>
+<div style="background: #F4F6F4; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #5C6B60">스스로 말하기</span><b style="font-size: 26px; color: #0E6B2C">{{ rp.self }}%</b><span style="font-size: 11px; color: #5C6B60">힌트 {{ rp.hints }}회 사용</span></div>
+<div style="background: #F4F6F4; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #5C6B60">고친 표현</span><b style="font-size: 26px; color: #0E6B2C">{{ rp.fixCount }}개</b><span style="font-size: 11px; color: #5C6B60">교정 탭에서 확인</span></div>
 </div>
 <div style="background: #E7F3EA; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 8px">
 <b style="font-size: 15px; color: #0B5E25">잘했어요</b>
-<span style="font-size: 14px; line-height: 1.6; color: #2E3A31">고래가 노래하는 이유를 "to talk to friends"라며 자기 생각으로 설명했어요.</span>
+<span style="font-size: 14px; line-height: 1.6; color: #2E3A31">{{ rp.praise }}</span>
+</div>
+<div style="border: 1px solid #E3E8E4; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 6px">
+<b style="font-size: 15px">내용 이해</b>
+<span style="font-size: 14px; line-height: 1.6; color: #2E3A31">{{ rp.comprehension }}</span>
 </div>
 </div>
 </sc-if>
@@ -337,15 +383,15 @@ body{display:block;background:#FFFFFF !important}
 <sc-if value="{{ rWord }}" hint-placeholder-val="{{ false }}">
 <div style="display: flex; flex-direction: column; gap: 14px">
 <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
-<div style="background: #F4F6F4; border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 11px; color: #5C6B60">말한 단어</span><b style="font-size: 22px; color: #0E6B2C">112</b></div>
-<div style="background: #F4F6F4; border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 11px; color: #5C6B60">서로 다른 단어</span><b style="font-size: 22px; color: #1A56C4">58</b></div>
-<div style="background: #F4F6F4; border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 11px; color: #5C6B60">처음 쓴 단어</span><b style="font-size: 22px; color: #B4530B">7</b></div>
+<div style="background: #F4F6F4; border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 11px; color: #5C6B60">말한 단어</span><b style="font-size: 22px; color: #0E6B2C">{{ rp.total }}</b></div>
+<div style="background: #F4F6F4; border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 11px; color: #5C6B60">서로 다른 단어</span><b style="font-size: 22px; color: #1A56C4">{{ rp.unique }}</b></div>
+<div style="background: #F4F6F4; border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 11px; color: #5C6B60">어휘 다양도</span><b style="font-size: 22px; color: #B4530B">{{ rp.ttr }}%</b></div>
 </div>
 <div style="border: 1px solid #E3E8E4; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
 <div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 15px">많이 쓴 단어</b><span style="font-size: 11px; color: #767676">a, the 같은 기본 단어 제외</span></div>
-<sc-for list="{{ topWords }}" as="t" hint-placeholder-count="6">
+<sc-for list="{{ rp.topWords }}" as="t" hint-placeholder-count="6">
 <div style="display: flex; align-items: center; gap: 10px">
-<span style="width: 78px; font-size: 14px; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif">{{ t.w }}</span>
+<span style="width: 84px; font-size: 14px; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; text-overflow: ellipsis">{{ t.w }}</span>
 <div style="flex: 1; height: 10px; border-radius: 5px; background: #EEF1EE; overflow: hidden"><div style="{{ t.style }}"></div></div>
 <span style="width: 30px; text-align: right; font-size: 13px; color: #5C6B60">{{ t.n }}회</span>
 </div>
@@ -354,7 +400,7 @@ body{display:block;background:#FFFFFF !important}
 <div style="border: 1px solid #E3E8E4; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
 <b style="font-size: 15px">책에서 배운 단어, 써 봤을까?</b>
 <div style="display: flex; flex-direction: column; gap: 8px">
-<sc-for list="{{ bookWords }}" as="b" hint-placeholder-count="5">
+<sc-for list="{{ rp.bookWords }}" as="b" hint-placeholder-count="5">
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
 <span style="font-size: 14px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700">{{ b.w }}</span>
 <span style="{{ b.style }}">{{ b.label }}</span>
@@ -362,28 +408,19 @@ body{display:block;background:#FFFFFF !important}
 </sc-for>
 </div>
 </div>
+<sc-if value="{{ rp.overWord }}" hint-placeholder-val="{{ false }}">
 <div style="background: #FFF8F2; border: 1px solid #F6D3B5; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 8px">
-<b style="font-size: 15px; color: #B4530B">자주 쓴 단어, 이렇게도 말해 봐</b>
-<span style="font-size: 14px; color: #2E3A31"><b style="font-family: 'Plus Jakarta Sans', sans-serif">good</b> 5회 사용</span>
+<b style="font-size: 15px; color: #8A3E06">자주 쓴 단어, 이렇게도 말해 봐</b>
+<span style="font-size: 14px; color: #2E3A31"><b style="font-family: 'Plus Jakarta Sans', sans-serif">{{ rp.overWord }}</b> 대신</span>
 <div style="display: flex; gap: 6px; flex-wrap: wrap">
-<span style="padding: 6px 12px; border-radius: 999px; background: #FFF; border: 1px solid #F6D3B5; font-size: 13px; font-family: 'Plus Jakarta Sans', sans-serif">great</span>
-<span style="padding: 6px 12px; border-radius: 999px; background: #FFF; border: 1px solid #F6D3B5; font-size: 13px; font-family: 'Plus Jakarta Sans', sans-serif">amazing</span>
-<span style="padding: 6px 12px; border-radius: 999px; background: #FFF; border: 1px solid #F6D3B5; font-size: 13px; font-family: 'Plus Jakarta Sans', sans-serif">wonderful</span>
+<sc-for list="{{ rp.overAlt }}" as="o" hint-placeholder-count="3"><span style="padding: 6px 12px; border-radius: 999px; background: #FFF; border: 1px solid #F6D3B5; font-size: 13px; font-family: 'Plus Jakarta Sans', sans-serif">{{ o }}</span></sc-for>
 </div>
 </div>
+</sc-if>
 <div style="border: 1px solid #E3E8E4; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
-<b style="font-size: 15px">어떤 종류의 단어를 썼을까?</b>
-<div style="display: flex; height: 14px; border-radius: 7px; overflow: hidden">
-<div style="width: 38%; background: #0E6B2C"></div>
-<div style="width: 27%; background: #1F6FEB"></div>
-<div style="width: 18%; background: #F27A1A"></div>
-<div style="width: 17%; background: #C9D1CB"></div>
-</div>
-<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; font-size: 12px; color: #2E3A31">
-<span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #0E6B2C"></span>명사 38%</span>
-<span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #1F6FEB"></span>동사 27%</span>
-<span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #F27A1A"></span>형용사 18%</span>
-<span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #C9D1CB"></span>기타 17%</span>
+<b style="font-size: 15px">새로 배운 표현</b>
+<div style="display: flex; gap: 8px; flex-wrap: wrap">
+<sc-for list="{{ rp.expressions }}" as="e" hint-placeholder-count="4"><span style="padding: 7px 12px; border-radius: 999px; background: #E7F3EA; color: #0B5E25; font-size: 13px; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif">{{ e }}</span></sc-for>
 </div>
 </div>
 </div>
@@ -393,7 +430,8 @@ body{display:block;background:#FFFFFF !important}
 <div style="display: flex; flex-direction: column; gap: 14px">
 <div style="border: 1px solid #E3E8E4; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 4px">
 <b style="font-size: 15px; padding-bottom: 6px">표현 교정</b>
-<sc-for list="{{ fixes }}" as="f" hint-placeholder-count="3">
+<sc-if value="{{ rp.noFix }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; color: #5C6B60">고칠 문장이 없었어요. 아주 잘했어요!</span></sc-if>
+<sc-for list="{{ rp.fixes }}" as="f" hint-placeholder-count="3">
 <div style="display: flex; flex-direction: column; gap: 2px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; padding: 10px 0; border-top: 1px solid #EEF1EE">
 <s style="color: #8A968D">{{ f.from }}</s>
 <b style="color: #0E6B2C">{{ f.to }}</b>
@@ -401,23 +439,16 @@ body{display:block;background:#FFFFFF !important}
 </div>
 </sc-for>
 </div>
-<div style="border: 1px solid #E3E8E4; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
-<b style="font-size: 15px">발음 체크</b>
-<div style="display: flex; align-items: center; gap: 12px">
-<span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 15px; font-family: 'Plus Jakarta Sans', sans-serif">whale</b><span style="font-size: 12px; color: #5C6B60">w를 입술 둥글게 모아서</span></span>
-<span style="padding: 5px 10px; border-radius: 999px; background: #FFF0E3; color: #B4530B; font-size: 12px; font-weight: 700">조금 더 연습</span>
-</div>
-<div style="display: flex; align-items: center; gap: 12px">
-<span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 15px; font-family: 'Plus Jakarta Sans', sans-serif">migrate</b><span style="font-size: 12px; color: #5C6B60">강세는 앞쪽 MI</span></span>
-<span style="padding: 5px 10px; border-radius: 999px; background: #E7F3EA; color: #0B5E25; font-size: 12px; font-weight: 700">좋아요</span>
-</div>
+<div style="background: #F4F8FF; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 6px">
+<b style="font-size: 15px; color: #1A56C4">다음 북토킹 팁</b>
+<span style="font-size: 14px; line-height: 1.6; color: #2E3A31">{{ rp.nextTip }}</span>
 </div>
 <button onClick="{{ goReview }}" style="border: 0; min-height: 52px; border-radius: 999px; background: #0E6B2C; color: #FFF; font-size: 15px; font-weight: 800">고친 표현 다시 말하기</button>
 </div>
 </sc-if>
 
-<button style="border: 1px solid #CFDDF8; min-height: 52px; border-radius: 999px; background: #FFFFFF; color: #1A56C4; font-size: 15px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>부모님께 리포트 보내기</button>
-<span style="font-size: 12px; color: #767676; text-align: center">프로토타입 샘플 데이터</span>
+<button onClick="{{ shareReport }}" style="border: 1px solid #CFDDF8; min-height: 52px; border-radius: 999px; background: #FFFFFF; color: #1A56C4; font-size: 15px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>부모님께 리포트 보내기</button>
+<span style="font-size: 12px; color: #767676; text-align: center">{{ rp.note }}</span>
 </div>
 </sc-if>
 
@@ -429,6 +460,7 @@ body{display:block;background:#FFFFFF !important}
 <div style="display: flex; background: #F4F6F4; border-radius: 999px; padding: 4px">
 <button onClick="{{ setWeek }}" style="{{ weekBtn }}">주간</button>
 <button onClick="{{ setMonth }}" style="{{ monthBtn }}">월간</button>
+<button onClick="{{ setYear }}" style="{{ yearBtn }}">연간</button>
 </div>
 </div>
 <div style="border: 1px solid #E3E8E4; border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 14px">
@@ -444,9 +476,9 @@ body{display:block;background:#FFFFFF !important}
 </div>
 </div>
 <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
-<div style="background: #0E6B2C; color: #FFF; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #D3E9D9">읽은 책</span><b style="font-size: 28px">{{ books }}권</b></div>
-<div style="background: #E8F0FE; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #1A56C4">누적 사용 어휘</span><b style="font-size: 28px; color: #1A56C4">{{ vocab }}개</b></div>
-<div style="background: #FFF0E3; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #B4530B">새로 쓴 단어</span><b style="font-size: 28px; color: #B4530B">{{ newWords }}개</b></div>
+<div style="background: #0E6B2C; color: #FFF; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #D3E9D9">{{ periodName }} 읽은 책</span><b style="font-size: 28px">{{ books }}권</b></div>
+<div style="background: #E8F0FE; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #1A56C4">지금까지 쓴 어휘</span><b style="font-size: 28px; color: #1A56C4">{{ vocab }}개</b></div>
+<div style="background: #FFF0E3; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #B4530B">{{ periodName }} 쓴 단어</span><b style="font-size: 28px; color: #B4530B">{{ newWords }}개</b></div>
 <div style="background: #F4F6F4; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #5C6B60">대화 시간</span><b style="font-size: 28px">{{ minutes }}분</b></div>
 </div>
 <div style="border: 1px solid #E3E8E4; border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 14px">
@@ -465,7 +497,7 @@ body{display:block;background:#FFFFFF !important}
 <span style="height: 8px; border-radius: 4px; background: #DDE5DF; overflow: hidden; display: block"><span style="width: 36%; height: 100%; background: #0E6B2C; display: block"></span></span>
 </span>
 </button>
-<span style="font-size: 12px; color: #767676; text-align: center">프로토타입 샘플 데이터</span>
+<span style="font-size: 12px; color: #767676; text-align: center">{{ statsNote }}</span>
 </div>
 </sc-if>
 
@@ -495,7 +527,7 @@ body{display:block;background:#FFFFFF !important}
 <span style="font-size: 12px; color: #5C6B60">{{ boardDesc }} · 집계 11.01 ~ 11.08</span>
 <div style="background: #0E6B2C; color: #FFF; border-radius: 16px; padding: 14px 16px; display: flex; align-items: center; gap: 12px">
 <span style="width: 28px; font-weight: 900; font-size: 16px; text-align: center">{{ myRank }}</span>
-<span style="width: 40px; height: 40px; border-radius: 50%; background: #F27A1A; color: #2B1600; display: flex; align-items: center; justify-content: center; font-weight: 900">서</span>
+<span style="width: 40px; height: 40px; border-radius: 50%; background: #E8650A; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 900">서</span>
 <span style="flex: 1; display: flex; flex-direction: column"><b style="font-size: 15px">서윤 <span style="font-size: 11px; padding: 2px 6px; border-radius: 6px; background: #FFF; color: #0E6B2C; margin-left: 4px">나</span></b><span style="font-size: 12px; color: #D3E9D9">초5 · Lv.3</span></span>
 <b style="font-size: 17px">{{ myScore }}</b>
 </div>
@@ -515,7 +547,7 @@ body{display:block;background:#FFFFFF !important}
 
 <sc-if value="{{ vMile }}" hint-placeholder-val="{{ false }}">
 <div style="display: flex; flex-direction: column; gap: 12px">
-<span style="font-size: 13px; color: #5C6B60">완독한 책이 쌓이면 클럽 배지를 받아요. 지금까지 32권!</span>
+<span style="font-size: 13px; color: #5C6B60">완독한 책이 쌓이면 클럽 배지를 받아요. 지금까지 {{ totalBooks }}권!</span>
 <sc-for list="{{ miles }}" as="m" hint-placeholder-count="5">
 <div style="display: flex; align-items: center; gap: 14px; padding: 14px; border: 1px solid #E3E8E4; border-radius: 16px">
 <span style="{{ m.badge }}">{{ m.n }}</span>
@@ -550,7 +582,7 @@ body{display:block;background:#FFFFFF !important}
 <div class="scroll" style="flex: 1; overflow-y: auto; padding: 20px 20px 24px; display: flex; flex-direction: column; gap: 16px">
 <div style="display: flex; align-items: center; gap: 8px">
 <button aria-label="뒤로" onClick="{{ goHome }}" style="width: 44px; height: 44px; border: 0; border-radius: 50%; background: #F4F6F4; color: #16201A; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
-<b style="font-size: 22px; letter-spacing: -0.5px; flex: 1">내 책장</b><span style="font-size: 14px; color: #5C6B60">32권</span>
+<b style="font-size: 22px; letter-spacing: -0.5px; flex: 1">내 책장</b><span style="font-size: 14px; color: #5C6B60">{{ shelfCount }}권</span>
 </div>
 <div style="display: flex; gap: 8px">
 <span style="padding: 8px 14px; border-radius: 999px; background: #0E6B2C; color: #FFF; font-size: 13px; font-weight: 700">영어</span>
@@ -650,6 +682,7 @@ function render() {
   kids(frag, vals);
   app.replaceChildren(frag);
   app.querySelectorAll('.scroll').forEach(function (el, i) { if (keep[i]) el.scrollTop = keep[i]; });
+  if (__comp.afterRender) __comp.afterRender();
 }
 function mount(C) { __comp = new C({}); render(); }
 
@@ -658,183 +691,377 @@ function mount(C) { __comp = new C({}); render(); }
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { screen: 'home', turn: 0, hint: false, period: 'week', review: 0, rtab: 'sum', sub: 'board', kind: 'read', same: false };
+    var saved = [];
+    try { saved = JSON.parse(localStorage.getItem('bookirang.sessions') || '[]'); } catch (e) { saved = []; }
+    this.state = {
+      screen: 'home', period: 'week', review: 0, rtab: 'sum', sub: 'board', kind: 'read', same: false,
+      level: 3,
+      analysis: null, pages: 0, busy: false, err: '',
+      messages: [], hint: false, hintText: '', hintsUsed: 0, kidTurns: 0, stage: '마음 열기', done: false,
+      listening: false, thinking: false, startedAt: 0, endedAt: 0,
+      report: null, reportBusy: false, current: null,
+      sessions: saved
+    };
   }
+
+  /* ---------- 서버 호출 ---------- */
+  api(payload) {
+    return fetch('/api/claude', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload) })
+      .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error(j.error || '서버 오류'); return j; }); });
+  }
+
+  /* ---------- 사진 줄여서 base64로 ---------- */
+  shrink(file) {
+    return new Promise(function (resolve, reject) {
+      var img = new Image();
+      var url = URL.createObjectURL(file);
+      img.onload = function () {
+        var max = 1600, w = img.width, h = img.height;
+        if (w > max || h > max) { var k = max / Math.max(w, h); w = Math.round(w * k); h = Math.round(h * k); }
+        var c = document.createElement('canvas'); c.width = w; c.height = h;
+        c.getContext('2d').drawImage(img, 0, 0, w, h);
+        URL.revokeObjectURL(url);
+        resolve(c.toDataURL('image/jpeg', 0.85).split(',')[1]);
+      };
+      img.onerror = function () { reject(new Error('사진을 열 수 없어요')); };
+      img.src = url;
+    });
+  }
+
+  /* ---------- 음성 ---------- */
+  say(text) {
+    try {
+      if (!window.speechSynthesis || !text) return;
+      window.speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(text);
+      u.lang = 'en-US'; u.rate = 0.92;
+      window.speechSynthesis.speak(u);
+    } catch (e) {}
+  }
+
+  /* ---------- 흐름 ---------- */
+  onPhoto(e) {
+    var self = this;
+    var file = e.target.files && e.target.files[0];
+    if (!file) return;
+    var appending = !!this.state.analysis && this.state.screen === 'confirm';
+    this.setState({ screen: 'scan', busy: true, err: '' });
+    this.shrink(file)
+      .then(function (b64) { return self.api({ task: 'analyze', image: b64, mediaType: 'image/jpeg', level: self.state.level }); })
+      .then(function (res) {
+        if (!res.ok) { self.setState({ busy: false, err: res.reason || '영어 글을 찾지 못했어요. 다시 찍어 주세요.' }); return; }
+        var a = res;
+        if (appending) {
+          var prev = self.state.analysis;
+          var box = document.getElementById('passageBox');
+          var base = box ? box.value : prev.passage;
+          var seen = {};
+          var words = prev.words.concat(res.words || []).filter(function (w) { var k = (w.en || '').toLowerCase(); if (seen[k]) return false; seen[k] = 1; return true; }).slice(0, 8);
+          a = Object.assign({}, prev, { passage: base + '\n\n' + (res.passage || ''), words: words });
+        }
+        self.setState({ busy: false, analysis: a, pages: (appending ? self.state.pages : 0) + 1, screen: 'confirm' });
+      })
+      .catch(function (er) { self.setState({ busy: false, err: '분석하지 못했어요: ' + er.message }); });
+  }
+
+  startTalk() {
+    var box = document.getElementById('passageBox');
+    var a = Object.assign({}, this.state.analysis, { passage: box ? box.value : this.state.analysis.passage });
+    var first = a.opening || 'What was the most interesting part of this story?';
+    this.setState({
+      analysis: a, screen: 'talk', messages: [{ role: 'tutor', text: first }], kidTurns: 0, hintsUsed: 0,
+      hint: false, hintText: 'I think the most interesting part was…', stage: '마음 열기', done: false,
+      startedAt: Date.now(), err: '', report: null
+    });
+    this.say(first);
+  }
+
+  sendKid(text) {
+    var self = this;
+    text = (text || '').trim();
+    if (!text || this.state.thinking) return;
+    var msgs = this.state.messages.concat([{ role: 'kid', text: text }]);
+    var turns = this.state.kidTurns + 1;
+    this.setState({ messages: msgs, kidTurns: turns, thinking: true, hint: false, err: '' });
+    var a = this.state.analysis;
+    this.api({ task: 'chat', passage: a.passage, title: a.title, level: this.state.level, history: msgs, kidTurns: turns })
+      .then(function (r) {
+        var list = self.state.messages.slice();
+        if (r.fix) { list[list.length - 1] = Object.assign({}, list[list.length - 1], { fix: r.fix }); }
+        list.push({ role: 'tutor', text: r.reply });
+        self.setState({ messages: list, thinking: false, stage: r.stage || self.state.stage, hintText: r.hint || self.state.hintText, done: !!r.done });
+        self.say(r.reply);
+      })
+      .catch(function (er) { self.setState({ thinking: false, err: '도란이가 대답하지 못했어요: ' + er.message }); });
+  }
+
+  speak() {
+    var self = this;
+    if (this.state.done) { this.finishTalk(); return; }
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) { this.setState({ err: '이 브라우저는 음성 인식을 지원하지 않아요. 아래 칸에 영어로 써 주세요.' }); return; }
+    if (this.state.listening) { try { this.rec && this.rec.stop(); } catch (e) {} return; }
+    try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch (e) {}
+    var rec = new SR();
+    rec.lang = 'en-US'; rec.interimResults = false; rec.maxAlternatives = 1;
+    rec.onresult = function (ev) { var t = ev.results[0][0].transcript; self.sendKid(t); };
+    rec.onerror = function (ev) { self.setState({ listening: false, err: ev.error === 'not-allowed' ? '마이크 사용을 허용해 주세요.' : '잘 듣지 못했어요. 다시 말해 볼까?' }); };
+    rec.onend = function () { self.setState({ listening: false }); };
+    this.rec = rec;
+    this.setState({ listening: true, err: '' });
+    rec.start();
+  }
+
+  finishTalk() {
+    var self = this;
+    var end = Date.now();
+    var st = this.calcStats(this.state.messages, this.state.analysis, this.state.startedAt, end, this.state.hintsUsed, this.state.kidTurns);
+    var cur = { id: end, date: new Date(end).toISOString().slice(0, 10), title: this.state.analysis.title, stats: st, report: null };
+    this.setState({ screen: 'done', endedAt: end, current: cur, reportBusy: true, rtab: 'sum' });
+    this.saveSession(cur);
+    var a = this.state.analysis;
+    this.api({ task: 'report', title: a.title, level: this.state.level, history: this.state.messages })
+      .then(function (r) {
+        var c = Object.assign({}, self.state.current, { report: r });
+        self.setState({ current: c, reportBusy: false });
+        self.saveSession(c);
+      })
+      .catch(function (er) { self.setState({ reportBusy: false, err: '리포트를 만들지 못했어요: ' + er.message }); });
+  }
+
+  saveSession(cur) {
+    var list = this.state.sessions.filter(function (s) { return s.id !== cur.id; });
+    list.unshift(cur);
+    list = list.slice(0, 400);
+    try { localStorage.setItem('bookirang.sessions', JSON.stringify(list)); } catch (e) {}
+    this.state.sessions = list;
+  }
+
+  /* ---------- 단어·문장 통계 ---------- */
+  calcStats(msgs, a, start, end, hints, turns) {
+    var STOP = 'a an the and or but so to of in on at for with is am are was were be been it its this that i you he she we they me my your his her our their them us do does did not no yes yeah oh um uh very really just there here what why how when where who because like'.split(' ');
+    var stop = {}; STOP.forEach(function (w) { stop[w] = 1; });
+    var kid = msgs.filter(function (m) { return m.role === 'kid'; }).map(function (m) { return m.text; });
+    var tutor = msgs.filter(function (m) { return m.role === 'tutor'; }).map(function (m) { return m.text; });
+    var tok = function (s) { return (s.toLowerCase().match(/[a-z']+/g) || []); };
+    var kidWords = [].concat.apply([], kid.map(tok));
+    var tutorWords = [].concat.apply([], tutor.map(tok));
+    var freq = {};
+    kidWords.forEach(function (w) { freq[w] = (freq[w] || 0) + 1; });
+    var uniq = Object.keys(freq).length;
+    var top = Object.keys(freq).filter(function (w) { return !stop[w] && w.length > 1; })
+      .sort(function (x, y) { return freq[y] - freq[x]; }).slice(0, 6).map(function (w) { return [w, freq[w]]; });
+    var sentences = kid.reduce(function (n, t) { var p = t.split(/[.!?]+/).filter(function (x) { return x.trim(); }).length; return n + Math.max(1, p); }, 0);
+    var kidText = ' ' + kid.join(' ').toLowerCase() + ' ';
+    var bookWords = ((a && a.words) || []).map(function (w) { var e = (w.en || '').toLowerCase(); return [w.en, e && kidText.indexOf(e.split(' ')[0]) > -1]; });
+    return {
+      total: kidWords.length, unique: uniq, top: top, sentences: sentences, turns: turns,
+      avg: sentences ? Math.round(kidWords.length / sentences * 10) / 10 : 0,
+      ratio: (kidWords.length + tutorWords.length) ? Math.round(kidWords.length / (kidWords.length + tutorWords.length) * 100) : 0,
+      minutes: Math.max(1, Math.round((end - start) / 60000)),
+      hints: hints, self: turns ? Math.max(0, Math.round((1 - hints / turns) * 100)) : 100,
+      ttr: kidWords.length ? Math.round(uniq / kidWords.length * 100) : 0,
+      bookWords: bookWords, words: Object.keys(freq)
+    };
+  }
+
+  afterRender() {
+    var c = document.getElementById('chat');
+    if (c) c.scrollTop = c.scrollHeight;
+  }
+
   renderVals() {
     var s = this.state;
     var self = this;
-    var G = '#0E6B2C', B = '#1F6FEB', O = '#F27A1A';
-    var go = function (name) { return function () { self.setState({ screen: name, turn: 0, hint: false, review: 0 }); }; };
+    var G = '#0E6B2C', B = '#1F6FEB', O = '#E8650A';
+    var go = function (name) { return function () { self.setState({ screen: name, review: 0, err: '' }); }; };
     var set = function (obj) { return function () { self.setState(obj); }; };
+    var seg = function (on) { return 'flex:1;border:0;border-radius:999px;padding:6px 12px;min-height:36px;font-size:13px;font-weight:700;' + (on ? 'background:' + G + ';color:#FFF' : 'background:none;color:#5C6B60'); };
+    var under = function (on) { return 'border:0;background:none;min-height:44px;font-size:14px;font-weight:700;border-bottom:3px solid ' + (on ? G : 'transparent') + ';color:' + (on ? G : '#8A968D'); };
+    var tab = function (name) { var on = s.screen === name; return 'border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px;font-weight:700;color:' + (on ? G : '#8A968D'); };
+    var cover = function (c, ink) { return 'height:92px;border-radius:10px;background:' + c + ';color:' + ink + ';display:flex;align-items:flex-end;padding:10px;font-weight:900;font-size:18px;font-family:Plus Jakarta Sans,sans-serif;overflow:hidden'; };
+    var palette = [[G, '#FFF'], [B, '#FFF'], [O, '#FFF'], ['#0A4F20', '#FFF'], ['#E7F3EA', '#0B5E25'], ['#E8F0FE', '#1A56C4']];
 
-    var msgs = [
-      { who: 't', text: "Hi! I read your page about the singing whales. What was the most surprising part?" },
-      { who: 'k', text: "They sing song for a long time!", fix: "They sing songs for a long time." },
-      { who: 't', text: "Wow, yes! They sing songs for hours. Where do humpback whales travel?" },
-      { who: 'k', text: "They go to warm sea.", fix: "They go to warm seas." },
-      { who: 't', text: "Right, they migrate to warm seas. Why do you think they sing?" },
-      { who: 'k', text: "I think they sing to talk friends.", fix: "I think they sing to talk to their friends." },
-      { who: 't', text: "What a great idea! You explained it so well today." }
-    ];
-    var count = Math.min(msgs.length, s.turn * 2 + 1);
-    var shown = msgs.slice(0, count).map(function (m) {
-      var tutor = m.who === 't';
+    /* --- 대화 화면 --- */
+    var shown = s.messages.map(function (m) {
+      var tutor = m.role === 'tutor';
       return {
-        text: m.text,
-        fix: tutor ? '' : (m.fix || ''),
+        text: m.text, fix: tutor ? '' : (m.fix || ''),
         wrap: 'display:flex;flex-direction:column;align-items:' + (tutor ? 'flex-start' : 'flex-end') + ';gap:2px',
         bubble: 'max-width:84%;padding:12px 14px;font-size:15px;line-height:1.5;border-radius:' + (tutor ? '18px 18px 18px 4px;background:#F4F6F4;color:#16201A' : '18px 18px 4px 18px;background:' + G + ';color:#FFFFFF')
       };
     });
-    var stages = ['마음 열기', '내용 확인', '내용 확인', '생각 말하기'];
-    var hints = ['"The most surprising part was…"', '"They go to…"', '"I think they sing because…"', '"I liked…"'];
-    var finished = count >= msgs.length;
-    var pct = Math.round((count / msgs.length) * 100);
+    var pct = Math.min(100, Math.round(s.kidTurns / 6 * 100));
+    var lastTutor = s.messages.filter(function (m) { return m.role === 'tutor'; }).slice(-1)[0];
 
-    var fixes = [
-      { from: 'They sing song for a long time.', to: 'They sing songs for a long time.', why: '노래가 여러 곡이면 songs' },
-      { from: 'They go to warm sea.', to: 'They go to warm seas.', why: '바다 여러 곳은 seas' },
-      { from: 'I think they sing to talk friends.', to: 'I think they sing to talk to their friends.', why: '~에게 말하다는 talk to' }
+    /* --- 책장·최근 --- */
+    var sample = [
+      { title: 'The Singing Whales', date: '샘플', count: 18 }, { title: 'Kids Times · Robots at School', date: '샘플', count: 15 },
+      { title: 'Frog and Toad Are Friends', date: '샘플', count: 21 }, { title: 'Henry and Mudge', date: '샘플', count: 12 }
     ];
-    var r = Math.min(s.review, 2);
+    var real = s.sessions.map(function (x) { return { title: x.title, date: x.date.slice(5).replace('-', '/'), count: x.stats.sentences }; });
+    var shelfSrc = real.length ? real : sample;
+    var books = shelfSrc.map(function (b, i) { var p = palette[i % palette.length]; return Object.assign({}, b, { short: (b.title || '').split(' ').slice(-1)[0], cover: cover(p[0], p[1]) }); });
 
-    var tab = function (name) {
-      var on = s.screen === name;
-      return 'border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px;font-weight:700;color:' + (on ? G : '#8A968D');
-    };
-    var seg = function (on) { return 'flex:1;border:0;border-radius:999px;padding:6px 14px;min-height:36px;font-size:13px;font-weight:700;' + (on ? 'background:' + G + ';color:#FFF' : 'background:none;color:#5C6B60'); };
-    var under = function (on) { return 'border:0;background:none;min-height:44px;font-size:14px;font-weight:700;border-bottom:3px solid ' + (on ? G : 'transparent') + ';color:' + (on ? G : '#8A968D'); };
-    var cover = function (c, ink) { return 'height:92px;border-radius:10px;background:' + c + ';color:' + ink + ';display:flex;align-items:flex-end;padding:10px;font-weight:900;font-size:18px;font-family:Plus Jakarta Sans,sans-serif'; };
-    var books = [
-      { title: 'The Singing Whales', short: 'Whales', date: '오늘', count: 18, cover: cover(G, '#FFF') },
-      { title: 'Kids Times · Robots at School', short: 'Robots', date: '11월 6일', count: 15, cover: cover(B, '#FFF') },
-      { title: 'Frog and Toad Are Friends', short: 'Frog', date: '11월 5일', count: 21, cover: cover(O, '#2B1600') },
-      { title: 'Henry and Mudge', short: 'Henry', date: '11월 4일', count: 12, cover: cover('#0A4F20', '#FFF') },
-      { title: 'Kids Times · Plastic Sea', short: 'Ocean', date: '11월 1일', count: 14, cover: cover('#E7F3EA', '#0B5E25') },
-      { title: 'Nate the Great', short: 'Nate', date: '10월 30일', count: 17, cover: cover('#E8F0FE', '#1A56C4') }
-    ];
-
-    var titles = [
-      ['Nate the Great', '탐정 · 챕터북'], ['Henry and Mudge', '우정 · 리더스'], ['Frog and Toad Are Friends', '우정 · 리더스'], ['Amelia Bedelia', '유머 · 리더스'],
-      ['Mercy Watson to the Rescue', '동물 · 챕터북'], ['Fly Guy', '유머 · 리더스'], ['Magic Tree House #1', '모험 · 챕터북'],
-      ['Cam Jansen', '탐정 · 챕터북'], ['Junie B. Jones', '학교 · 챕터북'], ['Flat Stanley', '모험 · 챕터북'], ['Kids Times 기사', '시사 · 신문'],
-      ['The Black Lagoon', '학교 · 챕터북'], ['Mercy Watson Fights Crime', '동물 · 챕터북'], ['Magic Tree House #2', '모험 · 챕터북']
-    ];
-    var done = 4, today = 4;
-    var dayStyle = function (i) {
-      var bg = i < done ? G : (i === today ? B : '#EEF1EE');
-      var ink = i <= today ? '#FFF' : '#5C6B60';
-      return 'aspect-ratio:1;border-radius:10px;background:' + bg + ';color:' + ink + ';display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800';
-    };
-    var days = titles.map(function (t, i) { return { n: i < done ? '✓' : String(i + 1), style: dayStyle(i) }; });
-    var plan = titles.map(function (t, i) {
-      var st = i < done ? '완료' : (i === today ? '오늘' : '예정');
-      var c = i < done ? G : (i === today ? '#1A56C4' : '#767676');
-      return {
-        day: 'D' + (i + 1), title: t[0], genre: t[1], state: st,
-        badge: 'width:40px;height:40px;flex:none;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;background:' + (i < done ? '#E7F3EA' : (i === today ? '#E8F0FE' : '#F4F6F4')) + ';color:' + c,
-        stateStyle: 'font-size:12px;font-weight:700;color:' + c
+    /* --- 리포트 (실제 세션 우선, 없으면 샘플) --- */
+    var cur = s.current || s.sessions[0] || null;
+    var rp;
+    if (cur) {
+      var st = cur.stats, rr = cur.report || {};
+      var mx = st.top.length ? st.top[0][1] : 1;
+      rp = {
+        title: cur.title, date: cur.date, ratio: st.ratio, ratioStyle: 'width:' + st.ratio + '%;height:100%;background:#FFFFFF;border-radius:5px',
+        minutes: st.minutes, sentences: st.sentences, turns: st.turns, avg: st.avg, self: st.self, hints: st.hints,
+        fixCount: (rr.fixes || []).length, praise: rr.praise || '리포트를 만드는 중이에요…', comprehension: rr.comprehension || '—',
+        total: st.total, unique: st.unique, ttr: st.ttr,
+        topWords: st.top.map(function (t, i) { return { w: t[0], n: t[1], style: 'width:' + Math.round(t[1] / mx * 100) + '%;height:100%;border-radius:5px;background:' + (i === 0 ? G : '#9CC7A8') }; }),
+        bookWords: st.bookWords.map(function (b) { return { w: b[0], label: b[1] ? '말했어요' : '다음에 써 보기', style: 'padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700;' + (b[1] ? 'background:#E7F3EA;color:#0B5E25' : 'background:#FFF0E3;color:#8A3E06') }; }),
+        overWord: (rr.overused && rr.overused.word) || '', overAlt: (rr.overused && rr.overused.alternatives) || [],
+        expressions: rr.expressions || [], fixes: rr.fixes || [], noFix: !!cur.report && !(rr.fixes || []).length,
+        nextTip: rr.nextTip || '—', note: '단어 수·비율은 대화 기록으로 계산하고, 칭찬·교정은 Claude가 작성해요'
       };
-    });
+    } else {
+      rp = {
+        title: 'The Singing Whales', date: '샘플', ratio: 68, ratioStyle: 'width:68%;height:100%;background:#FFFFFF;border-radius:5px',
+        minutes: 12, sentences: 18, turns: 6, avg: 6.2, self: 94, hints: 1, fixCount: 3,
+        praise: '고래가 노래하는 이유를 "to talk to friends"라며 자기 생각으로 설명했어요.', comprehension: '확인 질문 2개에 모두 바르게 답했어요.',
+        total: 112, unique: 58, ttr: 52,
+        topWords: [['they', 9], ['sing', 7], ['whales', 6], ['think', 4], ['because', 3], ['ocean', 3]].map(function (t, i) { return { w: t[0], n: t[1], style: 'width:' + Math.round(t[1] / 9 * 100) + '%;height:100%;border-radius:5px;background:' + (i === 0 ? G : '#9CC7A8') }; }),
+        bookWords: [['humpback', true], ['migrate', true], ['repeat', false]].map(function (b) { return { w: b[0], label: b[1] ? '말했어요' : '다음에 써 보기', style: 'padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700;' + (b[1] ? 'background:#E7F3EA;color:#0B5E25' : 'background:#FFF0E3;color:#8A3E06') }; }),
+        overWord: 'good', overAlt: ['great', 'amazing', 'wonderful'], expressions: ['migrate', 'for hours', 'talk to'],
+        fixes: [{ from: 'They sing song for a long time.', to: 'They sing songs for a long time.', why: '노래가 여러 곡이면 songs' }],
+        noFix: false, nextTip: '이유를 말할 때 because로 시작해 보게 해 주세요.', note: '아직 북토킹 기록이 없어서 샘플 리포트를 보여 줘요'
+      };
+    }
+    var fixesForReview = rp.fixes.length ? rp.fixes : [{ from: 'They sing song.', to: 'They sing songs.' }];
+    var r = Math.min(s.review, fixesForReview.length - 1);
 
-    var week = [{ l: '월', v: 12 }, { l: '화', v: 0 }, { l: '수', v: 15 }, { l: '목', v: 21 }, { l: '금', v: 0 }, { l: '토', v: 20 }, { l: '일', v: 18 }];
-    var month = [{ l: '1주', v: 54 }, { l: '2주', v: 61 }, { l: '3주', v: 72 }, { l: '4주', v: 86 }];
-    var data = s.period === 'week' ? week : month;
-    var max = Math.max.apply(null, data.map(function (d) { return d.v; }));
-    var bars = data.map(function (d, i) {
-      var h = Math.max(4, Math.round((d.v / max) * 100));
-      var last = i === data.length - 1;
-      return { v: d.v, label: d.l, style: 'width:100%;max-width:30px;height:' + h + 'px;border-radius:6px;background:' + (last ? G : (d.v ? '#9CC7A8' : '#EEF1EE')) };
+    /* --- 주간·월간·연간 통계 --- */
+    var now = new Date();
+    var dayKey = function (d) { return d.toISOString().slice(0, 10); };
+    var buckets = [];
+    if (s.period === 'week') {
+      for (var i = 6; i >= 0; i--) { var d = new Date(now); d.setDate(now.getDate() - i); buckets.push({ label: ['일', '월', '화', '수', '목', '금', '토'][d.getDay()], match: dayKey(d) }); }
+    } else if (s.period === 'month') {
+      for (var j = 3; j >= 0; j--) { var e2 = new Date(now); e2.setDate(now.getDate() - j * 7); var st2 = new Date(e2); st2.setDate(e2.getDate() - 6); buckets.push({ label: (4 - j) + '주', from: dayKey(st2), to: dayKey(e2) }); }
+    } else {
+      for (var k = 11; k >= 0; k--) { var m2 = new Date(now.getFullYear(), now.getMonth() - k, 1); buckets.push({ label: (m2.getMonth() + 1) + '월', ym: m2.getFullYear() + '-' + String(m2.getMonth() + 1).padStart(2, '0') }); }
+    }
+    var inB = function (sess, b) { if (b.match) return sess.date === b.match; if (b.ym) return sess.date.slice(0, 7) === b.ym; return sess.date >= b.from && sess.date <= b.to; };
+    var hasReal = s.sessions.length > 0;
+    var sampleVals = { week: [12, 0, 15, 21, 0, 20, 18], month: [54, 61, 72, 86], year: [40, 52, 61, 58, 70, 77, 81, 66, 90, 98, 112, 86] }[s.period];
+    var vals = buckets.map(function (b, i) {
+      if (!hasReal) return sampleVals[i] || 0;
+      return s.sessions.filter(function (x) { return inB(x, b); }).reduce(function (n, x) { return n + x.stats.sentences; }, 0);
     });
-    var skillList = [
-      { name: '말하기 양', v: 78, c: G }, { name: '문장 완성도', v: 64, c: B },
-      { name: '어휘 다양성', v: 58, c: O }, { name: '생각 표현(이유 말하기)', v: 71, c: '#0A4F20' }
+    var vmax = Math.max.apply(null, vals.concat([1]));
+    var bars = buckets.map(function (b, i) {
+      var h = Math.max(4, Math.round(vals[i] / vmax * 100));
+      var last = i === buckets.length - 1;
+      return { v: vals[i], label: b.label, style: 'width:100%;max-width:30px;height:' + h + 'px;border-radius:6px;background:' + (last ? G : (vals[i] ? '#9CC7A8' : '#EEF1EE')) };
+    });
+    var inPeriod = s.sessions.filter(function (x) { return buckets.some(function (b) { return inB(x, b); }); });
+    var vocabSet = {}; s.sessions.forEach(function (x) { (x.stats.words || []).forEach(function (w) { vocabSet[w] = 1; }); });
+    var periodName = { week: '이번 주', month: '최근 4주', year: '최근 12개월' }[s.period];
+    var agg = hasReal ? {
+      books: inPeriod.length, minutes: inPeriod.reduce(function (n, x) { return n + x.stats.minutes; }, 0),
+      newWords: inPeriod.reduce(function (n, x) { return n + x.stats.unique; }, 0), vocab: Object.keys(vocabSet).length
+    } : { week: { books: 4, minutes: 52, newWords: 23, vocab: 412 }, month: { books: 12, minutes: 186, newWords: 71, vocab: 412 }, year: { books: 98, minutes: 1240, newWords: 388, vocab: 412 } }[s.period];
+    var skillBase = hasReal && inPeriod.length ? {
+      amount: Math.min(100, Math.round(inPeriod.reduce(function (n, x) { return n + x.stats.ratio; }, 0) / inPeriod.length * 1.4)),
+      complete: Math.min(100, Math.round(inPeriod.reduce(function (n, x) { return n + x.stats.avg; }, 0) / inPeriod.length * 10)),
+      variety: Math.round(inPeriod.reduce(function (n, x) { return n + x.stats.ttr; }, 0) / inPeriod.length),
+      self: Math.round(inPeriod.reduce(function (n, x) { return n + x.stats.self; }, 0) / inPeriod.length)
+    } : { amount: 78, complete: 64, variety: 58, self: 71 };
+    var skills = [
+      { name: '말하기 양', v: skillBase.amount, c: G }, { name: '문장 길이', v: skillBase.complete, c: B },
+      { name: '어휘 다양성', v: skillBase.variety, c: O }, { name: '스스로 말하기', v: skillBase.self, c: '#0A4F20' }
     ].map(function (k) { return { name: k.name, v: k.v, style: 'width:' + k.v + '%;height:100%;border-radius:4px;background:' + k.c }; });
 
-    var tw = [['they', 9], ['sing', 7], ['whales', 6], ['think', 4], ['because', 3], ['ocean', 3]];
-    var topWords = tw.map(function (t, i) { return { w: t[0], n: t[1], style: 'width:' + Math.round(t[1] / 9 * 100) + '%;height:100%;border-radius:5px;background:' + (i === 0 ? G : '#9CC7A8') }; });
-    var bw = [['humpback', true], ['migrate', true], ['for hours', true], ['repeat', false], ['ocean', true]];
-    var bookWords = bw.map(function (b) {
-      return { w: b[0], label: b[1] ? '말했어요' : '다음에 써 보기', style: 'padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700;' + (b[1] ? 'background:#E7F3EA;color:#0B5E25' : 'background:#FFF0E3;color:#B4530B') };
-    });
+    /* --- 2주 플랜 (샘플) --- */
+    var titles = [['Nate the Great', '탐정 · 챕터북'], ['Henry and Mudge', '우정 · 리더스'], ['Frog and Toad Are Friends', '우정 · 리더스'], ['Amelia Bedelia', '유머 · 리더스'], ['Mercy Watson to the Rescue', '동물 · 챕터북'], ['Fly Guy', '유머 · 리더스'], ['Magic Tree House #1', '모험 · 챕터북'], ['Cam Jansen', '탐정 · 챕터북'], ['Junie B. Jones', '학교 · 챕터북'], ['Flat Stanley', '모험 · 챕터북'], ['Kids Times 기사', '시사 · 신문'], ['The Black Lagoon', '학교 · 챕터북'], ['Mercy Watson Fights Crime', '동물 · 챕터북'], ['Magic Tree House #2', '모험 · 챕터북']];
+    var doneN = 4, today = 4;
+    var days = titles.map(function (t, i) { var bg = i < doneN ? G : (i === today ? B : '#EEF1EE'); return { n: i < doneN ? '✓' : String(i + 1), style: 'aspect-ratio:1;border-radius:10px;background:' + bg + ';color:' + (i <= today ? '#FFF' : '#5C6B60') + ';display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800' }; });
+    var plan = titles.map(function (t, i) { var c = i < doneN ? G : (i === today ? '#1A56C4' : '#767676'); return { day: 'D' + (i + 1), title: t[0], genre: t[1], state: i < doneN ? '완료' : (i === today ? '오늘' : '예정'), badge: 'width:40px;height:40px;flex:none;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;background:' + (i < doneN ? '#E7F3EA' : (i === today ? '#E8F0FE' : '#F4F6F4')) + ';color:' + c, stateStyle: 'font-size:12px;font-weight:700;color:' + c }; });
 
+    /* --- 랭킹 (샘플) --- */
     var kidsRead = [['지호', '초5 · Lv.4', '9권'], ['하린', '초5 · Lv.3', '8권'], ['도윤', '초4 · Lv.3', '7권'], ['서준', '초5 · Lv.2', '6권'], ['민서', '초6 · Lv.4', '6권'], ['예린', '초5 · Lv.3', '5권']];
     var kidsDays = [['하린', '초5 · Lv.3', '8일'], ['서준', '초5 · Lv.2', '8일'], ['지호', '초5 · Lv.4', '7일'], ['유나', '초4 · Lv.2', '7일'], ['도윤', '초4 · Lv.3', '6일'], ['시우', '초5 · Lv.3', '6일']];
     var list = s.kind === 'read' ? kidsRead : kidsDays;
-    if (s.same) { list = list.filter(function (k) { return k[1].indexOf('초5') === 0; }); }
-    var avatarC = [G, B, '#B4530B', '#0A4F20', '#1A56C4', '#0B5E25'];
-    var medal = ['#D99A06', '#7D8790', '#B0652A'];
-    var board = list.map(function (k, i) {
-      return {
-        rank: i + 1, name: k[0], meta: k[1], score: k[2], init: k[0].charAt(0),
-        rankStyle: 'width:28px;height:28px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;' + (i < 3 ? 'background:' + medal[i] + ';color:#FFF' : 'color:#5C6B60'),
-        avatar: 'width:40px;height:40px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;color:#FFF;background:' + avatarC[i % 6]
-      };
-    });
-    var mileData = [[10, '10권 클럽', 32], [30, '30권 클럽', 32], [50, '50권 클럽', 32], [100, '100권 클럽', 32], [200, '200권 클럽', 32]];
-    var miles = mileData.map(function (m) {
-      var got = m[2] >= m[0];
-      var p = Math.min(100, Math.round(m[2] / m[0] * 100));
-      return {
-        n: m[0], name: m[1], state: got ? '달성!' : (m[2] + '/' + m[0] + '권'),
-        badge: 'width:52px;height:52px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;' + (got ? 'background:' + O + ';color:#2B1600' : 'background:#F4F6F4;color:#767676;border:2px dashed #C9D1CB'),
-        bar: 'display:block;height:100%;border-radius:4px;width:' + p + '%;background:' + (got ? O : G)
-      };
-    });
-    var hall = [
-      { month: '2026년 10월', reader: '지호', books: '완독 18권', steady: '하린', days: '27일 출석' },
-      { month: '2026년 9월', reader: '민서', books: '완독 15권', steady: '서준', days: '25일 출석' },
-      { month: '2026년 8월', reader: '하린', books: '완독 14권', steady: '하린', days: '24일 출석' }
-    ];
+    if (s.same) list = list.filter(function (k2) { return k2[1].indexOf('초5') === 0; });
+    var avatarC = [G, B, '#B4530B', '#0A4F20', '#1A56C4', '#0B5E25'], medal = ['#D99A06', '#7D8790', '#B0652A'];
+    var board = list.map(function (k2, i) { return { rank: i + 1, name: k2[0], meta: k2[1], score: k2[2], init: k2[0].charAt(0), rankStyle: 'width:28px;height:28px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;' + (i < 3 ? 'background:' + medal[i] + ';color:#FFF' : 'color:#5C6B60'), avatar: 'width:40px;height:40px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;color:#FFF;background:' + avatarC[i % 6] }; });
+    var totalBooks = 32 + s.sessions.length;
+    var miles = [10, 30, 50, 100, 200].map(function (n) { var got = totalBooks >= n; var p = Math.min(100, Math.round(totalBooks / n * 100)); return { n: n, name: n + '권 클럽', state: got ? '달성!' : (totalBooks + '/' + n + '권'), badge: 'width:52px;height:52px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;' + (got ? 'background:' + O + ';color:#FFF' : 'background:#F4F6F4;color:#767676;border:2px dashed #C9D1CB'), bar: 'display:block;height:100%;border-radius:4px;width:' + p + '%;background:' + (got ? O : G) }; });
+    var hall = [{ month: '2026년 10월', reader: '지호', books: '완독 18권', steady: '하린', days: '27일 출석' }, { month: '2026년 9월', reader: '민서', books: '완독 15권', steady: '서준', days: '25일 출석' }, { month: '2026년 8월', reader: '하린', books: '완독 14권', steady: '하린', days: '24일 출석' }];
+
+    var a = s.analysis || { title: '', topic: '', difficulty: '', passage: '', words: [] };
+    var st0 = (s.current && s.current.stats) || { sentences: 0, unique: 0, minutes: 0 };
 
     return {
-      isHome: s.screen === 'home', isScan: s.screen === 'scan', isConfirm: s.screen === 'confirm',
-      isTalk: s.screen === 'talk', isDone: s.screen === 'done', isReport: s.screen === 'report',
-      isStats: s.screen === 'stats', isShelf: s.screen === 'shelf', isReview: s.screen === 'review',
-      isPlan: s.screen === 'plan', isRank: s.screen === 'rank',
+      isHome: s.screen === 'home', isScan: s.screen === 'scan', isConfirm: s.screen === 'confirm', isTalk: s.screen === 'talk',
+      isDone: s.screen === 'done', isReport: s.screen === 'report', isStats: s.screen === 'stats', isShelf: s.screen === 'shelf',
+      isReview: s.screen === 'review', isPlan: s.screen === 'plan', isRank: s.screen === 'rank',
       showTabs: ['home', 'plan', 'report', 'stats', 'rank'].indexOf(s.screen) > -1,
-      goHome: go('home'), goScan: go('scan'), goConfirm: go('confirm'), goTalk: go('talk'),
-      goReport: go('report'), goStats: go('stats'), goShelf: go('shelf'), goReview: go('review'),
-      goPlan: go('plan'), goRank: go('rank'),
+      goHome: go('home'), goConfirm: go('confirm'), goReport: go('report'), goStats: go('stats'), goShelf: go('shelf'),
+      goReview: go('review'), goPlan: go('plan'), goRank: go('rank'),
+      goScan: function () { self.setState({ screen: 'scan', err: '', analysis: s.screen === 'confirm' ? s.analysis : null, pages: s.screen === 'confirm' ? s.pages : 0 }); },
       tabHome: tab('home'), tabPlan: tab('plan'), tabReport: tab('report'), tabStats: tab('stats'), tabRank: tab('rank'),
-      shown: shown,
-      stageLabel: stages[Math.min(s.turn, 3)],
+
+      busy: s.busy, notBusy: !s.busy, err: s.err, hasPages: s.pages > 0, pageCount: s.pages,
+      uploadTitle: s.pages > 0 ? '다음 쪽을 올려 주세요' : '읽은 책 한 쪽을 올려 주세요',
+      onPhoto: function (e) { self.onPhoto(e); },
+      a: a, wordCount: (a.words || []).length,
+      words: (a.words || []).map(function (w) { return { en: w.en, ko: w.ko, say: function () { self.say(w.en); } }; }),
+      startTalk: function () { self.startTalk(); },
+
+      shown: shown, thinking: s.thinking, stageLabel: s.stage,
       progressStyle: 'width:' + pct + '%;height:100%;background:' + G + ';border-radius:3px',
-      showHint: s.hint && !finished,
-      hintText: '이렇게 시작해 봐: ' + hints[Math.min(s.turn, 3)],
-      toggleHint: function () { self.setState({ hint: !s.hint }); },
-      speak: function () { if (finished) { self.setState({ screen: 'done' }); } else { self.setState({ turn: s.turn + 1, hint: false }); } },
-      speakLabel: finished ? '눌러서 마치기' : '누르고 말하기',
-      words: [
-        { en: 'humpback whale', ko: '혹등고래' }, { en: 'migrate', ko: '이동하다' }, { en: 'repeat', ko: '반복하다' },
-        { en: 'for hours', ko: '몇 시간 동안' }, { en: 'ocean', ko: '바다' }
-      ],
-      reviewNo: r + 1, reviewFrom: fixes[r].from, reviewTo: fixes[r].to,
-      reviewBtn: s.review >= 2 ? '말하고 끝내기' : '말하고 다음',
-      nextReview: function () { if (s.review >= 2) { self.setState({ screen: 'home', review: 0 }); } else { self.setState({ review: s.review + 1 }); } },
-      recent: books.slice(0, 4), shelf: books, fixes: fixes,
-      week1: days.slice(0, 7), week2: days.slice(7), plan: plan,
+      showHint: s.hint, hintText: '이렇게 시작해 봐: ' + s.hintText,
+      toggleHint: function () { self.setState({ hint: !s.hint, hintsUsed: s.hint ? s.hintsUsed : s.hintsUsed + 1 }); },
+      speak: function () { self.speak(); },
+      micStyle: 'width:76px;height:76px;border:0;border-radius:50%;color:#FFF;display:flex;align-items:center;justify-content:center;background:' + (s.listening ? O : G) + (s.listening ? ';box-shadow:0 0 0 8px rgba(232,101,10,.2)' : ''),
+      speakLabel: s.done ? '눌러서 마치기' : (s.listening ? '듣는 중… 다 말하면 다시 눌러요' : (s.thinking ? '도란이가 생각 중이에요' : '누르고 영어로 말하기')),
+      replay: function () { self.say(lastTutor && lastTutor.text); },
+      sendTyped: function (e) { e.preventDefault(); var inp = document.getElementById('typed'); var v = inp ? inp.value : ''; if (inp) inp.value = ''; self.sendKid(v); },
+      canFinish: s.kidTurns >= 2, finishTalk: function () { self.finishTalk(); },
+
+      st: st0, doneNote: '책장에 1권 추가 · ' + (s.reportBusy ? '리포트를 만드는 중이에요' : '리포트가 준비됐어요'),
+
+      rp: rp, reportBusy: s.reportBusy,
       rSum: s.rtab === 'sum', rWord: s.rtab === 'word', rFix: s.rtab === 'fix',
       rSumBtn: seg(s.rtab === 'sum'), rWordBtn: seg(s.rtab === 'word'), rFixBtn: seg(s.rtab === 'fix'),
       setRSum: set({ rtab: 'sum' }), setRWord: set({ rtab: 'word' }), setRFix: set({ rtab: 'fix' }),
-      topWords: topWords, bookWords: bookWords,
-      bars: bars, skills: skillList,
-      trend: s.period === 'week' ? '지난주보다 +18%' : '지난달보다 +24%',
-      books: s.period === 'week' ? 4 : 12, minutes: s.period === 'week' ? 52 : 186, newWords: s.period === 'week' ? 23 : 71,
-      vocab: 412,
-      weekBtn: seg(s.period === 'week'), monthBtn: seg(s.period === 'month'),
-      setWeek: set({ period: 'week' }), setMonth: set({ period: 'month' }),
+      shareReport: function () {
+        var txt = '[북이랑 리포트] ' + rp.title + '\n말한 문장 ' + rp.sentences + ' · 서로 다른 단어 ' + rp.unique + ' · 말한 비율 ' + rp.ratio + '%\n잘했어요: ' + rp.praise;
+        if (navigator.share) { navigator.share({ title: '북이랑 리포트', text: txt }).catch(function () {}); }
+        else if (navigator.clipboard) { navigator.clipboard.writeText(txt); self.setState({ err: '' }); alert('리포트 내용을 복사했어요. 메신저에 붙여 넣어 보내세요.'); }
+      },
+
+      reviewNo: r + 1, reviewTotal: fixesForReview.length, reviewFrom: fixesForReview[r].from, reviewTo: fixesForReview[r].to,
+      sayReview: function () { self.say(fixesForReview[r].to); },
+      reviewBtn: s.review >= fixesForReview.length - 1 ? '말하고 끝내기' : '말하고 다음',
+      nextReview: function () { if (s.review >= fixesForReview.length - 1) self.setState({ screen: 'home', review: 0 }); else self.setState({ review: s.review + 1 }); },
+
+      recent: books.slice(0, 4), shelf: books, shelfCount: totalBooks,
+      week1: days.slice(0, 7), week2: days.slice(7), plan: plan,
+
+      bars: bars, skills: skills, periodName: periodName, statsNote: hasReal ? '내 북토킹 기록으로 계산했어요' : '아직 기록이 없어 샘플 데이터를 보여 줘요',
+      trend: periodName + ' 말한 문장 ' + vals.reduce(function (n, v) { return n + v; }, 0) + '개',
+      books: agg.books, minutes: agg.minutes, newWords: agg.newWords, vocab: agg.vocab,
+      weekBtn: seg(s.period === 'week'), monthBtn: seg(s.period === 'month'), yearBtn: seg(s.period === 'year'),
+      setWeek: set({ period: 'week' }), setMonth: set({ period: 'month' }), setYear: set({ period: 'year' }),
+
       vBoard: s.sub === 'board', vMile: s.sub === 'mile', vHall: s.sub === 'hall',
       subBoard: under(s.sub === 'board'), subMile: under(s.sub === 'mile'), subHall: under(s.sub === 'hall'),
       setBoard: set({ sub: 'board' }), setMile: set({ sub: 'mile' }), setHall: set({ sub: 'hall' }),
-      kRead: seg(s.kind === 'read'), kDays: seg(s.kind === 'days'),
-      setRead: set({ kind: 'read' }), setDays: set({ kind: 'days' }),
+      kRead: seg(s.kind === 'read'), kDays: seg(s.kind === 'days'), setRead: set({ kind: 'read' }), setDays: set({ kind: 'days' }),
       toggleSame: function () { self.setState({ same: !s.same }); },
       sameTrack: 'width:40px;height:24px;border-radius:12px;padding:3px;display:flex;background:' + (s.same ? G : '#C9D1CB') + ';justify-content:' + (s.same ? 'flex-end' : 'flex-start'),
       sameKnob: 'width:18px;height:18px;border-radius:50%;background:#FFF;display:block',
       boardDesc: s.kind === 'read' ? '11월 완독한 책 수' : '11월 북토킹한 날 수',
       myRank: s.kind === 'read' ? '7' : '9', myScore: s.kind === 'read' ? '5권' : '5일',
-      board: board, miles: miles, hall: hall
+      board: board, miles: miles, hall: hall, totalBooks: totalBooks
     };
   }
 }
