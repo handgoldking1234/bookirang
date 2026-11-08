@@ -160,7 +160,8 @@ async function chat(body) {
     '"Oh, you mean ...!"처럼 그 뜻을 쉬운 영어 문장으로 말해 준 뒤 따라 말해 보게 해. 이때 fix에 그 영어 문장을 넣고 korean=true, advance=false. ' +
     '아이가 그 문장을 영어로 따라 하면 칭찬하고 다음으로 넘어가(advance=true).\n' +
     '7) 위험하거나 아이에게 맞지 않는 이야기는 하지 말고 주제로 돌아와.\n' +
-    '반드시 JSON 하나만 출력: {"reply":"도란이의 영어 답","fix":"아이 마지막 문장의 바른 형태(고칠 게 없으면 빈 문자열)",' +
+    '반드시 JSON 하나만 출력: {"reply":"도란이의 영어 답","fix":"아이 마지막 문장의 더 자연스러운 영어 문장(고칠 게 없으면 빈 문자열)",' +
+    '"why":"fix가 있을 때 왜 그렇게 말하면 좋은지 초등학생이 이해할 한국어 1~2문장(없으면 빈 문자열)",' +
     '"onTopic":true,"advance":false,"korean":false,"usedGoals":[아이 마지막 말에서 쓴 목표 표현 번호들]}';
   const messages = history.map((m) => ({ role: m.role === 'kid' ? 'user' : 'assistant', content: m.text }));
   while (messages.length && messages[0].role !== 'user') messages.shift();
@@ -183,7 +184,7 @@ async function chat(body) {
   if (advance && !isLast && !/\?/.test(reply)) reply += ' ' + next.q;   // 넘어가는데 질문이 빠졌으면 붙인다
   const used = (Array.isArray(r.usedGoals) ? r.usedGoals : []).map(Number).filter((n) => n >= 0 && n < (p.goals || []).length);
   return {
-    reply, fix: r.fix || '', korean: !!r.korean, onTopic, step: newStep, off: newOff, done, usedGoals: used,
+    reply, fix: r.fix || '', why: r.fix ? String(r.why || '').slice(0, 200) : '', korean: !!r.korean, onTopic, step: newStep, off: newOff, done, usedGoals: used,
     stage: done ? '마무리' : qs[newStep].stage, hint: qs[newStep].hint || ''
   };
 }
