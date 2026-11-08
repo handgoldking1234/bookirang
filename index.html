@@ -1,0 +1,844 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E6B2C">
+<title>북이랑 - 책 찍고 AI랑 도란도란</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&amp;family=Plus+Jakarta+Sans:wght@500;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#FFFFFF}
+*{box-sizing:border-box}
+button{font-family:inherit;cursor:pointer}
+.scroll::-webkit-scrollbar{display:none}
+</style>
+<style>
+html,body{height:100%}
+body{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#EEF1EE !important}
+#app>div{box-shadow:0 20px 60px rgba(0,0,0,.12);border-radius:32px}
+@media (max-width:1024px), (pointer:coarse){
+body{display:block;background:#FFFFFF !important}
+#app>div{width:100% !important;height:100vh !important;height:100dvh !important;border-radius:0;box-shadow:none}
+#app>div>.scroll,#app>div>div{padding-left:max(20px, calc((100% - 720px) / 2)) !important;padding-right:max(20px, calc((100% - 720px) / 2)) !important}
+#app>div>nav{padding-left:max(0px, calc((100% - 720px) / 2));padding-right:max(0px, calc((100% - 720px) / 2))}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<template id="tpl">
+<div style="width: 390px; height: 844px; background: #FFFFFF; color: #16201A; font-family: 'Noto Sans KR', 'Plus Jakarta Sans', sans-serif; display: flex; flex-direction: column; overflow: hidden; position: relative">
+
+<!-- ===== HOME ===== -->
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+<div class="scroll" style="flex: 1; overflow-y: auto; padding: 24px 20px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<span style="display: flex; align-items: center; gap: 8px">
+<svg width="32" height="32" viewBox="0 0 36 36" aria-hidden="true"><rect width="36" height="36" rx="11" fill="#0E6B2C"/><path d="M9 11h6a3 3 0 0 1 3 3v12a2.2 2.2 0 0 0-2.2-2.2H9z" fill="#FFFFFF"/><path d="M27 11h-6a3 3 0 0 0-3 3v12a2.2 2.2 0 0 1 2.2-2.2H27z" fill="#FFFFFF"/><circle cx="29" cy="7" r="4.5" fill="#F27A1A"/></svg>
+<span style="font-size: 24px; font-weight: 900; letter-spacing: -1px; color: #0E6B2C">북이랑</span>
+</span>
+<div style="display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: #FFF0E3; font-size: 13px; font-weight: 700; color: #B4530B">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>5일 연속
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 15px; color: #5C6B60">안녕, 서윤아!</span>
+<b style="font-size: 26px; line-height: 1.3; letter-spacing: -0.5px">오늘은 어떤 이야기를<br>읽었어?</b>
+</div>
+<button onClick="{{ goScan }}" style="border: 0; background: #0E6B2C; color: #FFFFFF; border-radius: 24px; padding: 24px 22px; display: flex; align-items: center; gap: 18px; text-align: left">
+<span style="width: 60px; height: 60px; flex: none; border-radius: 18px; background: #FFFFFF; color: #0E6B2C; display: flex; align-items: center; justify-content: center">
+<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+</span>
+<span style="display: flex; flex-direction: column; gap: 4px">
+<b style="font-size: 21px">찰칵! 책 찍기</b>
+<span style="font-size: 14px; color: #D3E9D9">한 쪽만 찍어도 이야기가 시작돼요</span>
+</span>
+</button>
+
+<button onClick="{{ goPlan }}" style="border: 1px solid #CFDDF8; background: #F4F8FF; color: #16201A; border-radius: 20px; padding: 16px; display: flex; align-items: center; gap: 14px; text-align: left">
+<span style="width: 56px; height: 72px; flex: none; border-radius: 8px; background: #1F6FEB; color: #FFF; display: flex; align-items: flex-end; padding: 6px; font-size: 11px; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif">Day 5</span>
+<span style="flex: 1; display: flex; flex-direction: column; gap: 3px">
+<span style="font-size: 12px; font-weight: 700; color: #1A56C4">오늘의 추천 책 · 2주 플랜 5/14</span>
+<b style="font-size: 16px; font-family: 'Plus Jakarta Sans', sans-serif">Mercy Watson to the Rescue</b>
+<span style="font-size: 12px; color: #5C6B60">Lv.3 · 약 15분 분량</span>
+</span>
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5C6B60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+</button>
+
+<button onClick="{{ goReview }}" style="border: 1px solid #F6D3B5; background: #FFF8F2; color: #16201A; border-radius: 20px; padding: 16px; display: flex; align-items: center; gap: 14px; text-align: left">
+<span style="width: 44px; height: 44px; flex: none; border-radius: 14px; background: #F27A1A; color: #2B1600; display: flex; align-items: center; justify-content: center">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>
+</span>
+<span style="flex: 1; display: flex; flex-direction: column; gap: 2px">
+<b style="font-size: 16px">어제 고친 표현 다시 말하기</b>
+<span style="font-size: 13px; color: #5C6B60">3문장 · 1분이면 끝나요</span>
+</span>
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5C6B60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+</button>
+
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 18px">이번 주</b><button onClick="{{ goStats }}" style="border: 0; background: none; color: #0E6B2C; font-size: 13px; font-weight: 700; padding: 8px 0">성장 보기</button></div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+<div style="background: #F4F6F4; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #5C6B60">북토킹</span><b style="font-size: 24px; color: #0E6B2C">4회</b></div>
+<div style="background: #F4F6F4; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #5C6B60">말한 문장</span><b style="font-size: 24px; color: #0E6B2C">86</b></div>
+<div style="background: #F4F6F4; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #5C6B60">새 단어</span><b style="font-size: 24px; color: #0E6B2C">23</b></div>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 18px">최근 읽은 책</b><button onClick="{{ goShelf }}" style="border: 0; background: none; color: #0E6B2C; font-size: 13px; font-weight: 700; padding: 8px 0">책장</button></div>
+<div class="scroll" style="display: flex; gap: 12px; overflow-x: auto">
+<sc-for list="{{ recent }}" as="b" hint-placeholder-count="3">
+<button onClick="{{ goReport }}" style="border: 0; flex: none; width: 132px; background: #F4F6F4; border-radius: 14px; padding: 10px; display: flex; flex-direction: column; gap: 8px; text-align: left; color: #16201A">
+<span style="{{ b.cover }}">{{ b.short }}</span>
+<b style="font-size: 13px; line-height: 1.35">{{ b.title }}</b>
+<span style="font-size: 11px; color: #5C6B60">{{ b.date }}</span>
+</button>
+</sc-for>
+</div>
+</div>
+</div>
+</sc-if>
+
+<!-- ===== PLAN: 2주 14권 추천 ===== -->
+<sc-if value="{{ isPlan }}" hint-placeholder-val="{{ false }}">
+<div class="scroll" style="flex: 1; overflow-y: auto; padding: 20px 20px 24px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<b style="font-size: 24px; letter-spacing: -0.5px">서윤이 맞춤 2주 플랜</b>
+<span style="font-size: 13px; color: #5C6B60; line-height: 1.6">최근 북토킹 4번의 문장 길이, 어휘, 이해도를 보고 하루 한 권씩 골랐어요.</span>
+</div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap">
+<span style="padding: 6px 12px; border-radius: 999px; background: #0E6B2C; color: #FFF; font-size: 13px; font-weight: 700">Lv.3 중급 리더</span>
+<span style="padding: 6px 12px; border-radius: 999px; background: #E8F0FE; color: #1A56C4; font-size: 13px; font-weight: 700">AR 2~3 수준</span>
+<span style="padding: 6px 12px; border-radius: 999px; background: #FFF0E3; color: #B4530B; font-size: 13px; font-weight: 700">4/14권 완료</span>
+</div>
+<div style="border: 1px solid #E3E8E4; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; font-size: 13px"><b>1주차</b><span style="color: #5C6B60">11월 4일 – 10일</span></div>
+<div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px">
+<sc-for list="{{ week1 }}" as="d" hint-placeholder-count="7"><span style="{{ d.style }}">{{ d.n }}</span></sc-for>
+</div>
+<div style="display: flex; justify-content: space-between; font-size: 13px; padding-top: 4px"><b>2주차</b><span style="color: #5C6B60">11월 11일 – 17일</span></div>
+<div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px">
+<sc-for list="{{ week2 }}" as="d" hint-placeholder-count="7"><span style="{{ d.style }}">{{ d.n }}</span></sc-for>
+</div>
+<div style="display: flex; gap: 14px; font-size: 11px; color: #5C6B60; padding-top: 2px">
+<span style="display: inline-flex; align-items: center; gap: 4px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #0E6B2C"></span>완료</span>
+<span style="display: inline-flex; align-items: center; gap: 4px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #1F6FEB"></span>오늘</span>
+<span style="display: inline-flex; align-items: center; gap: 4px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #EEF1EE"></span>예정</span>
+</div>
+</div>
+<div style="background: #F4F8FF; border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
+<span style="font-size: 12px; font-weight: 700; color: #1A56C4">DAY 5 · 오늘의 책</span>
+<div style="display: flex; gap: 14px">
+<span style="width: 72px; height: 96px; flex: none; border-radius: 8px; background: #1F6FEB; color: #FFF; display: flex; align-items: flex-end; padding: 8px; font-weight: 800; font-size: 13px; font-family: 'Plus Jakarta Sans', sans-serif">Mercy</span>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<b style="font-size: 17px; font-family: 'Plus Jakarta Sans', sans-serif">Mercy Watson to the Rescue</b>
+<span style="font-size: 12px; color: #5C6B60">챕터북 · 동물 · 유머</span>
+<span style="font-size: 12px; color: #5C6B60">추천 이유: 지난주 동물 이야기에서 대화가 가장 길었어요</span>
+</div>
+</div>
+<div style="display: flex; gap: 6px; flex-wrap: wrap">
+<span style="padding: 5px 10px; border-radius: 999px; background: #FFF; color: #1A56C4; font-size: 12px; font-weight: 700">미리 볼 단어</span>
+<span style="padding: 5px 10px; border-radius: 999px; background: #FFF; font-size: 12px">rescue</span>
+<span style="padding: 5px 10px; border-radius: 999px; background: #FFF; font-size: 12px">porcine</span>
+<span style="padding: 5px 10px; border-radius: 999px; background: #FFF; font-size: 12px">toast</span>
+</div>
+<button onClick="{{ goScan }}" style="border: 0; min-height: 52px; border-radius: 999px; background: #0E6B2C; color: #FFF; font-size: 16px; font-weight: 800">다 읽었으면 찰칵!</button>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<b style="font-size: 15px; padding-bottom: 6px">2주 도서 목록</b>
+<sc-for list="{{ plan }}" as="p" hint-placeholder-count="5">
+<div style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid #EEF1EE">
+<span style="{{ p.badge }}">{{ p.day }}</span>
+<span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 14px; font-family: 'Plus Jakarta Sans', sans-serif">{{ p.title }}</b><span style="font-size: 12px; color: #5C6B60">{{ p.genre }}</span></span>
+<span style="{{ p.stateStyle }}">{{ p.state }}</span>
+</div>
+</sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 13px; color: #5C6B60; text-align: center">난이도가 맞지 않나요? 다음 추천에 반영해요</span>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<button style="border: 1px solid #E3E8E4; background: #FFF; min-height: 48px; border-radius: 999px; font-size: 14px; font-weight: 700; color: #16201A">너무 쉬워요</button>
+<button style="border: 1px solid #E3E8E4; background: #FFF; min-height: 48px; border-radius: 999px; font-size: 14px; font-weight: 700; color: #16201A">너무 어려워요</button>
+</div>
+</div>
+</div>
+</sc-if>
+
+<!-- ===== SCAN ===== -->
+<sc-if value="{{ isScan }}" hint-placeholder-val="{{ false }}">
+<div style="flex: 1; background: #0E1410; color: #FFFFFF; display: flex; flex-direction: column">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 12px">
+<button aria-label="닫기" onClick="{{ goHome }}" style="width: 44px; height: 44px; border: 0; border-radius: 50%; background: #2A332D; color: #FFF; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+<span style="font-size: 15px; font-weight: 700">책 찍기 · 1/3쪽</span>
+<span style="width: 44px"></span>
+</div>
+<div style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px">
+<div style="width: 290px; height: 420px; position: relative; border-radius: 12px; background: #EDE8DA; transform: rotate(-2deg); padding: 36px 28px; display: flex; flex-direction: column; gap: 12px">
+<div style="height: 14px; width: 70%; background: #3A3A3A; border-radius: 4px"></div>
+<div style="height: 8px; width: 100%; background: #9C9486; border-radius: 4px"></div>
+<div style="height: 8px; width: 94%; background: #9C9486; border-radius: 4px"></div>
+<div style="height: 8px; width: 98%; background: #9C9486; border-radius: 4px"></div>
+<div style="height: 8px; width: 80%; background: #9C9486; border-radius: 4px"></div>
+<div style="height: 90px; width: 100%; background: #C9D7E8; border-radius: 8px"></div>
+<div style="height: 8px; width: 96%; background: #9C9486; border-radius: 4px"></div>
+<div style="height: 8px; width: 90%; background: #9C9486; border-radius: 4px"></div>
+<div style="height: 8px; width: 60%; background: #9C9486; border-radius: 4px"></div>
+<div style="position: absolute; inset: -10px; border: 3px solid #F27A1A; border-radius: 16px"></div>
+</div>
+</div>
+<span style="text-align: center; font-size: 14px; color: #C8D2CB; padding-bottom: 16px">글자가 잘 보이게 틀 안에 맞춰 주세요</span>
+<div style="display: flex; justify-content: space-around; align-items: center; padding: 8px 32px 40px">
+<button aria-label="갤러리에서 고르기" style="width: 48px; height: 48px; border: 0; border-radius: 12px; background: #2A332D; color: #FFF; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></button>
+<button aria-label="촬영" onClick="{{ goConfirm }}" style="width: 80px; height: 80px; border-radius: 50%; border: 5px solid #FFF; background: #0E6B2C"></button>
+<span style="width: 48px"></span>
+</div>
+</div>
+</sc-if>
+
+<!-- ===== CONFIRM ===== -->
+<sc-if value="{{ isConfirm }}" hint-placeholder-val="{{ false }}">
+<div class="scroll" style="flex: 1; overflow-y: auto; padding: 16px 20px 24px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; align-items: center; gap: 8px">
+<button aria-label="뒤로" onClick="{{ goScan }}" style="width: 44px; height: 44px; border: 0; border-radius: 50%; background: #F4F6F4; color: #16201A; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+<b style="font-size: 17px">이 글로 이야기할까요?</b>
+</div>
+<div style="background: #F4F6F4; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px">
+<b style="font-size: 20px; font-family: 'Plus Jakarta Sans', sans-serif">The Singing Whales</b>
+<span style="padding: 5px 10px; border-radius: 999px; background: #E7F3EA; color: #0B5E25; font-size: 12px; font-weight: 700; flex: none">딱 맞는 난이도</span>
+</div>
+<span style="font-size: 14px; color: #5C6B60; line-height: 1.6">주제: 혹등고래가 노래하는 이유와 따뜻한 바다로의 이동</span>
+<div style="font-size: 14px; line-height: 1.7; color: #2E3A31; font-family: 'Plus Jakarta Sans', sans-serif; background: #FFFFFF; border-radius: 12px; padding: 14px">Humpback whales are famous for their songs. A song can last for many minutes, and whales may repeat it for hours…</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 15px">먼저 듣고 따라 말해요</b><span style="font-size: 12px; color: #5C6B60">핵심 단어 5개</span></div>
+<sc-for list="{{ words }}" as="w" hint-placeholder-count="3">
+<div style="display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid #E3E8E4; border-radius: 14px">
+<button aria-label="발음 듣기" style="width: 40px; height: 40px; flex: none; border: 0; border-radius: 50%; background: #E8F0FE; color: #1A56C4; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg></button>
+<span style="flex: 1; display: flex; flex-direction: column"><b style="font-size: 15px; font-family: 'Plus Jakarta Sans', sans-serif">{{ w.en }}</b><span style="font-size: 12px; color: #5C6B60">{{ w.ko }}</span></span>
+<span style="font-size: 12px; font-weight: 700; color: #0E6B2C">따라 말하기</span>
+</div>
+</sc-for>
+</div>
+<div style="background: #F4F6F4; border-radius: 16px; padding: 14px 16px; font-size: 13px; line-height: 1.6; color: #2E3A31">질문 6개 준비 · 약 12분<br><span style="color: #5C6B60">마음 열기 1 → 내용 확인 2 → 생각 말하기 3</span></div>
+<button onClick="{{ goTalk }}" style="border: 0; min-height: 56px; border-radius: 999px; background: #0E6B2C; color: #FFFFFF; font-size: 17px; font-weight: 800">도란이랑 이야기 시작</button>
+</div>
+</sc-if>
+
+<!-- ===== TALK ===== -->
+<sc-if value="{{ isTalk }}" hint-placeholder-val="{{ false }}">
+<div style="flex: 1; display: flex; flex-direction: column; min-height: 0">
+<div style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid #E3E8E4">
+<button aria-label="그만하기" onClick="{{ goHome }}" style="width: 44px; height: 44px; border: 0; border-radius: 50%; background: #F4F6F4; color: #16201A; display: flex; align-items: center; justify-content: center; flex: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+<div style="flex: 1; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 13px; color: #5C6B60">The Singing Whales · {{ stageLabel }}</span>
+<div style="height: 6px; border-radius: 3px; background: #E3E8E4; overflow: hidden"><div style="{{ progressStyle }}"></div></div>
+</div>
+</div>
+<div class="scroll" style="flex: 1; overflow-y: auto; padding: 18px 16px; display: flex; flex-direction: column; gap: 12px; font-family: 'Plus Jakarta Sans', 'Noto Sans KR', sans-serif">
+<span style="align-self: center; font-size: 12px; color: #5C6B60; background: #F4F6F4; padding: 6px 12px; border-radius: 999px">틀려도 괜찮아, 끝까지 말해 보는 게 중요해!</span>
+<sc-for list="{{ shown }}" as="m" hint-placeholder-count="2">
+<div style="{{ m.wrap }}">
+<div style="{{ m.bubble }}">{{ m.text }}</div>
+<sc-if value="{{ m.fix }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; color: #1A56C4; font-weight: 700; padding: 4px 6px">고쳐 말하기 · {{ m.fix }}</span></sc-if>
+</div>
+</sc-for>
+<sc-if value="{{ showHint }}" hint-placeholder-val="{{ false }}">
+<div style="align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; background: #FFF0E3; color: #B4530B; border-radius: 999px; padding: 8px 12px; font-size: 13px; font-weight: 700">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>{{ hintText }}
+</div>
+</sc-if>
+</div>
+<div style="padding: 12px 16px 28px; display: flex; flex-direction: column; align-items: center; gap: 10px; border-top: 1px solid #E3E8E4">
+<div style="display: flex; align-items: center; gap: 28px">
+<button aria-label="힌트 보기" onClick="{{ toggleHint }}" style="width: 48px; height: 48px; border: 0; border-radius: 50%; background: #FFF0E3; color: #B4530B; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></button>
+<button aria-label="누르고 말하기" onClick="{{ speak }}" style="width: 76px; height: 76px; border: 0; border-radius: 50%; background: #0E6B2C; color: #FFF; display: flex; align-items: center; justify-content: center"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg></button>
+<button aria-label="다시 듣기" style="width: 48px; height: 48px; border: 0; border-radius: 50%; background: #E8F0FE; color: #1A56C4; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg></button>
+</div>
+<span style="font-size: 13px; color: #5C6B60">{{ speakLabel }}</span>
+</div>
+</div>
+</sc-if>
+
+<!-- ===== REVIEW ===== -->
+<sc-if value="{{ isReview }}" hint-placeholder-val="{{ false }}">
+<div style="flex: 1; display: flex; flex-direction: column; padding: 16px 20px 28px; gap: 18px">
+<div style="display: flex; align-items: center; gap: 8px">
+<button aria-label="닫기" onClick="{{ goHome }}" style="width: 44px; height: 44px; border: 0; border-radius: 50%; background: #F4F6F4; color: #16201A; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+<b style="font-size: 17px">다시 말하기 · {{ reviewNo }}/3</b>
+</div>
+<div style="flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 20px; text-align: center">
+<span style="font-size: 14px; color: #5C6B60">어제 이렇게 말했어요</span>
+<s style="font-size: 18px; color: #8A968D; font-family: 'Plus Jakarta Sans', sans-serif">{{ reviewFrom }}</s>
+<span style="font-size: 14px; color: #5C6B60">이번엔 이렇게 말해 볼까요?</span>
+<b style="font-size: 24px; line-height: 1.4; color: #0E6B2C; font-family: 'Plus Jakarta Sans', sans-serif">{{ reviewTo }}</b>
+</div>
+<button onClick="{{ nextReview }}" style="border: 0; min-height: 56px; border-radius: 999px; background: #0E6B2C; color: #FFF; font-size: 17px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>{{ reviewBtn }}</button>
+</div>
+</sc-if>
+
+<!-- ===== DONE ===== -->
+<sc-if value="{{ isDone }}" hint-placeholder-val="{{ false }}">
+<div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding: 32px 24px; text-align: center; background: #0E6B2C; color: #FFFFFF">
+<svg width="170" height="150" viewBox="0 0 200 180" role="img" aria-label="도란이">
+<path d="M100 48 C74 28 36 28 16 40 L16 156 C38 144 76 144 100 164 Z" fill="#FFFFFF"/>
+<path d="M100 48 C126 28 164 28 184 40 L184 156 C162 144 124 144 100 164 Z" fill="#E7F3EA"/>
+<path d="M100 48 L100 164" stroke="#F27A1A" stroke-width="4"/>
+<path d="M50 92 Q62 80 74 92" stroke="#0A3A18" stroke-width="5" fill="none" stroke-linecap="round"/>
+<path d="M126 92 Q138 80 150 92" stroke="#0A3A18" stroke-width="5" fill="none" stroke-linecap="round"/>
+<circle cx="44" cy="116" r="8" fill="#F9B98A"/><circle cx="156" cy="116" r="8" fill="#F9B98A"/>
+<path d="M82 118 Q100 138 118 118" stroke="#0A3A18" stroke-width="5" fill="none" stroke-linecap="round"/>
+</svg>
+<b style="font-size: 30px; line-height: 1.3; letter-spacing: -1px">오늘도 멋지게<br>이야기했어!</b>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; width: 100%">
+<div style="background: #FFFFFF; color: #16201A; border-radius: 16px; padding: 14px 8px; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 24px; color: #0E6B2C">18</b><span style="font-size: 12px; color: #5C6B60">말한 문장</span></div>
+<div style="background: #FFFFFF; color: #16201A; border-radius: 16px; padding: 14px 8px; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 24px; color: #1A56C4">58</b><span style="font-size: 12px; color: #5C6B60">쓴 단어 종류</span></div>
+<div style="background: #FFFFFF; color: #16201A; border-radius: 16px; padding: 14px 8px; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 24px; color: #B4530B">12분</b><span style="font-size: 12px; color: #5C6B60">대화 시간</span></div>
+</div>
+<span style="font-size: 14px; color: #D3E9D9">2주 플랜 5/14 완료 · 책장에 1권 추가</span>
+<button onClick="{{ goReport }}" style="width: 100%; border: 0; min-height: 56px; border-radius: 999px; background: #FFFFFF; color: #0E6B2C; font-size: 17px; font-weight: 800">리포트 보기</button>
+<button onClick="{{ goHome }}" style="border: 0; background: none; color: #FFFFFF; font-size: 15px; font-weight: 700; min-height: 44px">홈으로</button>
+</div>
+</sc-if>
+
+<!-- ===== REPORT ===== -->
+<sc-if value="{{ isReport }}" hint-placeholder-val="{{ false }}">
+<div class="scroll" style="flex: 1; overflow-y: auto; padding: 20px 20px 24px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 13px; color: #5C6B60">오늘의 이야기 · 11월 8일</span>
+<b style="font-size: 24px; letter-spacing: -0.5px">The Singing Whales</b>
+</div>
+<div style="display: flex; background: #F4F6F4; border-radius: 999px; padding: 4px">
+<button onClick="{{ setRSum }}" style="{{ rSumBtn }}">요약</button>
+<button onClick="{{ setRWord }}" style="{{ rWordBtn }}">단어 분석</button>
+<button onClick="{{ setRFix }}" style="{{ rFixBtn }}">교정</button>
+</div>
+
+<sc-if value="{{ rSum }}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div style="background: #0E6B2C; color: #FFFFFF; border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 15px">내가 말한 시간</b><b style="font-size: 26px">68%</b></div>
+<div style="height: 10px; border-radius: 5px; background: rgba(255,255,255,0.25); overflow: hidden"><div style="width: 68%; height: 100%; background: #FFFFFF; border-radius: 5px"></div></div>
+<span style="font-size: 12px; color: #D3E9D9">12분 중 약 8분을 서윤이가 말했어요</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<div style="background: #F4F6F4; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #5C6B60">말한 문장</span><b style="font-size: 26px; color: #0E6B2C">18</b><span style="font-size: 11px; color: #5C6B60">지난번보다 +4</span></div>
+<div style="background: #F4F6F4; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #5C6B60">평균 문장 길이</span><b style="font-size: 26px; color: #0E6B2C">6.2단어</b><span style="font-size: 11px; color: #5C6B60">지난번 5.1단어</span></div>
+<div style="background: #F4F6F4; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #5C6B60">스스로 말하기</span><b style="font-size: 26px; color: #0E6B2C">94%</b><span style="font-size: 11px; color: #5C6B60">힌트 1회 사용</span></div>
+<div style="background: #F4F6F4; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #5C6B60">내용 이해</span><b style="font-size: 26px; color: #0E6B2C">2/2</b><span style="font-size: 11px; color: #5C6B60">확인 질문 모두 맞힘</span></div>
+</div>
+<div style="background: #E7F3EA; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 8px">
+<b style="font-size: 15px; color: #0B5E25">잘했어요</b>
+<span style="font-size: 14px; line-height: 1.6; color: #2E3A31">고래가 노래하는 이유를 "to talk to friends"라며 자기 생각으로 설명했어요.</span>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ rWord }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+<div style="background: #F4F6F4; border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 11px; color: #5C6B60">말한 단어</span><b style="font-size: 22px; color: #0E6B2C">112</b></div>
+<div style="background: #F4F6F4; border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 11px; color: #5C6B60">서로 다른 단어</span><b style="font-size: 22px; color: #1A56C4">58</b></div>
+<div style="background: #F4F6F4; border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 11px; color: #5C6B60">처음 쓴 단어</span><b style="font-size: 22px; color: #B4530B">7</b></div>
+</div>
+<div style="border: 1px solid #E3E8E4; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 15px">많이 쓴 단어</b><span style="font-size: 11px; color: #767676">a, the 같은 기본 단어 제외</span></div>
+<sc-for list="{{ topWords }}" as="t" hint-placeholder-count="6">
+<div style="display: flex; align-items: center; gap: 10px">
+<span style="width: 78px; font-size: 14px; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif">{{ t.w }}</span>
+<div style="flex: 1; height: 10px; border-radius: 5px; background: #EEF1EE; overflow: hidden"><div style="{{ t.style }}"></div></div>
+<span style="width: 30px; text-align: right; font-size: 13px; color: #5C6B60">{{ t.n }}회</span>
+</div>
+</sc-for>
+</div>
+<div style="border: 1px solid #E3E8E4; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+<b style="font-size: 15px">책에서 배운 단어, 써 봤을까?</b>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{ bookWords }}" as="b" hint-placeholder-count="5">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+<span style="font-size: 14px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700">{{ b.w }}</span>
+<span style="{{ b.style }}">{{ b.label }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+<div style="background: #FFF8F2; border: 1px solid #F6D3B5; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 8px">
+<b style="font-size: 15px; color: #B4530B">자주 쓴 단어, 이렇게도 말해 봐</b>
+<span style="font-size: 14px; color: #2E3A31"><b style="font-family: 'Plus Jakarta Sans', sans-serif">good</b> 5회 사용</span>
+<div style="display: flex; gap: 6px; flex-wrap: wrap">
+<span style="padding: 6px 12px; border-radius: 999px; background: #FFF; border: 1px solid #F6D3B5; font-size: 13px; font-family: 'Plus Jakarta Sans', sans-serif">great</span>
+<span style="padding: 6px 12px; border-radius: 999px; background: #FFF; border: 1px solid #F6D3B5; font-size: 13px; font-family: 'Plus Jakarta Sans', sans-serif">amazing</span>
+<span style="padding: 6px 12px; border-radius: 999px; background: #FFF; border: 1px solid #F6D3B5; font-size: 13px; font-family: 'Plus Jakarta Sans', sans-serif">wonderful</span>
+</div>
+</div>
+<div style="border: 1px solid #E3E8E4; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+<b style="font-size: 15px">어떤 종류의 단어를 썼을까?</b>
+<div style="display: flex; height: 14px; border-radius: 7px; overflow: hidden">
+<div style="width: 38%; background: #0E6B2C"></div>
+<div style="width: 27%; background: #1F6FEB"></div>
+<div style="width: 18%; background: #F27A1A"></div>
+<div style="width: 17%; background: #C9D1CB"></div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; font-size: 12px; color: #2E3A31">
+<span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #0E6B2C"></span>명사 38%</span>
+<span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #1F6FEB"></span>동사 27%</span>
+<span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #F27A1A"></span>형용사 18%</span>
+<span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #C9D1CB"></span>기타 17%</span>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ rFix }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div style="border: 1px solid #E3E8E4; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 4px">
+<b style="font-size: 15px; padding-bottom: 6px">표현 교정</b>
+<sc-for list="{{ fixes }}" as="f" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column; gap: 2px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; padding: 10px 0; border-top: 1px solid #EEF1EE">
+<s style="color: #8A968D">{{ f.from }}</s>
+<b style="color: #0E6B2C">{{ f.to }}</b>
+<span style="font-size: 12px; color: #5C6B60; font-family: 'Noto Sans KR', sans-serif">{{ f.why }}</span>
+</div>
+</sc-for>
+</div>
+<div style="border: 1px solid #E3E8E4; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+<b style="font-size: 15px">발음 체크</b>
+<div style="display: flex; align-items: center; gap: 12px">
+<span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 15px; font-family: 'Plus Jakarta Sans', sans-serif">whale</b><span style="font-size: 12px; color: #5C6B60">w를 입술 둥글게 모아서</span></span>
+<span style="padding: 5px 10px; border-radius: 999px; background: #FFF0E3; color: #B4530B; font-size: 12px; font-weight: 700">조금 더 연습</span>
+</div>
+<div style="display: flex; align-items: center; gap: 12px">
+<span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 15px; font-family: 'Plus Jakarta Sans', sans-serif">migrate</b><span style="font-size: 12px; color: #5C6B60">강세는 앞쪽 MI</span></span>
+<span style="padding: 5px 10px; border-radius: 999px; background: #E7F3EA; color: #0B5E25; font-size: 12px; font-weight: 700">좋아요</span>
+</div>
+</div>
+<button onClick="{{ goReview }}" style="border: 0; min-height: 52px; border-radius: 999px; background: #0E6B2C; color: #FFF; font-size: 15px; font-weight: 800">고친 표현 다시 말하기</button>
+</div>
+</sc-if>
+
+<button style="border: 1px solid #CFDDF8; min-height: 52px; border-radius: 999px; background: #FFFFFF; color: #1A56C4; font-size: 15px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>부모님께 리포트 보내기</button>
+<span style="font-size: 12px; color: #767676; text-align: center">프로토타입 샘플 데이터</span>
+</div>
+</sc-if>
+
+<!-- ===== STATS ===== -->
+<sc-if value="{{ isStats }}" hint-placeholder-val="{{ false }}">
+<div class="scroll" style="flex: 1; overflow-y: auto; padding: 20px 20px 24px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<b style="font-size: 24px; letter-spacing: -0.5px">서윤이의 성장</b>
+<div style="display: flex; background: #F4F6F4; border-radius: 999px; padding: 4px">
+<button onClick="{{ setWeek }}" style="{{ weekBtn }}">주간</button>
+<button onClick="{{ setMonth }}" style="{{ monthBtn }}">월간</button>
+</div>
+</div>
+<div style="border: 1px solid #E3E8E4; border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 15px">말한 문장 수</b><span style="font-size: 13px; color: #0E6B2C; font-weight: 700">{{ trend }}</span></div>
+<div style="height: 150px; display: flex; align-items: flex-end; gap: 8px">
+<sc-for list="{{ bars }}" as="d" hint-placeholder-count="7">
+<div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px">
+<span style="font-size: 11px; color: #5C6B60">{{ d.v }}</span>
+<div style="{{ d.style }}"></div>
+<span style="font-size: 11px; color: #5C6B60">{{ d.label }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<div style="background: #0E6B2C; color: #FFF; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #D3E9D9">읽은 책</span><b style="font-size: 28px">{{ books }}권</b></div>
+<div style="background: #E8F0FE; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #1A56C4">누적 사용 어휘</span><b style="font-size: 28px; color: #1A56C4">{{ vocab }}개</b></div>
+<div style="background: #FFF0E3; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #B4530B">새로 쓴 단어</span><b style="font-size: 28px; color: #B4530B">{{ newWords }}개</b></div>
+<div style="background: #F4F6F4; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #5C6B60">대화 시간</span><b style="font-size: 28px">{{ minutes }}분</b></div>
+</div>
+<div style="border: 1px solid #E3E8E4; border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 14px">
+<b style="font-size: 15px">말하기 역량</b>
+<sc-for list="{{ skills }}" as="s" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; justify-content: space-between; font-size: 13px"><span>{{ s.name }}</span><span style="color: #5C6B60">{{ s.v }}%</span></div>
+<div style="height: 8px; border-radius: 4px; background: #EEF1EE; overflow: hidden"><div style="{{ s.style }}"></div></div>
+</div>
+</sc-for>
+</div>
+<button onClick="{{ goPlan }}" style="border: 0; background: #F4F6F4; border-radius: 20px; padding: 18px; display: flex; gap: 14px; align-items: center; text-align: left; color: #16201A">
+<span style="width: 52px; height: 52px; border-radius: 16px; background: #0E6B2C; color: #FFF; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 17px; flex: none">Lv.3</span>
+<span style="flex: 1; display: flex; flex-direction: column; gap: 6px">
+<b style="font-size: 15px">중급 리더 · 2주 플랜 5/14</b>
+<span style="height: 8px; border-radius: 4px; background: #DDE5DF; overflow: hidden; display: block"><span style="width: 36%; height: 100%; background: #0E6B2C; display: block"></span></span>
+</span>
+</button>
+<span style="font-size: 12px; color: #767676; text-align: center">프로토타입 샘플 데이터</span>
+</div>
+</sc-if>
+
+<!-- ===== RANK ===== -->
+<sc-if value="{{ isRank }}" hint-placeholder-val="{{ false }}">
+<div class="scroll" style="flex: 1; overflow-y: auto; padding: 20px 20px 24px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<b style="font-size: 24px; letter-spacing: -0.5px">리딩 성장 기록</b>
+<span style="padding: 6px 12px; border-radius: 999px; background: #F4F6F4; font-size: 13px; font-weight: 700">2026년 11월</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-bottom: 1px solid #E3E8E4">
+<button onClick="{{ setBoard }}" style="{{ subBoard }}">리더보드</button>
+<button onClick="{{ setMile }}" style="{{ subMile }}">마일스톤</button>
+<button onClick="{{ setHall }}" style="{{ subHall }}">명예의 전당</button>
+</div>
+
+<sc-if value="{{ vBoard }}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<div style="display: flex; background: #F4F6F4; border-radius: 999px; padding: 4px">
+<button onClick="{{ setRead }}" style="{{ kRead }}">다독왕</button>
+<button onClick="{{ setDays }}" style="{{ kDays }}">개근왕</button>
+</div>
+<button onClick="{{ toggleSame }}" style="border: 0; background: none; display: flex; align-items: center; gap: 8px; font-size: 13px; color: #16201A; min-height: 44px">
+<span style="{{ sameTrack }}"><span style="{{ sameKnob }}"></span></span>같은 학년만</button>
+</div>
+<span style="font-size: 12px; color: #5C6B60">{{ boardDesc }} · 집계 11.01 ~ 11.08</span>
+<div style="background: #0E6B2C; color: #FFF; border-radius: 16px; padding: 14px 16px; display: flex; align-items: center; gap: 12px">
+<span style="width: 28px; font-weight: 900; font-size: 16px; text-align: center">{{ myRank }}</span>
+<span style="width: 40px; height: 40px; border-radius: 50%; background: #F27A1A; color: #2B1600; display: flex; align-items: center; justify-content: center; font-weight: 900">서</span>
+<span style="flex: 1; display: flex; flex-direction: column"><b style="font-size: 15px">서윤 <span style="font-size: 11px; padding: 2px 6px; border-radius: 6px; background: #FFF; color: #0E6B2C; margin-left: 4px">나</span></b><span style="font-size: 12px; color: #D3E9D9">초5 · Lv.3</span></span>
+<b style="font-size: 17px">{{ myScore }}</b>
+</div>
+<div style="display: flex; flex-direction: column">
+<sc-for list="{{ board }}" as="r" hint-placeholder-count="6">
+<div style="display: flex; align-items: center; gap: 12px; padding: 12px 4px; border-bottom: 1px solid #EEF1EE">
+<span style="{{ r.rankStyle }}">{{ r.rank }}</span>
+<span style="{{ r.avatar }}">{{ r.init }}</span>
+<span style="flex: 1; display: flex; flex-direction: column"><b style="font-size: 15px">{{ r.name }}</b><span style="font-size: 12px; color: #5C6B60">{{ r.meta }}</span></span>
+<b style="font-size: 15px">{{ r.score }}</b>
+</div>
+</sc-for>
+</div>
+<span style="font-size: 11px; color: #767676; line-height: 1.6">아이 이름은 닉네임으로만 보여요. 보호자 설정에서 랭킹 참여를 끌 수 있어요.</span>
+</div>
+</sc-if>
+
+<sc-if value="{{ vMile }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<span style="font-size: 13px; color: #5C6B60">완독한 책이 쌓이면 클럽 배지를 받아요. 지금까지 32권!</span>
+<sc-for list="{{ miles }}" as="m" hint-placeholder-count="5">
+<div style="display: flex; align-items: center; gap: 14px; padding: 14px; border: 1px solid #E3E8E4; border-radius: 16px">
+<span style="{{ m.badge }}">{{ m.n }}</span>
+<span style="flex: 1; display: flex; flex-direction: column; gap: 6px">
+<span style="display: flex; justify-content: space-between"><b style="font-size: 15px">{{ m.name }}</b><span style="font-size: 12px; color: #5C6B60">{{ m.state }}</span></span>
+<span style="height: 8px; border-radius: 4px; background: #EEF1EE; overflow: hidden; display: block"><span style="{{ m.bar }}"></span></span>
+</span>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ vHall }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<span style="font-size: 13px; color: #5C6B60">지난달의 다독왕과 개근왕</span>
+<sc-for list="{{ hall }}" as="h" hint-placeholder-count="3">
+<div style="border: 1px solid #E3E8E4; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+<b style="font-size: 15px">{{ h.month }}</b>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<div style="background: #FFF0E3; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: #B4530B; font-weight: 700">다독왕</span><b style="font-size: 15px">{{ h.reader }}</b><span style="font-size: 12px; color: #5C6B60">{{ h.books }}</span></div>
+<div style="background: #E8F0FE; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: #1A56C4; font-weight: 700">개근왕</span><b style="font-size: 15px">{{ h.steady }}</b><span style="font-size: 12px; color: #5C6B60">{{ h.days }}</span></div>
+</div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<!-- ===== SHELF ===== -->
+<sc-if value="{{ isShelf }}" hint-placeholder-val="{{ false }}">
+<div class="scroll" style="flex: 1; overflow-y: auto; padding: 20px 20px 24px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; align-items: center; gap: 8px">
+<button aria-label="뒤로" onClick="{{ goHome }}" style="width: 44px; height: 44px; border: 0; border-radius: 50%; background: #F4F6F4; color: #16201A; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+<b style="font-size: 22px; letter-spacing: -0.5px; flex: 1">내 책장</b><span style="font-size: 14px; color: #5C6B60">32권</span>
+</div>
+<div style="display: flex; gap: 8px">
+<span style="padding: 8px 14px; border-radius: 999px; background: #0E6B2C; color: #FFF; font-size: 13px; font-weight: 700">영어</span>
+<span style="padding: 8px 14px; border-radius: 999px; background: #F4F6F4; color: #5C6B60; font-size: 13px; font-weight: 700">한국어 · 준비 중</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<sc-for list="{{ shelf }}" as="b" hint-placeholder-count="6">
+<button onClick="{{ goReport }}" style="border: 0; background: #F4F6F4; border-radius: 14px; padding: 10px; display: flex; flex-direction: column; gap: 8px; text-align: left; color: #16201A">
+<span style="{{ b.cover }}">{{ b.short }}</span>
+<b style="font-size: 14px; line-height: 1.35">{{ b.title }}</b>
+<span style="font-size: 12px; color: #5C6B60">{{ b.date }} · {{ b.count }}문장</span>
+</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<!-- ===== TAB BAR ===== -->
+<sc-if value="{{ showTabs }}" hint-placeholder-val="{{ true }}">
+<nav aria-label="하단 메뉴" style="flex: none; height: 80px; padding-bottom: 14px; background: #FFFFFF; border-top: 1px solid #E3E8E4; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr))">
+<button onClick="{{ goHome }}" style="{{ tabHome }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>홈</button>
+<button onClick="{{ goPlan }}" style="{{ tabPlan }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>추천</button>
+<button onClick="{{ goReport }}" style="{{ tabReport }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>리포트</button>
+<button onClick="{{ goStats }}" style="{{ tabStats }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>성장</button>
+<button onClick="{{ goRank }}" style="{{ tabRank }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>랭킹</button>
+</nav>
+</sc-if>
+
+</div>
+</template>
+<script>
+/* 북이랑 프로토타입 미니 런타임: {{값}}, sc-if, sc-for, on이벤트만 처리 */
+class DCLogic {
+  constructor(props) { this.props = props || {}; this.state = {}; }
+  setState(next) { Object.assign(this.state, next); render(); }
+}
+var __comp = null;
+var HOLE = /\{\{\s*([\w.$]+)\s*\}\}/g;
+var WHOLE = /^\s*\{\{\s*([\w.$]+)\s*\}\}\s*$/;
+function look(scope, path) {
+  if (path === 'true') return true;
+  if (path === 'false') return false;
+  return path.split('.').reduce(function (o, k) { return o == null ? undefined : o[k]; }, scope);
+}
+function fill(str, scope) {
+  return str.replace(HOLE, function (_, p) { var v = look(scope, p); return v == null ? '' : v; });
+}
+function walk(node, scope) {
+  if (node.nodeType === 3) { if (node.nodeValue.indexOf('{{') > -1) node.nodeValue = fill(node.nodeValue, scope); return; }
+  if (node.nodeType !== 1) return;
+  var tag = node.tagName.toLowerCase();
+  if (tag === 'sc-if') {
+    var m = (node.getAttribute('value') || '').match(WHOLE);
+    var ok = m ? look(scope, m[1]) : false;
+    var frag = document.createDocumentFragment();
+    if (ok) { while (node.firstChild) frag.appendChild(node.firstChild); kids(frag, scope); }
+    node.replaceWith(frag);
+    return;
+  }
+  if (tag === 'sc-for') {
+    var lm = (node.getAttribute('list') || '').match(WHOLE);
+    var list = (lm && look(scope, lm[1])) || [];
+    var as = node.getAttribute('as') || 'item';
+    var out = document.createDocumentFragment();
+    list.forEach(function (item, i) {
+      var s = Object.create(scope); s[as] = item; s.$index = i;
+      var f = document.createDocumentFragment();
+      Array.prototype.forEach.call(node.childNodes, function (c) { f.appendChild(c.cloneNode(true)); });
+      kids(f, s);
+      out.appendChild(f);
+    });
+    node.replaceWith(out);
+    return;
+  }
+  Array.prototype.slice.call(node.attributes).forEach(function (a) {
+    if (a.name.indexOf('hint-') === 0) { node.removeAttribute(a.name); return; }
+    var w = a.value.match(WHOLE);
+    if (a.name.indexOf('on') === 0 && w) {
+      var fn = look(scope, w[1]);
+      node.removeAttribute(a.name);
+      if (typeof fn === 'function') node.addEventListener(a.name.slice(2), fn);
+      return;
+    }
+    if (a.value.indexOf('{{') > -1) node.setAttribute(a.name, fill(a.value, scope));
+  });
+  kids(node, scope);
+}
+function kids(parent, scope) {
+  Array.prototype.slice.call(parent.childNodes).forEach(function (c) { walk(c, scope); });
+}
+function render() {
+  var app = document.getElementById('app');
+  var keep = {};
+  app.querySelectorAll('.scroll').forEach(function (el, i) { keep[i] = el.scrollTop; });
+  var vals = __comp.renderVals();
+  var frag = document.getElementById('tpl').content.cloneNode(true);
+  kids(frag, vals);
+  app.replaceChildren(frag);
+  app.querySelectorAll('.scroll').forEach(function (el, i) { if (keep[i]) el.scrollTop = keep[i]; });
+}
+function mount(C) { __comp = new C({}); render(); }
+
+</script>
+<script>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { screen: 'home', turn: 0, hint: false, period: 'week', review: 0, rtab: 'sum', sub: 'board', kind: 'read', same: false };
+  }
+  renderVals() {
+    var s = this.state;
+    var self = this;
+    var G = '#0E6B2C', B = '#1F6FEB', O = '#F27A1A';
+    var go = function (name) { return function () { self.setState({ screen: name, turn: 0, hint: false, review: 0 }); }; };
+    var set = function (obj) { return function () { self.setState(obj); }; };
+
+    var msgs = [
+      { who: 't', text: "Hi! I read your page about the singing whales. What was the most surprising part?" },
+      { who: 'k', text: "They sing song for a long time!", fix: "They sing songs for a long time." },
+      { who: 't', text: "Wow, yes! They sing songs for hours. Where do humpback whales travel?" },
+      { who: 'k', text: "They go to warm sea.", fix: "They go to warm seas." },
+      { who: 't', text: "Right, they migrate to warm seas. Why do you think they sing?" },
+      { who: 'k', text: "I think they sing to talk friends.", fix: "I think they sing to talk to their friends." },
+      { who: 't', text: "What a great idea! You explained it so well today." }
+    ];
+    var count = Math.min(msgs.length, s.turn * 2 + 1);
+    var shown = msgs.slice(0, count).map(function (m) {
+      var tutor = m.who === 't';
+      return {
+        text: m.text,
+        fix: tutor ? '' : (m.fix || ''),
+        wrap: 'display:flex;flex-direction:column;align-items:' + (tutor ? 'flex-start' : 'flex-end') + ';gap:2px',
+        bubble: 'max-width:84%;padding:12px 14px;font-size:15px;line-height:1.5;border-radius:' + (tutor ? '18px 18px 18px 4px;background:#F4F6F4;color:#16201A' : '18px 18px 4px 18px;background:' + G + ';color:#FFFFFF')
+      };
+    });
+    var stages = ['마음 열기', '내용 확인', '내용 확인', '생각 말하기'];
+    var hints = ['"The most surprising part was…"', '"They go to…"', '"I think they sing because…"', '"I liked…"'];
+    var finished = count >= msgs.length;
+    var pct = Math.round((count / msgs.length) * 100);
+
+    var fixes = [
+      { from: 'They sing song for a long time.', to: 'They sing songs for a long time.', why: '노래가 여러 곡이면 songs' },
+      { from: 'They go to warm sea.', to: 'They go to warm seas.', why: '바다 여러 곳은 seas' },
+      { from: 'I think they sing to talk friends.', to: 'I think they sing to talk to their friends.', why: '~에게 말하다는 talk to' }
+    ];
+    var r = Math.min(s.review, 2);
+
+    var tab = function (name) {
+      var on = s.screen === name;
+      return 'border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px;font-weight:700;color:' + (on ? G : '#8A968D');
+    };
+    var seg = function (on) { return 'flex:1;border:0;border-radius:999px;padding:6px 14px;min-height:36px;font-size:13px;font-weight:700;' + (on ? 'background:' + G + ';color:#FFF' : 'background:none;color:#5C6B60'); };
+    var under = function (on) { return 'border:0;background:none;min-height:44px;font-size:14px;font-weight:700;border-bottom:3px solid ' + (on ? G : 'transparent') + ';color:' + (on ? G : '#8A968D'); };
+    var cover = function (c, ink) { return 'height:92px;border-radius:10px;background:' + c + ';color:' + ink + ';display:flex;align-items:flex-end;padding:10px;font-weight:900;font-size:18px;font-family:Plus Jakarta Sans,sans-serif'; };
+    var books = [
+      { title: 'The Singing Whales', short: 'Whales', date: '오늘', count: 18, cover: cover(G, '#FFF') },
+      { title: 'Kids Times · Robots at School', short: 'Robots', date: '11월 6일', count: 15, cover: cover(B, '#FFF') },
+      { title: 'Frog and Toad Are Friends', short: 'Frog', date: '11월 5일', count: 21, cover: cover(O, '#2B1600') },
+      { title: 'Henry and Mudge', short: 'Henry', date: '11월 4일', count: 12, cover: cover('#0A4F20', '#FFF') },
+      { title: 'Kids Times · Plastic Sea', short: 'Ocean', date: '11월 1일', count: 14, cover: cover('#E7F3EA', '#0B5E25') },
+      { title: 'Nate the Great', short: 'Nate', date: '10월 30일', count: 17, cover: cover('#E8F0FE', '#1A56C4') }
+    ];
+
+    var titles = [
+      ['Nate the Great', '탐정 · 챕터북'], ['Henry and Mudge', '우정 · 리더스'], ['Frog and Toad Are Friends', '우정 · 리더스'], ['Amelia Bedelia', '유머 · 리더스'],
+      ['Mercy Watson to the Rescue', '동물 · 챕터북'], ['Fly Guy', '유머 · 리더스'], ['Magic Tree House #1', '모험 · 챕터북'],
+      ['Cam Jansen', '탐정 · 챕터북'], ['Junie B. Jones', '학교 · 챕터북'], ['Flat Stanley', '모험 · 챕터북'], ['Kids Times 기사', '시사 · 신문'],
+      ['The Black Lagoon', '학교 · 챕터북'], ['Mercy Watson Fights Crime', '동물 · 챕터북'], ['Magic Tree House #2', '모험 · 챕터북']
+    ];
+    var done = 4, today = 4;
+    var dayStyle = function (i) {
+      var bg = i < done ? G : (i === today ? B : '#EEF1EE');
+      var ink = i <= today ? '#FFF' : '#5C6B60';
+      return 'aspect-ratio:1;border-radius:10px;background:' + bg + ';color:' + ink + ';display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800';
+    };
+    var days = titles.map(function (t, i) { return { n: i < done ? '✓' : String(i + 1), style: dayStyle(i) }; });
+    var plan = titles.map(function (t, i) {
+      var st = i < done ? '완료' : (i === today ? '오늘' : '예정');
+      var c = i < done ? G : (i === today ? '#1A56C4' : '#767676');
+      return {
+        day: 'D' + (i + 1), title: t[0], genre: t[1], state: st,
+        badge: 'width:40px;height:40px;flex:none;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;background:' + (i < done ? '#E7F3EA' : (i === today ? '#E8F0FE' : '#F4F6F4')) + ';color:' + c,
+        stateStyle: 'font-size:12px;font-weight:700;color:' + c
+      };
+    });
+
+    var week = [{ l: '월', v: 12 }, { l: '화', v: 0 }, { l: '수', v: 15 }, { l: '목', v: 21 }, { l: '금', v: 0 }, { l: '토', v: 20 }, { l: '일', v: 18 }];
+    var month = [{ l: '1주', v: 54 }, { l: '2주', v: 61 }, { l: '3주', v: 72 }, { l: '4주', v: 86 }];
+    var data = s.period === 'week' ? week : month;
+    var max = Math.max.apply(null, data.map(function (d) { return d.v; }));
+    var bars = data.map(function (d, i) {
+      var h = Math.max(4, Math.round((d.v / max) * 100));
+      var last = i === data.length - 1;
+      return { v: d.v, label: d.l, style: 'width:100%;max-width:30px;height:' + h + 'px;border-radius:6px;background:' + (last ? G : (d.v ? '#9CC7A8' : '#EEF1EE')) };
+    });
+    var skillList = [
+      { name: '말하기 양', v: 78, c: G }, { name: '문장 완성도', v: 64, c: B },
+      { name: '어휘 다양성', v: 58, c: O }, { name: '생각 표현(이유 말하기)', v: 71, c: '#0A4F20' }
+    ].map(function (k) { return { name: k.name, v: k.v, style: 'width:' + k.v + '%;height:100%;border-radius:4px;background:' + k.c }; });
+
+    var tw = [['they', 9], ['sing', 7], ['whales', 6], ['think', 4], ['because', 3], ['ocean', 3]];
+    var topWords = tw.map(function (t, i) { return { w: t[0], n: t[1], style: 'width:' + Math.round(t[1] / 9 * 100) + '%;height:100%;border-radius:5px;background:' + (i === 0 ? G : '#9CC7A8') }; });
+    var bw = [['humpback', true], ['migrate', true], ['for hours', true], ['repeat', false], ['ocean', true]];
+    var bookWords = bw.map(function (b) {
+      return { w: b[0], label: b[1] ? '말했어요' : '다음에 써 보기', style: 'padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700;' + (b[1] ? 'background:#E7F3EA;color:#0B5E25' : 'background:#FFF0E3;color:#B4530B') };
+    });
+
+    var kidsRead = [['지호', '초5 · Lv.4', '9권'], ['하린', '초5 · Lv.3', '8권'], ['도윤', '초4 · Lv.3', '7권'], ['서준', '초5 · Lv.2', '6권'], ['민서', '초6 · Lv.4', '6권'], ['예린', '초5 · Lv.3', '5권']];
+    var kidsDays = [['하린', '초5 · Lv.3', '8일'], ['서준', '초5 · Lv.2', '8일'], ['지호', '초5 · Lv.4', '7일'], ['유나', '초4 · Lv.2', '7일'], ['도윤', '초4 · Lv.3', '6일'], ['시우', '초5 · Lv.3', '6일']];
+    var list = s.kind === 'read' ? kidsRead : kidsDays;
+    if (s.same) { list = list.filter(function (k) { return k[1].indexOf('초5') === 0; }); }
+    var avatarC = [G, B, '#B4530B', '#0A4F20', '#1A56C4', '#0B5E25'];
+    var medal = ['#D99A06', '#7D8790', '#B0652A'];
+    var board = list.map(function (k, i) {
+      return {
+        rank: i + 1, name: k[0], meta: k[1], score: k[2], init: k[0].charAt(0),
+        rankStyle: 'width:28px;height:28px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;' + (i < 3 ? 'background:' + medal[i] + ';color:#FFF' : 'color:#5C6B60'),
+        avatar: 'width:40px;height:40px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;color:#FFF;background:' + avatarC[i % 6]
+      };
+    });
+    var mileData = [[10, '10권 클럽', 32], [30, '30권 클럽', 32], [50, '50권 클럽', 32], [100, '100권 클럽', 32], [200, '200권 클럽', 32]];
+    var miles = mileData.map(function (m) {
+      var got = m[2] >= m[0];
+      var p = Math.min(100, Math.round(m[2] / m[0] * 100));
+      return {
+        n: m[0], name: m[1], state: got ? '달성!' : (m[2] + '/' + m[0] + '권'),
+        badge: 'width:52px;height:52px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;' + (got ? 'background:' + O + ';color:#2B1600' : 'background:#F4F6F4;color:#767676;border:2px dashed #C9D1CB'),
+        bar: 'display:block;height:100%;border-radius:4px;width:' + p + '%;background:' + (got ? O : G)
+      };
+    });
+    var hall = [
+      { month: '2026년 10월', reader: '지호', books: '완독 18권', steady: '하린', days: '27일 출석' },
+      { month: '2026년 9월', reader: '민서', books: '완독 15권', steady: '서준', days: '25일 출석' },
+      { month: '2026년 8월', reader: '하린', books: '완독 14권', steady: '하린', days: '24일 출석' }
+    ];
+
+    return {
+      isHome: s.screen === 'home', isScan: s.screen === 'scan', isConfirm: s.screen === 'confirm',
+      isTalk: s.screen === 'talk', isDone: s.screen === 'done', isReport: s.screen === 'report',
+      isStats: s.screen === 'stats', isShelf: s.screen === 'shelf', isReview: s.screen === 'review',
+      isPlan: s.screen === 'plan', isRank: s.screen === 'rank',
+      showTabs: ['home', 'plan', 'report', 'stats', 'rank'].indexOf(s.screen) > -1,
+      goHome: go('home'), goScan: go('scan'), goConfirm: go('confirm'), goTalk: go('talk'),
+      goReport: go('report'), goStats: go('stats'), goShelf: go('shelf'), goReview: go('review'),
+      goPlan: go('plan'), goRank: go('rank'),
+      tabHome: tab('home'), tabPlan: tab('plan'), tabReport: tab('report'), tabStats: tab('stats'), tabRank: tab('rank'),
+      shown: shown,
+      stageLabel: stages[Math.min(s.turn, 3)],
+      progressStyle: 'width:' + pct + '%;height:100%;background:' + G + ';border-radius:3px',
+      showHint: s.hint && !finished,
+      hintText: '이렇게 시작해 봐: ' + hints[Math.min(s.turn, 3)],
+      toggleHint: function () { self.setState({ hint: !s.hint }); },
+      speak: function () { if (finished) { self.setState({ screen: 'done' }); } else { self.setState({ turn: s.turn + 1, hint: false }); } },
+      speakLabel: finished ? '눌러서 마치기' : '누르고 말하기',
+      words: [
+        { en: 'humpback whale', ko: '혹등고래' }, { en: 'migrate', ko: '이동하다' }, { en: 'repeat', ko: '반복하다' },
+        { en: 'for hours', ko: '몇 시간 동안' }, { en: 'ocean', ko: '바다' }
+      ],
+      reviewNo: r + 1, reviewFrom: fixes[r].from, reviewTo: fixes[r].to,
+      reviewBtn: s.review >= 2 ? '말하고 끝내기' : '말하고 다음',
+      nextReview: function () { if (s.review >= 2) { self.setState({ screen: 'home', review: 0 }); } else { self.setState({ review: s.review + 1 }); } },
+      recent: books.slice(0, 4), shelf: books, fixes: fixes,
+      week1: days.slice(0, 7), week2: days.slice(7), plan: plan,
+      rSum: s.rtab === 'sum', rWord: s.rtab === 'word', rFix: s.rtab === 'fix',
+      rSumBtn: seg(s.rtab === 'sum'), rWordBtn: seg(s.rtab === 'word'), rFixBtn: seg(s.rtab === 'fix'),
+      setRSum: set({ rtab: 'sum' }), setRWord: set({ rtab: 'word' }), setRFix: set({ rtab: 'fix' }),
+      topWords: topWords, bookWords: bookWords,
+      bars: bars, skills: skillList,
+      trend: s.period === 'week' ? '지난주보다 +18%' : '지난달보다 +24%',
+      books: s.period === 'week' ? 4 : 12, minutes: s.period === 'week' ? 52 : 186, newWords: s.period === 'week' ? 23 : 71,
+      vocab: 412,
+      weekBtn: seg(s.period === 'week'), monthBtn: seg(s.period === 'month'),
+      setWeek: set({ period: 'week' }), setMonth: set({ period: 'month' }),
+      vBoard: s.sub === 'board', vMile: s.sub === 'mile', vHall: s.sub === 'hall',
+      subBoard: under(s.sub === 'board'), subMile: under(s.sub === 'mile'), subHall: under(s.sub === 'hall'),
+      setBoard: set({ sub: 'board' }), setMile: set({ sub: 'mile' }), setHall: set({ sub: 'hall' }),
+      kRead: seg(s.kind === 'read'), kDays: seg(s.kind === 'days'),
+      setRead: set({ kind: 'read' }), setDays: set({ kind: 'days' }),
+      toggleSame: function () { self.setState({ same: !s.same }); },
+      sameTrack: 'width:40px;height:24px;border-radius:12px;padding:3px;display:flex;background:' + (s.same ? G : '#C9D1CB') + ';justify-content:' + (s.same ? 'flex-end' : 'flex-start'),
+      sameKnob: 'width:18px;height:18px;border-radius:50%;background:#FFF;display:block',
+      boardDesc: s.kind === 'read' ? '11월 완독한 책 수' : '11월 북토킹한 날 수',
+      myRank: s.kind === 'read' ? '7' : '9', myScore: s.kind === 'read' ? '5권' : '5일',
+      board: board, miles: miles, hall: hall
+    };
+  }
+}
+mount(Component);
+</script>
+</body>
+</html>
