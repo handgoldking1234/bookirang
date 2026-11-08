@@ -10,6 +10,7 @@
     tutorName: '도란이',
     apiBase: '',                   // 다른 도메인의 서버를 쓸 때만 지정 (예: https://bookirang.vercel.app)
     endpoint: '/api/booktalk',
+    assetBase: '',                 // 도란이 이미지 등 booktalk/assets 위치 (다른 경로에 두면 지정, 끝에 / 포함)
     child: { id: 'local', name: '서윤', grade: '초5', level: 3 },   // 호스트가 로그인한 아이 정보로 교체
     features: { plan: true, rank: true },   // 호스트에 이미 랭킹이 있으면 rank:false
     storage: null,                 // { get(key), set(key, value) } — 없으면 localStorage

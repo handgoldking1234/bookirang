@@ -20,6 +20,10 @@ button{font-family:inherit;cursor:pointer}
 .doran-mouth{transform-origin:100px 124px;transform:scaleY(.35);transition:transform .15s}
 .doran.talking .doran-mouth{animation:doranTalk .32s ease-in-out infinite}
 .doran.talking svg{animation:doranBob .64s ease-in-out infinite}
+@keyframes doranRing{0%{box-shadow:0 0 0 0 rgba(14,107,44,.45)}100%{box-shadow:0 0 0 12px rgba(14,107,44,0)}}
+.doran img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
+.doran.talking{animation:doranRing 1s ease-out infinite}
+.doran.talking img{animation:doranBob .7s ease-in-out infinite}
 </style>
 </helmet>
 <div style="width: 390px; height: 844px; background: #FFFFFF; color: #16201A; font-family: 'Noto Sans KR', 'Plus Jakarta Sans', sans-serif; display: flex; flex-direction: column; overflow: hidden; position: relative">
@@ -208,6 +212,14 @@ button{font-family:inherit;cursor:pointer}
 </sc-for>
 </div>
 <div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 14px; font-weight: 700">도란이 모습</span>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<sc-for list="{{ looks }}" as="k" hint-placeholder-count="2">
+<button onClick="{{ k.pick }}" aria-pressed="{{ k.on }}" style="{{ k.style }}"><img src="{{ k.src }}" alt="" style="width: 72px; height: 72px; border-radius: 50%; object-fit: cover"><span style="font-size: 14px; font-weight: 700">{{ k.name }}</span></button>
+</sc-for>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
 <span style="font-size: 14px; font-weight: 700">대화할 때 도란이</span>
 <div style="display: flex; background: #F4F6F4; border-radius: 999px; padding: 4px">
 <button onClick="{{ setAvBig }}" style="{{ avBigBtn }}">크게</button>
@@ -320,29 +332,13 @@ button{font-family:inherit;cursor:pointer}
 </div>
 <sc-if value="{{ avatarBig }}" hint-placeholder-val="{{ false }}">
 <button aria-label="도란이 작게 보기" onClick="{{ avatarToSmall }}" style="flex: none; border: 0; border-bottom: 1px solid #E3E8E4; background: #F4F8F4; padding: 12px 0 8px; display: flex; flex-direction: column; align-items: center; gap: 4px">
-<span class="{{ doranClass }}" style="width: 150px; height: 135px; display: block"><svg viewBox="0 0 200 180" width="100%" height="100%" aria-hidden="true">
-<path d="M100 48 C74 28 36 28 16 40 L16 156 C38 144 76 144 100 164 Z" fill="#FFFFFF" stroke="#0E6B2C" stroke-width="5"/>
-<path d="M100 48 C126 28 164 28 184 40 L184 156 C162 144 124 144 100 164 Z" fill="#E7F3EA" stroke="#0E6B2C" stroke-width="5"/>
-<path d="M100 48 L100 164" stroke="#E8650A" stroke-width="5"/>
-<circle cx="62" cy="88" r="9" fill="#0A3A18"/><circle cx="138" cy="88" r="9" fill="#0A3A18"/>
-<circle cx="65" cy="85" r="3" fill="#FFFFFF"/><circle cx="141" cy="85" r="3" fill="#FFFFFF"/>
-<circle cx="44" cy="112" r="8" fill="#F9B98A"/><circle cx="156" cy="112" r="8" fill="#F9B98A"/>
-<ellipse class="doran-mouth" cx="100" cy="124" rx="16" ry="12" fill="#0A3A18"/>
-</svg></span>
+<span class="{{ doranClass }}" style="width: 128px; height: 128px; display: block; border-radius: 50%; border: 3px solid #0E6B2C; background: #FFFFFF"><img src="{{ avatarSrc }}" alt=""></span>
 <span style="font-size: 12px; font-weight: 700; color: #0B5E25">{{ tutorName }} · {{ doranState }}</span>
 </button>
 </sc-if>
 <sc-if value="{{ avatarSmall }}" hint-placeholder-val="{{ true }}">
-<button aria-label="도란이 크게 보기" onClick="{{ avatarToBig }}" style="position: absolute; top: 84px; right: 12px; z-index: 3; width: 68px; height: 68px; border: 2px solid #0E6B2C; border-radius: 50%; background: #FFFFFF; box-shadow: 0 6px 16px rgba(0,0,0,0.12); padding: 8px; display: flex; align-items: center; justify-content: center">
-<span class="{{ doranClass }}" style="width: 100%; height: 100%; display: block"><svg viewBox="0 0 200 180" width="100%" height="100%" aria-hidden="true">
-<path d="M100 48 C74 28 36 28 16 40 L16 156 C38 144 76 144 100 164 Z" fill="#FFFFFF" stroke="#0E6B2C" stroke-width="5"/>
-<path d="M100 48 C126 28 164 28 184 40 L184 156 C162 144 124 144 100 164 Z" fill="#E7F3EA" stroke="#0E6B2C" stroke-width="5"/>
-<path d="M100 48 L100 164" stroke="#E8650A" stroke-width="5"/>
-<circle cx="62" cy="88" r="9" fill="#0A3A18"/><circle cx="138" cy="88" r="9" fill="#0A3A18"/>
-<circle cx="65" cy="85" r="3" fill="#FFFFFF"/><circle cx="141" cy="85" r="3" fill="#FFFFFF"/>
-<circle cx="44" cy="112" r="8" fill="#F9B98A"/><circle cx="156" cy="112" r="8" fill="#F9B98A"/>
-<ellipse class="doran-mouth" cx="100" cy="124" rx="16" ry="12" fill="#0A3A18"/>
-</svg></span>
+<button aria-label="도란이 크게 보기" onClick="{{ avatarToBig }}" style="position: absolute; top: 84px; right: 12px; z-index: 3; width: 68px; height: 68px; border: 3px solid #0E6B2C; border-radius: 50%; background: #FFFFFF; box-shadow: 0 6px 16px rgba(0,0,0,0.12); padding: 0; display: flex; align-items: center; justify-content: center">
+<span class="{{ doranClass }}" style="width: 100%; height: 100%; display: block; border-radius: 50%"><img src="{{ avatarSrc }}" alt=""></span>
 </button>
 </sc-if>
 <div id="chat" class="scroll" style="flex: 1; overflow-y: auto; padding: 18px 16px; display: flex; flex-direction: column; gap: 12px; font-family: 'Plus Jakarta Sans', 'Noto Sans KR', sans-serif">
@@ -801,6 +797,7 @@ class Component extends DCLogic {
       lessonPlan: null, fb: -1, source: 'book', step: 0, off: 0, goalsUsed: [],
       pickTab: 'textbook', grade: (BT.topics && BT.topics.textbook[BT.host.child.grade]) ? BT.host.child.grade : '초5',
       avatar: (function () { try { return localStorage.getItem('booktalk.avatar') || 'small'; } catch (e) { return 'small'; } })(),
+      look: (function () { try { return localStorage.getItem('booktalk.look') || 'girl'; } catch (e) { return 'girl'; } })(),
       meGrade: BT.host.child.grade, meSaved: false, clearAsk: false,
       sessions: saved
     };
@@ -1004,6 +1001,11 @@ class Component extends DCLogic {
     if (this._talking) document.querySelectorAll('.doran').forEach(function (el) { el.classList.add('talking'); });
   }
 
+  setLook(v) {
+    try { localStorage.setItem('booktalk.look', v); } catch (e) {}
+    this.setState({ look: v });
+  }
+
   setAvatar(v) {
     try { localStorage.setItem('booktalk.avatar', v); } catch (e) {}
     this.setState({ avatar: v });
@@ -1173,6 +1175,8 @@ class Component extends DCLogic {
       clearBtnStyle: 'min-height:48px;border-radius:999px;font-size:14px;font-weight:800;' + (s.clearAsk ? 'border:0;background:' + O + ';color:#FFF' : 'border:1px solid #F6D3B5;background:#FFF;color:#B4530B'),
       askClear: function () { if (!s.clearAsk) { self.setState({ clearAsk: true }); return; } self.setState({ sessions: window.BookTalk.store.clear(), current: null, clearAsk: false }); },
       fbOpen: !!fm, fb: fb, closeFb: set({ fb: -1 }),
+      avatarSrc: (host.assetBase || '') + 'booktalk/assets/doran-' + (s.look === 'boy' ? 'boy' : 'girl') + '.webp',
+      looks: [['girl', '여자'], ['boy', '남자']].map(function (k) { var on = s.look === k[0]; return { name: k[1], on: on ? 'true' : 'false', src: (host.assetBase || '') + 'booktalk/assets/doran-' + k[0] + '.webp', pick: function () { self.setLook(k[0]); }, style: 'display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px;border-radius:16px;' + (on ? 'border:2px solid ' + G + ';background:#E7F3EA;color:#0B5E25' : 'border:1px solid #E3E8E4;background:#FFF;color:#16201A') }; }),
       avatarBig: s.avatar === 'big', avatarSmall: s.avatar === 'small', doranClass: 'doran',
       doranState: s.listening ? '듣고 있어요' : (s.thinking ? '생각 중…' : '이야기 중'),
       avatarBtn: { big: '크게', small: '작게', hide: '숨김' }[s.avatar] || '작게',
