@@ -18,7 +18,7 @@
 ## 동작 흐름
 
 1. **책 올리기**: 카메라나 앨범 사진 → 브라우저에서 1600px로 줄여 `/api/booktalk`(analyze)로 보냄 → 본문 텍스트, 주제, 핵심 단어, 첫 질문을 받음. 여러 쪽을 이어 올릴 수 있고, 읽어 온 글은 화면에서 고칠 수 있음.
-2. **북토킹**: 마이크(브라우저 음성 인식, en-US) 또는 글자 입력 → `/api/booktalk`(chat) → 튜터 답, 고쳐 말하기, 힌트. 튜터 답은 브라우저 음성(TTS)으로 읽어 줌.
+2. **북토킹**: 마이크(브라우저 음성 인식, en-US) 또는 글자 입력 → `/api/booktalk`(chat) → 튜터 답, 고쳐 말하기, 힌트. 튜터 답은 OpenAI 음성(키가 있을 때) 또는 브라우저 음성으로 읽어 줌. 같은 문장은 한 번만 만들어 다시 씀.
 3. **리포트**: 단어 수, 서로 다른 단어, 많이 쓴 단어, 말한 비율 등은 대화 기록으로 브라우저에서 계산하고, 칭찬·교정·새 표현·팁은 `/api/booktalk`(report)로 받음.
 4. **성장 통계**: 북토킹 기록을 브라우저(localStorage)에 저장해 주간·월간·연간으로 묶어 보여 줌. 기록이 없으면 샘플 데이터.
 
@@ -27,8 +27,16 @@
 ## 배포 설정 (Vercel)
 
 1. 프로젝트 Settings › Environment Variables에 추가
-   - `ANTHROPIC_API_KEY`: Anthropic Console에서 발급한 API 키 (필수)
-   - `CLAUDE_MODEL`: 사용할 모델 (선택, 기본 `claude-sonnet-5-5`)
+
+| 이름 | 필수 | 설명 |
+| --- | --- | --- |
+| `ANTHROPIC_API_KEY` | 필수 | Anthropic Console에서 발급한 키 |
+| `OPENAI_API_KEY` | 선택 | 넣으면 도란이 목소리가 OpenAI 음성(자연스러운 목소리)으로 바뀜. 없으면 브라우저 목소리 |
+| `CLAUDE_MODEL_OCR` | 선택 | 사진 글 읽기 모델, 기본 `claude-sonnet-5-5` |
+| `CLAUDE_MODEL_CHAT` | 선택 | 대화·리포트 모델, 기본 `claude-haiku-5-5` |
+| `CLAUDE_MODEL` | 선택 | 넣으면 위 두 작업 모두 이 모델 사용 |
+| `OPENAI_TTS_MODEL`, `OPENAI_TTS_VOICE` | 선택 | 기본 `gpt-4o-mini-tts`, `coral` |
+
 2. 다시 배포(Redeploy)
 
 API 키는 서버 함수에서만 쓰이고 브라우저에는 노출되지 않습니다.

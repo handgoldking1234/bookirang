@@ -644,13 +644,7 @@ class Component extends DCLogic {
 
   /* ---------- 음성 ---------- */
   say(text) {
-    try {
-      if (!window.speechSynthesis || !text) return;
-      window.speechSynthesis.cancel();
-      var u = new SpeechSynthesisUtterance(text);
-      u.lang = 'en-US'; u.rate = 0.92;
-      window.speechSynthesis.speak(u);
-    } catch (e) {}
+    window.BookTalk.voice.say(text);
   }
 
   /* ---------- 흐름 ---------- */
@@ -715,7 +709,7 @@ class Component extends DCLogic {
     var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) { this.setState({ err: '이 브라우저는 음성 인식을 지원하지 않아요. 아래 칸에 영어로 써 주세요.' }); return; }
     if (this.state.listening) { try { this.rec && this.rec.stop(); } catch (e) {} return; }
-    try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch (e) {}
+    window.BookTalk.voice.stop();
     var rec = new SR();
     rec.lang = 'en-US'; rec.interimResults = false; rec.maxAlternatives = 1;
     rec.onresult = function (ev) { var t = ev.results[0][0].transcript; self.sendKid(t); };

@@ -1,10 +1,19 @@
 // 북토킹 모듈 · 서버 로직 (프레임워크 무관)
 // 어떤 서버(Vercel, Next.js API Route, Supabase Edge 등)에서도 handleBookTalk(body, options)만 부르면 된다.
-// options: { apiKey (필수), model (선택, 기본 claude-sonnet-5-5) }
+// options: {
+//   apiKey     (필수) Anthropic 키
+//   ocrModel   (선택) 사진 글 읽기 모델, 기본 claude-sonnet-5-5
+//   chatModel  (선택) 대화·리포트 모델, 기본 claude-haiku-5-5
+//   model      (선택) 지정하면 위 두 모델을 모두 이 값으로
+//   openaiKey  (선택) 있으면 도란이 목소리를 OpenAI 음성으로 (없으면 브라우저 목소리)
+//   ttsModel, ttsVoice (선택) 기본 gpt-4o-mini-tts, coral
+// }
 
 const API_URL = 'https://api.anthropic.com/v1/messages';
-const DEFAULT_MODEL = 'claude-sonnet-5-5';
-let OPTS = { apiKey: '', model: DEFAULT_MODEL };
+const TTS_URL = 'https://api.openai.com/v1/audio/speech';
+const DEFAULT_OCR_MODEL = 'claude-sonnet-5-5';
+const DEFAULT_CHAT_MODEL = 'claude-haiku-5-5';
+let OPTS = {};
 
 const LEVELS = {
   1: '초급: 아주 짧고 쉬운 문장(5단어 안팎), 예/아니오나 고르기 질문 위주',
@@ -18,7 +27,7 @@ function levelText(level) {
   return LEVELS[level] || LEVELS[3];
 }
 
-async function callClaude({ system, messages, maxTokens = 1024 }) {
+async function callClaude({ system, messages, maxTokens = 1024, model }) {
   const res = await fetch(API_URL, {
     method: 'POST',
     headers: {
@@ -26,7 +35,7 @@ async function callClaude({ system, messages, maxTokens = 1024 }) {
       'x-api-key': OPTS.apiKey,
       'anthropic-version': '2023-06-01'
     },
-    body: JSON.stringify({ model: OPTS.model || DEFAULT_MODEL, max_tokens: maxTokens, system, messages })
+    body: JSON.stringify({ model, max_tokens: maxTokens, system, messages })
   });
   const data = await res.json();
   if (!res.ok) {
@@ -63,6 +72,7 @@ async function analyze(body) {
   const text = await callClaude({
     system,
     maxTokens: 2000,
+    model: OPTS.ocrModel,
     messages: [{
       role: 'user',
       content: [
@@ -93,7 +103,7 @@ async function chat(body) {
     content: m.text
   }));
   if (!messages.length || messages[0].role !== 'user') messages.unshift({ role: 'user', content: '(대화 시작)' });
-  const text = await callClaude({ system, messages, maxTokens: 600 });
+  const text = await callClaude({ system, messages, maxTokens: 600, model: OPTS.chatModel });
   return parseJson(text);
 }
 
@@ -110,12 +120,45 @@ async function report(body) {
     '"overused":{"word":"아이가 자주 쓴 쉬운 단어(없으면 빈 문자열)","alternatives":["대신 쓸 말 3개"]},' +
     '"comprehension":"내용 이해 정도 한국어 한 문장",' +
     '"nextTip":"다음 북토킹을 위한 한국어 팁 한 문장"}';
-  const text = await callClaude({ system, messages: [{ role: 'user', content: prompt }], maxTokens: 1200 });
+  const text = await callClaude({ system, messages: [{ role: 'user', content: prompt }], maxTokens: 1200, model: OPTS.chatModel });
   return parseJson(text);
 }
 
+// 4) 도란이 목소리: 영어 문장 → mp3 (OpenAI)
+async function tts(body) {
+  const text = String(body.text || '').slice(0, 600);
+  if (!text) throw new Error('읽을 문장이 없어요');
+  const res = await fetch(TTS_URL, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', authorization: 'Bearer ' + OPTS.openaiKey },
+    body: JSON.stringify({
+      model: OPTS.ttsModel || 'gpt-4o-mini-tts',
+      voice: OPTS.ttsVoice || 'coral',
+      input: text,
+      instructions: 'You are Doran, a warm and friendly English reading tutor for Korean elementary school children. Speak clearly, a little slowly, cheerfully, with natural American pronunciation.',
+      response_format: 'mp3'
+    })
+  });
+  if (!res.ok) {
+    let msg = 'OpenAI 음성 오류 ' + res.status;
+    try { const j = await res.json(); if (j.error && j.error.message) msg = j.error.message; } catch (e) {}
+    throw new Error(msg);
+  }
+  const buf = Buffer.from(await res.arrayBuffer());
+  return { audio: buf.toString('base64'), mime: 'audio/mpeg' };
+}
+
 async function handleBookTalk(body, options) {
-  OPTS = Object.assign({ model: DEFAULT_MODEL }, options || {});
+  const o = options || {};
+  OPTS = Object.assign({}, o, {
+    ocrModel: o.model || o.ocrModel || DEFAULT_OCR_MODEL,
+    chatModel: o.model || o.chatModel || DEFAULT_CHAT_MODEL
+  });
+  if (body.task === 'config') return { tts: !!OPTS.openaiKey };
+  if (body.task === 'tts') {
+    if (!OPTS.openaiKey) throw new Error('서버에 OPENAI_API_KEY가 설정되지 않았어요');
+    return tts(body);
+  }
   if (!OPTS.apiKey) throw new Error('서버에 ANTHROPIC_API_KEY가 설정되지 않았어요');
   if (body.task === 'analyze') return analyze(body);
   if (body.task === 'chat') return chat(body);

@@ -12,6 +12,7 @@
 | `booktalk/core/api.js` | 서버 호출 | 그대로 복사 |
 | `booktalk/core/store.js` | 세션 저장 (`booktalk.<아이id>.sessions`) | 그대로 복사, 필요하면 storage 어댑터 교체 |
 | `booktalk/core/stats.js` | 단어·문장 계산, 주간·월간·연간 집계 | 그대로 복사 |
+| `booktalk/core/voice.js` | 도란이 목소리 (OpenAI 음성, 없으면 브라우저 음성) | 그대로 복사 |
 | `booktalk/ui/App.dc.html` | 화면 원본 | 하루5분 화면 방식(React 등)에 맞게 옮김 |
 | `api/booktalk.js` | Vercel 어댑터 | 하루5분 서버 방식에 맞게 몇 줄만 작성 |
 | `index.html`, `scripts/` | 북이랑 단독 앱 껍데기 | 옮기지 않음 |
