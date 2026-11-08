@@ -26,12 +26,14 @@ body{{display:block;background:#FFFFFF !important}}
 </head>
 <body>
 <div id="app"></div>
-<!-- 북토킹 모듈 core: 호스트 앱에 넣을 때는 window.BookTalkHost 를 먼저 정의한 뒤 이 5개를 로드 -->
+<!-- 북토킹 모듈 core: 호스트 앱에 넣을 때는 window.BookTalkHost 를 먼저 정의한 뒤 이 7개를 로드 -->
 <script src="booktalk/core/host.js"></script>
 <script src="booktalk/core/api.js"></script>
 <script src="booktalk/core/store.js"></script>
 <script src="booktalk/core/stats.js"></script>
 <script src="booktalk/core/voice.js"></script>
+<script src="booktalk/core/listen.js"></script>
+<script src="booktalk/core/topics.js"></script>
 <template id="tpl">
 {body.strip()}
 </template>

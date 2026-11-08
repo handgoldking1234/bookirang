@@ -13,6 +13,8 @@
 | `booktalk/core/store.js` | 세션 저장 (`booktalk.<아이id>.sessions`) | 그대로 복사, 필요하면 storage 어댑터 교체 |
 | `booktalk/core/stats.js` | 단어·문장 계산, 주간·월간·연간 집계 | 그대로 복사 |
 | `booktalk/core/voice.js` | 도란이 목소리 (OpenAI 음성, 없으면 브라우저 음성) | 그대로 복사 |
+| `booktalk/core/listen.js` | 아이 말 알아듣기 (녹음 → OpenAI 음성 인식, 없으면 브라우저 인식). 녹음은 글자로 바꾼 뒤 버림 | 그대로 복사 |
+| `booktalk/core/topics.js` | 오늘의 주제 28개, 학년별 교과서 단원 | 그대로 복사, `BookTalkHost.topics` / `BookTalkHost.textbook`으로 바꿔 넣기 가능 |
 | `booktalk/ui/App.dc.html` | 화면 원본 | 하루5분 화면 방식(React 등)에 맞게 옮김 |
 | `api/booktalk.js` | Vercel 어댑터 | 하루5분 서버 방식에 맞게 몇 줄만 작성 |
 | `index.html`, `scripts/` | 북이랑 단독 앱 껍데기 | 옮기지 않음 |
@@ -49,6 +51,10 @@ window.BookTalkHost = {
   "id": 1794125000000,
   "date": "2026-11-08",
   "title": "The Singing Whales",
+  "source": "book",            // book | topic | textbook | novel
+  "topic": "고래가 노래하는 이유",
+  "goals": [{ "en": "I think ... because ...", "ko": "...", "used": true }],
+  "koreanTurns": 1,           // 한국어로 말한 뒤 영어로 바꿔 본 횟수
   "stats": {
     "total": 112, "unique": 58, "sentences": 18, "turns": 6, "avg": 6.2,
     "ratio": 38, "minutes": 12, "hints": 1, "self": 83, "ttr": 52,
@@ -70,6 +76,8 @@ create table booktalk_sessions (
   child_id uuid not null,
   date date not null,
   title text,
+  source text default 'book',   -- book | topic | textbook | novel
+  goals jsonb,
   stats jsonb not null,
   report jsonb,
   created_at timestamptz default now()

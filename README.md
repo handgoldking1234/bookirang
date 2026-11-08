@@ -9,7 +9,7 @@
 | 파일 | 역할 |
 | --- | --- |
 | `booktalk/server/handler.js` | Claude 호출 로직 (사진 분석·대화·리포트) — 어떤 서버에서도 재사용 |
-| `booktalk/core/*.js` | 호스트 설정, 서버 호출, 세션 저장, 통계 계산 — 화면과 무관 |
+| `booktalk/core/*.js` | 호스트 설정, 서버 호출, 세션 저장, 통계 계산, 목소리·음성 인식, 프리토킹 소재 — 화면과 무관 |
 | `booktalk/ui/App.dc.html` | 화면·화면 로직 원본 |
 | `api/booktalk.js` | Vercel 어댑터 (`/api/booktalk`) |
 | `index.html` | 북이랑 단독 앱 (빌드 결과물, 직접 수정하지 않기) |
@@ -31,11 +31,12 @@
 | 이름 | 필수 | 설명 |
 | --- | --- | --- |
 | `ANTHROPIC_API_KEY` | 필수 | Anthropic Console에서 발급한 키 |
-| `OPENAI_API_KEY` | 선택 | 넣으면 도란이 목소리가 OpenAI 음성(자연스러운 목소리)으로 바뀜. 없으면 브라우저 목소리 |
+| `OPENAI_API_KEY` | 선택 | 넣으면 도란이 목소리(OpenAI 음성)와 아이 말 알아듣기(OpenAI 음성 인식, 한국어 섞어 말해도 됨)가 켜짐. 없으면 브라우저 기능(영어만) |
 | `CLAUDE_MODEL_OCR` | 선택 | 사진 글 읽기 모델, 기본 `claude-sonnet-5-5` |
 | `CLAUDE_MODEL_CHAT` | 선택 | 대화·리포트 모델, 기본 `claude-haiku-5-5` |
 | `CLAUDE_MODEL` | 선택 | 넣으면 위 두 작업 모두 이 모델 사용 |
 | `OPENAI_TTS_MODEL`, `OPENAI_TTS_VOICE` | 선택 | 기본 `gpt-4o-mini-tts`, `coral` |
+| `OPENAI_STT_MODEL` | 선택 | 기본 `gpt-4o-mini-transcribe` |
 
 2. 다시 배포(Redeploy)
 
@@ -46,3 +47,15 @@ API 키는 서버 함수에서만 쓰이고 브라우저에는 노출되지 않�
 ```bash
 python3 scripts/build.py booktalk/ui/App.dc.html scripts/runtime.js index.html
 ```
+
+## 도란도란 프리토킹 (주제 고정 방식)
+
+대화 소재는 4가지예요: 책 올리기 · 오늘의 주제 · 교과서 단원 · 원서.
+
+1. `plan` — 대화 전에 질문 6개(마음 열기 1 → 내용 확인 2 → 생각 말하기 3)와 목표 표현 3개를 먼저 정해요.
+2. `chat` — 도란이는 계획표의 **현재 질문**만 보고 답해요. 몇 번째 질문인지(`step`)와 몇 번 벗어났는지(`off`)는 서버가 정해요.
+   - 주제에서 두 번 연속 벗어나면 서버가 다음 질문으로 넘겨요.
+   - AI에게는 최근 3번 주고받은 대화와 아이가 한 말 요약만 넘겨서, 대화가 길어져도 헛소리가 늘지 않아요.
+   - 답은 3문장 이내로 다듬고, 넘어가는데 질문이 빠지면 다음 질문을 붙여요.
+   - 아이가 한국어로 말하면 뜻을 영어로 바꿔 보여 주고(`korean: true`) 따라 말하게 해요.
+3. 리포트·통계 — 목표 표현 사용 여부, 소재별 대화 수, 목표 표현 성공률이 남아요.
