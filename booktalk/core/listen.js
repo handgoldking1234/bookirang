@@ -12,12 +12,14 @@
   var rec = null, chunks = [], stream = null, timer = null, sr = null, opts = null;
   var MAX_MS = 30000;
 
+  // 서버 설정 확인: 성공한 결과만 기억한다 (네트워크 실패는 다음에 다시 확인)
   function check() {
     if (serverStt !== null) return Promise.resolve(serverStt);
     return BT.api.call({ task: 'config' })
       .then(function (c) { serverStt = !!c.stt; return serverStt; })
-      .catch(function () { serverStt = false; return false; });
+      .catch(function () { return false; });
   }
+  setTimeout(check, 0); // 첫 버튼을 누르기 전에 미리 확인해 둔다
 
   function canRecord() {
     return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
@@ -40,6 +42,7 @@
 
   function cleanup() {
     clearTimeout(timer); timer = null;
+    if (sr) { try { sr.onend = sr.onresult = sr.onerror = null; sr.abort(); } catch (e) {} sr = null; }
     if (stream) { stream.getTracks().forEach(function (t) { t.stop(); }); stream = null; }
     rec = null; chunks = [];
   }
@@ -82,17 +85,19 @@
     if (!SR) { fail('이 브라우저는 음성 인식을 지원하지 않아요. 아래 칸에 써 주세요.'); return; }
     sr = new SR();
     sr.lang = 'en-US'; sr.interimResults = false; sr.maxAlternatives = 1;
-    sr.onresult = function (ev) { var t = ev.results[0][0].transcript; opts.onText && opts.onText(t); };
-    sr.onerror = function (ev) { fail(ev.error === 'not-allowed' ? '마이크 사용을 허용해 주세요.' : '잘 듣지 못했어요. 다시 말해 볼까?'); };
-    sr.onend = function () { sr = null; state('idle'); };
+    var got = false;
+    sr.onresult = function (ev) { got = true; var t = ev.results[0][0].transcript; cleanup(); state('idle'); opts.onText && opts.onText(t); };
+    sr.onerror = function (ev) { fail(ev.error === 'not-allowed' || ev.error === 'service-not-allowed' ? '마이크 사용을 허용해 주세요.' : '잘 듣지 못했어요. 다시 말해 볼까?'); };
+    sr.onend = function () { if (!got) { cleanup(); state('idle'); } };
     state('listening');
-    sr.start();
+    timer = setTimeout(function () { fail('잘 듣지 못했어요. 다시 눌러서 말해 볼까?'); }, 15000); // 끝 신호가 안 와도 버튼이 멈추지 않게
+    try { sr.start(); } catch (e) { fail('음성 인식을 시작하지 못했어요. 아래 칸에 써 주세요.'); }
   }
 
   BT.listen = {
     start: function (o) {
       opts = o || {};
-      if (rec || sr) return;
+      if (rec || sr) cleanup(); // 이전 녹음이 끝나지 않고 남아 있으면 정리하고 새로 시작
       if (BT.voice) BT.voice.stop();
       check().then(function (ok) { if (ok && canRecord()) startRecording(); else startBrowser(); });
     },
@@ -101,6 +106,8 @@
       if (sr) { try { sr.stop(); } catch (e) {} }
     },
     isActive: function () { return !!(rec || sr); },
-    isNatural: function () { return serverStt === true; }
+    isNatural: function () { return serverStt === true; },
+    canRecord: canRecord,
+    hasBrowserStt: function () { return !!(window.SpeechRecognition || window.webkitSpeechRecognition); }
   };
 })();

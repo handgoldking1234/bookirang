@@ -24,43 +24,93 @@
   }
   document.addEventListener('pointerdown', unlock, { once: true, capture: true });
 
-  function browserSay(text) {
+  var token = 0;          // 새로 말하기 시작하면 이전 말하기(또는 늦게 도착한 음성)를 무시한다
+  var onDone = null;      // 지금 말하는 문장이 끝나면 부를 함수
+  function finish(t) { if (t !== token) return; var f = onDone; onDone = null; if (f) f(); }
+  player.addEventListener('ended', function () { finish(token); });
+  player.addEventListener('error', function () { if (player.src.indexOf('SUQzBAAAAAAAI1RTU0U') < 0) finish(token); });
+
+  function browserSay(text, t) {
     try {
-      if (!window.speechSynthesis) return;
+      if (!window.speechSynthesis) { finish(t); return; }
       window.speechSynthesis.cancel();
       var u = new SpeechSynthesisUtterance(text);
       u.lang = 'en-US'; u.rate = 0.92;
       u.onstart = function () { emit('speak'); };
-      u.onend = u.onerror = function () { emit('quiet'); };
+      u.onend = u.onerror = function () { emit('quiet'); finish(t); };
       window.speechSynthesis.speak(u);
-    } catch (e) {}
+    } catch (e) { finish(t); }
   }
 
   function play(src) {
-    try { player.pause(); player.src = src; var p = player.play(); if (p && p.catch) p.catch(function () {}); } catch (e) {}
+    try {
+      player.pause(); player.src = src;
+      var p = player.play();
+      if (p && p.catch) p.catch(function () { finish(token); }); // 자동 재생이 막혀도 다음 단계는 진행
+    } catch (e) { finish(token); }
+  }
+
+  // 긴 글은 문장 단위로 600자 안쪽 조각으로 나눈다 (서버 음성 한 번에 600자까지)
+  function chunks(text) {
+    var sents = String(text).replace(/\s+/g, ' ').match(/[^.!?]+[.!?]+["')\]]*|[^.!?]+$/g) || [];
+    var out = [], cur = '';
+    sents.forEach(function (x) {
+      x = x.trim(); if (!x) return;
+      if ((cur + ' ' + x).length > 500 && cur) { out.push(cur); cur = x; } else cur = cur ? cur + ' ' + x : x;
+    });
+    if (cur) out.push(cur);
+    return out.map(function (c) { return c.length > 590 ? c.slice(0, 590) : c; });
+  }
+
+  function speakOne(text, t, done) {
+    onDone = done || null;
+    if (cache[text]) { play(cache[text]); return; }
+    check().then(function (ok) {
+      if (t !== token) return;
+      if (!ok) { browserSay(text, t); return; }
+      BT.api.call({ task: 'tts', text: text })
+        .then(function (r) { cache[text] = 'data:' + (r.mime || 'audio/mpeg') + ';base64,' + r.audio; if (t === token) play(cache[text]); })
+        .catch(function () { if (t === token) browserSay(text, t); });
+    });
+  }
+
+  function prefetch(text) {
+    if (cache[text] || natural !== true) return;
+    BT.api.call({ task: 'tts', text: text }).then(function (r) { cache[text] = 'data:' + (r.mime || 'audio/mpeg') + ';base64,' + r.audio; }).catch(function () {});
   }
 
   function check() {
     if (natural !== null) return Promise.resolve(natural);
     return BT.api.call({ task: 'config' })
       .then(function (c) { natural = !!c.tts; return natural; })
-      .catch(function () { natural = false; return false; });
+      .catch(function () { return false; });
   }
 
   BT.voice = {
-    say: function (text) {
+    // 한 문장 말하기. done: 다 말하면(또는 멈추면 안 부름) 호출
+    say: function (text, done) {
       text = String(text || '').trim();
-      if (!text) return;
+      if (!text) { if (done) done(); return; }
       BT.voice.stop();
-      if (cache[text]) { play(cache[text]); return; }
-      check().then(function (ok) {
-        if (!ok) { browserSay(text); return; }
-        BT.api.call({ task: 'tts', text: text })
-          .then(function (r) { cache[text] = 'data:' + (r.mime || 'audio/mpeg') + ';base64,' + r.audio; play(cache[text]); })
-          .catch(function () { browserSay(text); });
-      });
+      var t = ++token;
+      if (text.length > 590) { BT.voice.read(text, done); return; }
+      speakOne(text, t, done);
+    },
+    // 긴 글 읽어 주기: 조각을 차례로 읽고, 다 읽으면 done
+    read: function (text, done) {
+      BT.voice.stop();
+      var t = ++token, list = chunks(text), i = 0;
+      var next = function () {
+        if (t !== token) return;
+        if (i >= list.length) { if (done) done(); return; }
+        var c = list[i++];
+        if (list[i]) prefetch(list[i]); // 다음 조각을 미리 만들어 끊김을 줄인다
+        speakOne(c, t, next);
+      };
+      next();
     },
     stop: function () {
+      token++; onDone = null;
       emit('quiet');
       try { player.pause(); } catch (e) {}
       try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch (e) {}

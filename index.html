@@ -60,14 +60,14 @@ body{display:block;background:#FFFFFF !important}
 <span style="font-size: 24px; font-weight: 900; letter-spacing: -1px; color: #0E6B2C">{{ appName }}</span>
 </span>
 <span style="display: flex; align-items: center; gap: 8px">
-<div style="display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: #FFF0E3; font-size: 13px; font-weight: 700; color: #B4530B">
+<div style="display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: #FFF0E3; font-size: 15px; font-weight: 700; color: #B4530B">
 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>5일 연속
 </div>
-<button aria-label="내 정보" onClick="{{ goMe }}" style="width: 40px; height: 40px; border: 0; border-radius: 50%; background: #0E6B2C; color: #FFFFFF; font-size: 15px; font-weight: 900; display: flex; align-items: center; justify-content: center">{{ childInit }}</button>
+<button aria-label="내 정보" onClick="{{ goMe }}" style="width: 40px; height: 40px; border: 0; border-radius: 50%; background: #0E6B2C; color: #FFFFFF; font-size: 17px; font-weight: 900; display: flex; align-items: center; justify-content: center">{{ childInit }}</button>
 </span>
 </div>
 <div style="display: flex; flex-direction: column; gap: 4px">
-<span style="font-size: 15px; color: #5C6B60">안녕, {{ childName }}!</span>
+<span style="font-size: 17px; color: #5C6B60">안녕, {{ childName }}!</span>
 <b style="font-size: 26px; line-height: 1.3; letter-spacing: -0.5px">오늘은 어떤 이야기를<br>읽었어?</b>
 </div>
 <button onClick="{{ goBookTalk }}" style="border: 0; background: #0E6B2C; color: #FFFFFF; border-radius: 24px; padding: 24px 22px; display: flex; align-items: center; gap: 18px; text-align: left">
@@ -76,29 +76,29 @@ body{display:block;background:#FFFFFF !important}
 </span>
 <span style="display: flex; flex-direction: column; gap: 4px">
 <b style="font-size: 21px">북토킹 시작</b>
-<span style="font-size: 14px; color: #D3E9D9">책 사진을 올리고 {{ tutorName }}랑 바로 이야기해요</span>
+<span style="font-size: 16px; color: #D3E9D9">책 사진을 올리고 {{ tutorName }}랑 바로 이야기해요</span>
 </span>
 </button>
 
 <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
 <button onClick="{{ goTopic }}" style="border: 0; background: #E8650A; color: #FFFFFF; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 8px; text-align: left; min-height: 132px">
-<span style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; color: #FFFFFF"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>오늘의 주제</span>
-<b style="font-size: 17px; line-height: 1.3; font-family: 'Plus Jakarta Sans', sans-serif; color: #FFFFFF">{{ todayEn }}</b>
-<span style="font-size: 12px; color: #FFFFFF">{{ todayKo }} · 프리토킹</span>
+<span style="display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 800; color: #FFFFFF"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>오늘의 주제</span>
+<b style="font-size: 19px; line-height: 1.3; font-family: 'Plus Jakarta Sans', sans-serif; color: #FFFFFF">{{ todayEn }}</b>
+<span style="font-size: 14px; color: #FFFFFF">{{ todayKo }} · 프리토킹</span>
 </button>
 <button onClick="{{ goPick }}" style="border: 1px solid #CFDDF8; background: #F4F8FF; color: #16201A; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 8px; text-align: left; min-height: 132px">
-<span style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; color: #1A56C4"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>교과서 · 원서</span>
-<b style="font-size: 17px; line-height: 1.3">단원이나 책을<br>골라서 이야기</b>
-<span style="font-size: 12px; color: #5C6B60">{{ childGrade }} 교과서 표현</span>
+<span style="display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 800; color: #1A56C4"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>교과서 · 원서</span>
+<b style="font-size: 19px; line-height: 1.3">단원이나 책을<br>골라서 이야기</b>
+<span style="font-size: 14px; color: #5C6B60">{{ childGrade }} 교과서 표현</span>
 </button>
 </div>
 
 <button onClick="{{ goPlan }}" style="border: 1px solid #CFDDF8; background: #F4F8FF; color: #16201A; border-radius: 20px; padding: 16px; display: flex; align-items: center; gap: 14px; text-align: left">
-<span style="width: 56px; height: 72px; flex: none; border-radius: 8px; background: #1F6FEB; color: #FFF; display: flex; align-items: flex-end; padding: 6px; font-size: 11px; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif">Day 5</span>
+<span style="width: 56px; height: 72px; flex: none; border-radius: 8px; background: #1F6FEB; color: #FFF; display: flex; align-items: flex-end; padding: 6px; font-size: 13px; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif">Day 5</span>
 <span style="flex: 1; display: flex; flex-direction: column; gap: 3px">
-<span style="font-size: 12px; font-weight: 700; color: #1A56C4">오늘의 추천 책 · 2주 플랜 5/14</span>
-<b style="font-size: 16px; font-family: 'Plus Jakarta Sans', sans-serif">Mercy Watson to the Rescue</b>
-<span style="font-size: 12px; color: #5C6B60">Lv.3 · 약 15분 분량</span>
+<span style="font-size: 14px; font-weight: 700; color: #1A56C4">오늘의 추천 책 · 2주 플랜 5/14</span>
+<b style="font-size: 18px; font-family: 'Plus Jakarta Sans', sans-serif">Mercy Watson to the Rescue</b>
+<span style="font-size: 14px; color: #5C6B60">Lv.3 · 약 15분 분량</span>
 </span>
 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5C6B60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
 </button>
@@ -108,28 +108,28 @@ body{display:block;background:#FFFFFF !important}
 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>
 </span>
 <span style="flex: 1; display: flex; flex-direction: column; gap: 2px">
-<b style="font-size: 16px">어제 고친 표현 다시 말하기</b>
-<span style="font-size: 13px; color: #5C6B60">3문장 · 1분이면 끝나요</span>
+<b style="font-size: 18px">어제 고친 표현 다시 말하기</b>
+<span style="font-size: 15px; color: #5C6B60">3문장 · 1분이면 끝나요</span>
 </span>
 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5C6B60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
 </button>
 
 <div style="display: flex; flex-direction: column; gap: 12px">
-<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 18px">이번 주</b><button onClick="{{ goStats }}" style="border: 0; background: none; color: #0E6B2C; font-size: 13px; font-weight: 700; padding: 8px 0">성장 보기</button></div>
+<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 20px">이번 주</b><button onClick="{{ goStats }}" style="border: 0; background: none; color: #0E6B2C; font-size: 15px; font-weight: 700; padding: 8px 0">성장 보기</button></div>
 <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
-<div style="background: #F4F6F4; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #5C6B60">북토킹</span><b style="font-size: 24px; color: #0E6B2C">4회</b></div>
-<div style="background: #F4F6F4; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #5C6B60">말한 문장</span><b style="font-size: 24px; color: #0E6B2C">86</b></div>
-<div style="background: #F4F6F4; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #5C6B60">새 단어</span><b style="font-size: 24px; color: #0E6B2C">23</b></div>
+<div style="background: #F4F6F4; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 14px; color: #5C6B60">북토킹</span><b style="font-size: 24px; color: #0E6B2C">4회</b></div>
+<div style="background: #F4F6F4; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 14px; color: #5C6B60">말한 문장</span><b style="font-size: 24px; color: #0E6B2C">86</b></div>
+<div style="background: #F4F6F4; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 14px; color: #5C6B60">새 단어</span><b style="font-size: 24px; color: #0E6B2C">23</b></div>
 </div>
 </div>
 <div style="display: flex; flex-direction: column; gap: 12px">
-<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 18px">최근 읽은 책</b><button onClick="{{ goShelf }}" style="border: 0; background: none; color: #0E6B2C; font-size: 13px; font-weight: 700; padding: 8px 0">책장</button></div>
+<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 20px">최근 읽은 책</b><button onClick="{{ goShelf }}" style="border: 0; background: none; color: #0E6B2C; font-size: 15px; font-weight: 700; padding: 8px 0">책장</button></div>
 <div class="scroll" style="display: flex; gap: 12px; overflow-x: auto">
 <sc-for list="{{ recent }}" as="b" hint-placeholder-count="3">
 <button onClick="{{ goReport }}" style="border: 0; flex: none; width: 132px; background: #F4F6F4; border-radius: 14px; padding: 10px; display: flex; flex-direction: column; gap: 8px; text-align: left; color: #16201A">
 <span style="{{ b.cover }}">{{ b.short }}</span>
-<b style="font-size: 13px; line-height: 1.35">{{ b.title }}</b>
-<span style="font-size: 11px; color: #5C6B60">{{ b.date }}</span>
+<b style="font-size: 15px; line-height: 1.35">{{ b.title }}</b>
+<span style="font-size: 13px; color: #5C6B60">{{ b.date }}</span>
 </button>
 </sc-for>
 </div>
@@ -142,61 +142,61 @@ body{display:block;background:#FFFFFF !important}
 <div class="scroll" style="flex: 1; overflow-y: auto; padding: 0 20px 24px; display: flex; flex-direction: column; gap: 16px">
 <div class="topbar" style="padding-top: 20px; display: flex; flex-direction: column; gap: 6px">
 <b style="font-size: 24px; letter-spacing: -0.5px">{{ childName }} 맞춤 2주 플랜</b>
-<span style="font-size: 13px; color: #5C6B60; line-height: 1.6">최근 북토킹 4번의 문장 길이, 어휘, 이해도를 보고 하루 한 권씩 골랐어요.</span>
+<span style="font-size: 15px; color: #5C6B60; line-height: 1.6">최근 북토킹 4번의 문장 길이, 어휘, 이해도를 보고 하루 한 권씩 골랐어요.</span>
 </div>
 <div style="display: flex; gap: 8px; flex-wrap: wrap">
-<span style="padding: 6px 12px; border-radius: 999px; background: #0E6B2C; color: #FFF; font-size: 13px; font-weight: 700">Lv.3 중급 리더</span>
-<span style="padding: 6px 12px; border-radius: 999px; background: #E8F0FE; color: #1A56C4; font-size: 13px; font-weight: 700">AR 2~3 수준</span>
-<span style="padding: 6px 12px; border-radius: 999px; background: #FFF0E3; color: #B4530B; font-size: 13px; font-weight: 700">4/14권 완료</span>
+<span style="padding: 6px 12px; border-radius: 999px; background: #0E6B2C; color: #FFF; font-size: 15px; font-weight: 700">Lv.3 중급 리더</span>
+<span style="padding: 6px 12px; border-radius: 999px; background: #E8F0FE; color: #1A56C4; font-size: 15px; font-weight: 700">AR 2~3 수준</span>
+<span style="padding: 6px 12px; border-radius: 999px; background: #FFF0E3; color: #B4530B; font-size: 15px; font-weight: 700">4/14권 완료</span>
 </div>
 <div style="border: 1px solid #E3E8E4; border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
-<div style="display: flex; justify-content: space-between; font-size: 13px"><b>1주차</b><span style="color: #5C6B60">11월 4일 – 10일</span></div>
+<div style="display: flex; justify-content: space-between; font-size: 15px"><b>1주차</b><span style="color: #5C6B60">11월 4일 – 10일</span></div>
 <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px">
 <sc-for list="{{ week1 }}" as="d" hint-placeholder-count="7"><span style="{{ d.style }}">{{ d.n }}</span></sc-for>
 </div>
-<div style="display: flex; justify-content: space-between; font-size: 13px; padding-top: 4px"><b>2주차</b><span style="color: #5C6B60">11월 11일 – 17일</span></div>
+<div style="display: flex; justify-content: space-between; font-size: 15px; padding-top: 4px"><b>2주차</b><span style="color: #5C6B60">11월 11일 – 17일</span></div>
 <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px">
 <sc-for list="{{ week2 }}" as="d" hint-placeholder-count="7"><span style="{{ d.style }}">{{ d.n }}</span></sc-for>
 </div>
-<div style="display: flex; gap: 14px; font-size: 11px; color: #5C6B60; padding-top: 2px">
+<div style="display: flex; gap: 14px; font-size: 13px; color: #5C6B60; padding-top: 2px">
 <span style="display: inline-flex; align-items: center; gap: 4px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #0E6B2C"></span>완료</span>
 <span style="display: inline-flex; align-items: center; gap: 4px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #1F6FEB"></span>오늘</span>
 <span style="display: inline-flex; align-items: center; gap: 4px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #EEF1EE"></span>예정</span>
 </div>
 </div>
 <div style="background: #F4F8FF; border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
-<span style="font-size: 12px; font-weight: 700; color: #1A56C4">DAY 5 · 오늘의 책</span>
+<span style="font-size: 14px; font-weight: 700; color: #1A56C4">DAY 5 · 오늘의 책</span>
 <div style="display: flex; gap: 14px">
-<span style="width: 72px; height: 96px; flex: none; border-radius: 8px; background: #1F6FEB; color: #FFF; display: flex; align-items: flex-end; padding: 8px; font-weight: 800; font-size: 13px; font-family: 'Plus Jakarta Sans', sans-serif">Mercy</span>
+<span style="width: 72px; height: 96px; flex: none; border-radius: 8px; background: #1F6FEB; color: #FFF; display: flex; align-items: flex-end; padding: 8px; font-weight: 800; font-size: 15px; font-family: 'Plus Jakarta Sans', sans-serif">Mercy</span>
 <div style="display: flex; flex-direction: column; gap: 4px">
-<b style="font-size: 17px; font-family: 'Plus Jakarta Sans', sans-serif">Mercy Watson to the Rescue</b>
-<span style="font-size: 12px; color: #5C6B60">챕터북 · 동물 · 유머</span>
-<span style="font-size: 12px; color: #5C6B60">추천 이유: 지난주 동물 이야기에서 대화가 가장 길었어요</span>
+<b style="font-size: 19px; font-family: 'Plus Jakarta Sans', sans-serif">Mercy Watson to the Rescue</b>
+<span style="font-size: 14px; color: #5C6B60">챕터북 · 동물 · 유머</span>
+<span style="font-size: 14px; color: #5C6B60">추천 이유: 지난주 동물 이야기에서 대화가 가장 길었어요</span>
 </div>
 </div>
 <div style="display: flex; gap: 6px; flex-wrap: wrap">
-<span style="padding: 5px 10px; border-radius: 999px; background: #FFF; color: #1A56C4; font-size: 12px; font-weight: 700">미리 볼 단어</span>
-<span style="padding: 5px 10px; border-radius: 999px; background: #FFF; font-size: 12px">rescue</span>
-<span style="padding: 5px 10px; border-radius: 999px; background: #FFF; font-size: 12px">porcine</span>
-<span style="padding: 5px 10px; border-radius: 999px; background: #FFF; font-size: 12px">toast</span>
+<span style="padding: 5px 10px; border-radius: 999px; background: #FFF; color: #1A56C4; font-size: 14px; font-weight: 700">미리 볼 단어</span>
+<span style="padding: 5px 10px; border-radius: 999px; background: #FFF; font-size: 14px">rescue</span>
+<span style="padding: 5px 10px; border-radius: 999px; background: #FFF; font-size: 14px">porcine</span>
+<span style="padding: 5px 10px; border-radius: 999px; background: #FFF; font-size: 14px">toast</span>
 </div>
-<button onClick="{{ goBookTalk }}" style="border: 0; min-height: 52px; border-radius: 999px; background: #0E6B2C; color: #FFF; font-size: 16px; font-weight: 800">다 읽었으면 북토킹 시작</button>
+<button onClick="{{ goBookTalk }}" style="border: 0; min-height: 52px; border-radius: 999px; background: #0E6B2C; color: #FFF; font-size: 18px; font-weight: 800">다 읽었으면 북토킹 시작</button>
 </div>
 <div style="display: flex; flex-direction: column; gap: 4px">
-<b style="font-size: 15px; padding-bottom: 6px">2주 도서 목록</b>
+<b style="font-size: 17px; padding-bottom: 6px">2주 도서 목록</b>
 <sc-for list="{{ plan }}" as="p" hint-placeholder-count="5">
 <div style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid #EEF1EE">
 <span style="{{ p.badge }}">{{ p.day }}</span>
-<span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 14px; font-family: 'Plus Jakarta Sans', sans-serif">{{ p.title }}</b><span style="font-size: 12px; color: #5C6B60">{{ p.genre }}</span></span>
+<span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 16px; font-family: 'Plus Jakarta Sans', sans-serif">{{ p.title }}</b><span style="font-size: 14px; color: #5C6B60">{{ p.genre }}</span></span>
 <span style="{{ p.stateStyle }}">{{ p.state }}</span>
 </div>
 </sc-for>
 </div>
 <div style="display: flex; flex-direction: column; gap: 8px">
-<span style="font-size: 13px; color: #5C6B60; text-align: center">난이도가 맞지 않나요? 다음 추천에 반영해요</span>
+<span style="font-size: 15px; color: #5C6B60; text-align: center">난이도가 맞지 않나요? 다음 추천에 반영해요</span>
 <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
-<button style="border: 1px solid #E3E8E4; background: #FFF; min-height: 48px; border-radius: 999px; font-size: 14px; font-weight: 700; color: #16201A">너무 쉬워요</button>
-<button style="border: 1px solid #E3E8E4; background: #FFF; min-height: 48px; border-radius: 999px; font-size: 14px; font-weight: 700; color: #16201A">너무 어려워요</button>
+<button style="border: 1px solid #E3E8E4; background: #FFF; min-height: 48px; border-radius: 999px; font-size: 16px; font-weight: 700; color: #16201A">너무 쉬워요</button>
+<button style="border: 1px solid #E3E8E4; background: #FFF; min-height: 48px; border-radius: 999px; font-size: 16px; font-weight: 700; color: #16201A">너무 어려워요</button>
 </div>
 </div>
 </div>
@@ -207,59 +207,65 @@ body{display:block;background:#FFFFFF !important}
 <div class="scroll" style="flex: 1; overflow-y: auto; padding: 0 20px 28px; display: flex; flex-direction: column; gap: 18px">
 <div class="topbar" style="padding-top: 16px; display: flex; align-items: center; gap: 8px">
 <button aria-label="뒤로" onClick="{{ goHome }}" style="width: 44px; height: 44px; border: 0; border-radius: 50%; background: #F4F6F4; color: #16201A; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
-<b style="font-size: 17px">내 정보</b>
+<b style="font-size: 19px">내 정보</b>
 </div>
 <div style="display: flex; align-items: center; gap: 14px; background: #F4F6F4; border-radius: 20px; padding: 16px">
 <span style="width: 56px; height: 56px; flex: none; border-radius: 50%; background: #0E6B2C; color: #FFFFFF; font-size: 22px; font-weight: 900; display: flex; align-items: center; justify-content: center">{{ childInit }}</span>
-<span style="display: flex; flex-direction: column; gap: 2px"><b style="font-size: 18px">{{ childName }}</b><span style="font-size: 13px; color: #5C6B60">{{ childMeta }}</span></span>
+<span style="display: flex; flex-direction: column; gap: 2px"><b style="font-size: 20px">{{ childName }}</b><span style="font-size: 15px; color: #5C6B60">{{ childMeta }}</span></span>
 </div>
 <sc-if value="{{ meLocked }}" hint-placeholder-val="{{ false }}">
-<div style="background: #F4F8FF; color: #1A56C4; border-radius: 14px; padding: 12px 14px; font-size: 14px; line-height: 1.6">이름·학년은 {{ hostAppName }} 계정 정보를 써요. 바꾸려면 {{ hostAppName }} 설정에서 바꿔 주세요.</div>
+<div style="background: #F4F8FF; color: #1A56C4; border-radius: 14px; padding: 12px 14px; font-size: 16px; line-height: 1.6">이름·학년은 {{ hostAppName }} 계정 정보를 써요. 바꾸려면 {{ hostAppName }} 설정에서 바꿔 주세요.</div>
 </sc-if>
 <sc-if value="{{ meEditable }}" hint-placeholder-val="{{ true }}">
 <div style="display: flex; flex-direction: column; gap: 8px">
-<label for="meName" style="font-size: 14px; font-weight: 700">이름</label>
-<input id="meName" type="text" maxlength="12" value="{{ meNameVal }}" onInput="{{ typeName }}" autocomplete="off" style="min-height: 48px; border: 1px solid #E3E8E4; border-radius: 14px; padding: 0 14px; font-size: 16px; font-family: inherit">
+<label for="meName" style="font-size: 16px; font-weight: 700">이름</label>
+<input id="meName" type="text" maxlength="12" value="{{ meNameVal }}" onInput="{{ typeName }}" autocomplete="off" style="min-height: 48px; border: 1px solid #E3E8E4; border-radius: 14px; padding: 0 14px; font-size: 18px; font-family: inherit">
 </div>
 <div style="display: flex; flex-direction: column; gap: 8px">
-<span style="font-size: 14px; font-weight: 700">학년</span>
+<span style="font-size: 16px; font-weight: 700">학년</span>
 <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px">
 <sc-for list="{{ meGrades }}" as="g" hint-placeholder-count="6"><button onClick="{{ g.pick }}" style="{{ g.style }}">{{ g.name }}</button></sc-for>
 </div>
 </div>
 </sc-if>
 <div style="display: flex; flex-direction: column; gap: 8px">
-<span style="font-size: 14px; font-weight: 700">영어 레벨 <span style="font-weight: 400; color: #5C6B60">· 질문 난이도가 바뀌어요</span></span>
+<span style="font-size: 16px; font-weight: 700">영어 레벨 <span style="font-weight: 400; color: #5C6B60">· 질문 난이도가 바뀌어요</span></span>
 <sc-for list="{{ meLevels }}" as="l" hint-placeholder-count="5">
-<button onClick="{{ l.pick }}" style="{{ l.style }}"><b style="font-size: 14px; flex: none; width: 44px">Lv.{{ l.n }}</b><span style="font-size: 13px; text-align: left">{{ l.desc }}</span></button>
+<button onClick="{{ l.pick }}" style="{{ l.style }}"><b style="font-size: 16px; flex: none; width: 44px">Lv.{{ l.n }}</b><span style="font-size: 15px; text-align: left">{{ l.desc }}</span></button>
 </sc-for>
 </div>
 <div style="display: flex; flex-direction: column; gap: 8px">
-<span style="font-size: 14px; font-weight: 700">도란이 모습</span>
+<span style="font-size: 16px; font-weight: 700">도란이 모습</span>
 <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
 <sc-for list="{{ looks }}" as="k" hint-placeholder-count="2">
-<button onClick="{{ k.pick }}" aria-pressed="{{ k.on }}" style="{{ k.style }}"><img src="{{ k.src }}" alt="" style="width: 72px; height: 72px; border-radius: 50%; object-fit: cover"><span style="font-size: 14px; font-weight: 700">{{ k.name }}</span></button>
+<button onClick="{{ k.pick }}" aria-pressed="{{ k.on }}" style="{{ k.style }}"><img src="{{ k.src }}" alt="" style="width: 72px; height: 72px; border-radius: 50%; object-fit: cover"><span style="font-size: 16px; font-weight: 700">{{ k.name }}</span></button>
 </sc-for>
 </div>
 </div>
 <div style="display: flex; flex-direction: column; gap: 8px">
-<span style="font-size: 14px; font-weight: 700">대화할 때 도란이</span>
+<span style="font-size: 16px; font-weight: 700">대화할 때 도란이</span>
 <div style="display: flex; background: #F4F6F4; border-radius: 999px; padding: 4px">
 <button onClick="{{ setAvBig }}" style="{{ avBigBtn }}">크게</button>
 <button onClick="{{ setAvSmall }}" style="{{ avSmallBtn }}">작게</button>
 <button onClick="{{ setAvHide }}" style="{{ avHideBtn }}">숨김</button>
 </div>
 </div>
-<button onClick="{{ saveMe }}" style="border: 0; min-height: 54px; border-radius: 999px; background: #0E6B2C; color: #FFFFFF; font-size: 16px; font-weight: 800">저장하기</button>
-<sc-if value="{{ meSaved }}" hint-placeholder-val="{{ false }}"><span role="status" style="align-self: center; font-size: 13px; color: #0B5E25; font-weight: 700">저장했어요</span></sc-if>
+<button onClick="{{ saveMe }}" style="border: 0; min-height: 54px; border-radius: 999px; background: #0E6B2C; color: #FFFFFF; font-size: 18px; font-weight: 800">저장하기</button>
+<sc-if value="{{ meSaved }}" hint-placeholder-val="{{ false }}"><span role="status" style="align-self: center; font-size: 15px; color: #0B5E25; font-weight: 700">저장했어요</span></sc-if>
 
+<div style="border: 1px solid #E3E8E4; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 17px">연결 상태</b><button onClick="{{ recheckSvc }}" style="border: 0; background: none; color: #1A56C4; font-size: 15px; font-weight: 700; min-height: 32px">다시 확인</button></div>
+<sc-for list="{{ svcRows }}" as="r" hint-placeholder-count="4">
+<div style="display: flex; align-items: center; gap: 10px; font-size: 16px"><span style="{{ r.dot }}"></span><span style="flex: 1">{{ r.name }}</span><span style="font-size: 15px; color: #5C6B60">{{ r.state }}</span></div>
+</sc-for>
+</div>
 <div style="border: 1px solid #E3E8E4; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 8px">
-<b style="font-size: 15px">개인정보 안내</b>
-<span style="font-size: 13px; line-height: 1.7; color: #2E3A31">· 아이 목소리는 글자로 바꾼 뒤 바로 지우고 저장하지 않아요.<br>· 올린 책 사진은 글을 읽는 데만 쓰고 저장하지 않아요.<br>· 대화 기록과 리포트는 {{ storeWhere }}에 저장돼요.<br>· 만 14세 미만은 보호자 동의 후 사용해 주세요.</span>
+<b style="font-size: 17px">개인정보 안내</b>
+<span style="font-size: 15px; line-height: 1.7; color: #2E3A31">· 아이 목소리는 글자로 바꾼 뒤 바로 지우고 저장하지 않아요.<br>· 올린 책 사진은 글을 읽는 데만 쓰고 저장하지 않아요.<br>· 대화 기록과 리포트는 {{ storeWhere }}에 저장돼요.<br>· 만 14세 미만은 보호자 동의 후 사용해 주세요.</span>
 </div>
 <div style="border: 1px solid #F6D3B5; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
-<b style="font-size: 15px">기록 지우기</b>
-<span style="font-size: 13px; color: #5C6B60; line-height: 1.6">지금까지의 북토킹 기록 {{ sessionCount }}개와 리포트·통계가 모두 지워져요. 되돌릴 수 없어요.</span>
+<b style="font-size: 17px">기록 지우기</b>
+<span style="font-size: 15px; color: #5C6B60; line-height: 1.6">지금까지의 북토킹 기록 {{ sessionCount }}개와 리포트·통계가 모두 지워져요. 되돌릴 수 없어요.</span>
 <button onClick="{{ askClear }}" style="{{ clearBtnStyle }}">{{ clearBtnLabel }}</button>
 </div>
 </div>
@@ -270,7 +276,7 @@ body{display:block;background:#FFFFFF !important}
 <div class="scroll" style="flex: 1; overflow-y: auto; padding: 0 20px 24px; display: flex; flex-direction: column; gap: 16px">
 <div class="topbar" style="padding-top: 16px; display: flex; align-items: center; gap: 8px">
 <button aria-label="뒤로" onClick="{{ goHome }}" style="width: 44px; height: 44px; border: 0; border-radius: 50%; background: #F4F6F4; color: #16201A; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
-<b style="font-size: 17px">무엇으로 이야기할까요?</b>
+<b style="font-size: 19px">무엇으로 이야기할까요?</b>
 </div>
 <div style="display: flex; background: #F4F6F4; border-radius: 999px; padding: 4px">
 <button onClick="{{ setPickBook }}" style="{{ pickBookBtn }}">교과서</button>
@@ -283,24 +289,24 @@ body{display:block;background:#FFFFFF !important}
 <div style="display: flex; flex-direction: column; gap: 8px">
 <sc-for list="{{ units }}" as="u" hint-placeholder-count="5">
 <button onClick="{{ u.go }}" style="border: 1px solid #E3E8E4; background: #FFFFFF; color: #16201A; border-radius: 16px; padding: 14px; display: flex; align-items: center; gap: 12px; text-align: left">
-<span style="width: 36px; height: 36px; flex: none; border-radius: 10px; background: #E7F3EA; color: #0B5E25; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800">{{ u.no }}</span>
-<span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 15px; font-family: 'Plus Jakarta Sans', sans-serif">{{ u.en }}</b><span style="font-size: 12px; color: #5C6B60">{{ u.ko }} · {{ u.extra }}</span></span>
+<span style="width: 36px; height: 36px; flex: none; border-radius: 10px; background: #E7F3EA; color: #0B5E25; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800">{{ u.no }}</span>
+<span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 17px; font-family: 'Plus Jakarta Sans', sans-serif">{{ u.en }}</b><span style="font-size: 14px; color: #5C6B60">{{ u.ko }} · {{ u.extra }}</span></span>
 </button>
 </sc-for>
 </div>
-<button onClick="{{ goBookTalk }}" style="border: 1px dashed #9CC7A8; background: #FFFFFF; color: #0B5E25; border-radius: 16px; min-height: 52px; font-size: 14px; font-weight: 700">교과서 본문 사진으로 북토킹 시작</button>
+<button onClick="{{ goBookTalk }}" style="border: 1px dashed #9CC7A8; background: #FFFFFF; color: #0B5E25; border-radius: 16px; min-height: 52px; font-size: 16px; font-weight: 700">교과서 본문 사진으로 북토킹 시작</button>
 </sc-if>
 <sc-if value="{{ pickIsNovel }}" hint-placeholder-val="{{ false }}">
-<span style="font-size: 13px; color: #5C6B60; line-height: 1.6">2주 플랜 책이나 직접 읽은 책을 골라요. 책 내용은 아이가 직접 말해 주는 방식이에요. 읽은 쪽을 올리면 더 자세히 이야기할 수 있어요.</span>
+<span style="font-size: 15px; color: #5C6B60; line-height: 1.6">2주 플랜 책이나 직접 읽은 책을 골라요. 책 내용은 아이가 직접 말해 주는 방식이에요. 읽은 쪽을 올리면 더 자세히 이야기할 수 있어요.</span>
 <div style="display: flex; gap: 8px">
 <label for="novelTitle" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">책 제목</label>
-<input id="novelTitle" type="text" autocomplete="off" placeholder="책 제목 (예: Charlotte's Web)" style="flex: 1; min-width: 0; min-height: 48px; border: 1px solid #E3E8E4; border-radius: 14px; padding: 0 14px; font-size: 15px; font-family: inherit">
-<button onClick="{{ goNovelTyped }}" style="flex: none; min-height: 48px; padding: 0 16px; border: 0; border-radius: 14px; background: #0E6B2C; color: #FFF; font-size: 14px; font-weight: 800">시작</button>
+<input id="novelTitle" type="text" autocomplete="off" placeholder="책 제목 (예: Charlotte's Web)" style="flex: 1; min-width: 0; min-height: 48px; border: 1px solid #E3E8E4; border-radius: 14px; padding: 0 14px; font-size: 17px; font-family: inherit">
+<button onClick="{{ goNovelTyped }}" style="flex: none; min-height: 48px; padding: 0 16px; border: 0; border-radius: 14px; background: #0E6B2C; color: #FFF; font-size: 16px; font-weight: 800">시작</button>
 </div>
 <div style="display: flex; flex-direction: column; gap: 4px">
 <sc-for list="{{ novels }}" as="n" hint-placeholder-count="5">
 <button onClick="{{ n.go }}" style="border: 0; border-top: 1px solid #EEF1EE; background: none; color: #16201A; padding: 12px 0; display: flex; align-items: center; gap: 12px; text-align: left">
-<span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 14px; font-family: 'Plus Jakarta Sans', sans-serif">{{ n.title }}</b><span style="font-size: 12px; color: #5C6B60">{{ n.genre }}</span></span>
+<span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 16px; font-family: 'Plus Jakarta Sans', sans-serif">{{ n.title }}</b><span style="font-size: 14px; color: #5C6B60">{{ n.genre }}</span></span>
 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5C6B60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
 </button>
 </sc-for>
@@ -314,28 +320,28 @@ body{display:block;background:#FFFFFF !important}
 <div class="scroll" style="flex: 1; overflow-y: auto; padding: 0 20px 24px; display: flex; flex-direction: column; gap: 16px">
 <div class="topbar" style="padding-top: 16px; display: flex; align-items: center; gap: 8px">
 <button aria-label="뒤로" onClick="{{ goTalk }}" style="width: 44px; height: 44px; border: 0; border-radius: 50%; background: #F4F6F4; color: #16201A; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
-<b style="font-size: 17px">읽어 온 글 고치기</b>
+<b style="font-size: 19px">읽어 온 글 고치기</b>
 </div>
 <div style="background: #F4F6F4; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
 <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px">
 <b style="font-size: 20px; font-family: 'Plus Jakarta Sans', sans-serif">{{ a.title }}</b>
-<span style="padding: 5px 10px; border-radius: 999px; background: #E7F3EA; color: #0B5E25; font-size: 12px; font-weight: 700; flex: none">{{ a.difficulty }}</span>
+<span style="padding: 5px 10px; border-radius: 999px; background: #E7F3EA; color: #0B5E25; font-size: 14px; font-weight: 700; flex: none">{{ a.difficulty }}</span>
 </div>
-<span style="font-size: 14px; color: #5C6B60; line-height: 1.6">주제: {{ a.topic }}</span>
-<label for="passageBox" style="font-size: 13px; font-weight: 700; color: #2E3A31">읽어 온 글 · 틀린 글자는 바로 고칠 수 있어요</label>
-<textarea id="passageBox" rows="8" style="width: 100%; font-size: 14px; line-height: 1.7; color: #2E3A31; font-family: 'Plus Jakarta Sans', sans-serif; background: #FFFFFF; border: 1px solid #E3E8E4; border-radius: 12px; padding: 14px; resize: vertical">{{ a.passage }}</textarea>
+<span style="font-size: 16px; color: #5C6B60; line-height: 1.6">주제: {{ a.topic }}</span>
+<label for="passageBox" style="font-size: 15px; font-weight: 700; color: #2E3A31">읽어 온 글 · 틀린 글자는 바로 고칠 수 있어요</label>
+<textarea id="passageBox" rows="8" style="width: 100%; font-size: 16px; line-height: 1.7; color: #2E3A31; font-family: 'Plus Jakarta Sans', sans-serif; background: #FFFFFF; border: 1px solid #E3E8E4; border-radius: 12px; padding: 14px; resize: vertical">{{ a.passage }}</textarea>
 </div>
 <div style="display: flex; flex-direction: column; gap: 10px">
-<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 15px">먼저 듣고 따라 말해요</b><span style="font-size: 12px; color: #5C6B60">핵심 단어 {{ wordCount }}개</span></div>
+<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 17px">먼저 듣고 따라 말해요</b><span style="font-size: 14px; color: #5C6B60">핵심 단어 {{ wordCount }}개</span></div>
 <sc-for list="{{ words }}" as="w" hint-placeholder-count="3">
 <div style="display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid #E3E8E4; border-radius: 14px">
 <button aria-label="발음 듣기" onClick="{{ w.say }}" style="width: 40px; height: 40px; flex: none; border: 0; border-radius: 50%; background: #E8F0FE; color: #1A56C4; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg></button>
-<span style="flex: 1; display: flex; flex-direction: column"><b style="font-size: 15px; font-family: 'Plus Jakarta Sans', sans-serif">{{ w.en }}</b><span style="font-size: 12px; color: #5C6B60">{{ w.ko }}</span></span>
+<span style="flex: 1; display: flex; flex-direction: column"><b style="font-size: 17px; font-family: 'Plus Jakarta Sans', sans-serif">{{ w.en }}</b><span style="font-size: 14px; color: #5C6B60">{{ w.ko }}</span></span>
 </div>
 </sc-for>
 </div>
-<div style="background: #F4F6F4; border-radius: 16px; padding: 14px 16px; font-size: 13px; line-height: 1.6; color: #2E3A31">{{ tutorName }}가 이 글로 질문 6개와 써 볼 표현 3개를 먼저 정해요<br><span style="color: #5C6B60">정한 주제를 벗어나지 않고 끝까지 이야기해요 · 약 10~15분</span></div>
-<button onClick="{{ startTalk }}" style="border: 0; min-height: 56px; border-radius: 999px; background: #0E6B2C; color: #FFFFFF; font-size: 17px; font-weight: 800">고친 글로 이야기 시작</button>
+<div style="background: #F4F6F4; border-radius: 16px; padding: 14px 16px; font-size: 15px; line-height: 1.6; color: #2E3A31">{{ tutorName }}가 이 글로 질문 6개와 써 볼 표현 3개를 먼저 정해요<br><span style="color: #5C6B60">정한 주제를 벗어나지 않고 끝까지 이야기해요 · 약 10~15분</span></div>
+<button onClick="{{ startTalk }}" style="border: 0; min-height: 56px; border-radius: 999px; background: #0E6B2C; color: #FFFFFF; font-size: 19px; font-weight: 800">고친 글로 이야기 시작</button>
 </div>
 </sc-if>
 
@@ -345,18 +351,18 @@ body{display:block;background:#FFFFFF !important}
 <div style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid #E3E8E4">
 <button aria-label="그만하기" onClick="{{ goHome }}" style="width: 44px; height: 44px; border: 0; border-radius: 50%; background: #F4F6F4; color: #16201A; display: flex; align-items: center; justify-content: center; flex: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
 <div style="flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0">
-<span style="font-size: 13px; color: #5C6B60; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{ talkHead }}</span>
+<span style="font-size: 15px; color: #5C6B60; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{ talkHead }}</span>
 <div style="height: 6px; border-radius: 3px; background: #E3E8E4; overflow: hidden"><div style="{{ progressStyle }}"></div></div>
 </div>
-<button aria-label="{{ avatarAria }}" onClick="{{ cycleAvatar }}" style="flex: none; min-height: 40px; padding: 0 10px; border: 1px solid #E3E8E4; border-radius: 999px; background: #FFFFFF; color: #2E3A31; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>{{ avatarBtn }}</button>
+<button aria-label="{{ avatarAria }}" onClick="{{ cycleAvatar }}" style="flex: none; min-height: 40px; padding: 0 10px; border: 1px solid #E3E8E4; border-radius: 999px; background: #FFFFFF; color: #2E3A31; font-size: 14px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>{{ avatarBtn }}</button>
 <sc-if value="{{ canFinish }}" hint-placeholder-val="{{ false }}">
-<button onClick="{{ finishTalk }}" style="border: 0; flex: none; min-height: 40px; padding: 0 14px; border-radius: 999px; background: #E7F3EA; color: #0B5E25; font-size: 13px; font-weight: 800">마치기</button>
+<button onClick="{{ finishTalk }}" style="border: 0; flex: none; min-height: 40px; padding: 0 14px; border-radius: 999px; background: #E7F3EA; color: #0B5E25; font-size: 15px; font-weight: 800">마치기</button>
 </sc-if>
 </div>
 <sc-if value="{{ avatarBig }}" hint-placeholder-val="{{ false }}">
 <button aria-label="도란이 작게 보기" onClick="{{ avatarToSmall }}" style="flex: none; border: 0; border-bottom: 1px solid #E3E8E4; background: #F4F8F4; padding: 14px 0 8px; display: flex; flex-direction: column; align-items: center; gap: 4px">
 <span class="{{ doranBodyClass }}" style="width: 112px; height: 157px; display: block; border-radius: 22px; border: 3px solid #0E6B2C; background: #FFFFFF"><img src="{{ avatarBodySrc }}" alt=""></span>
-<span style="font-size: 12px; font-weight: 700; color: #0B5E25">{{ tutorName }} · {{ doranState }}</span>
+<span style="font-size: 14px; font-weight: 700; color: #0B5E25">{{ tutorName }} · {{ doranState }}</span>
 </button>
 </sc-if>
 <sc-if value="{{ avatarSmall }}" hint-placeholder-val="{{ true }}">
@@ -368,68 +374,66 @@ body{display:block;background:#FFFFFF !important}
 <div style="display: flex; gap: 6px; flex-wrap: wrap; justify-content: center">
 <sc-for list="{{ goalChips }}" as="g" hint-placeholder-count="3"><span style="{{ g.style }}">{{ g.mark }} {{ g.en }}</span></sc-for>
 </div>
-<span style="align-self: center; font-size: 12px; color: #5C6B60; background: #F4F6F4; padding: 6px 12px; border-radius: 999px">틀려도 괜찮아, 한국어로 말해도 괜찮아!</span>
+<span style="align-self: center; font-size: 14px; color: #5C6B60; background: #F4F6F4; padding: 6px 12px; border-radius: 999px">틀려도 괜찮아, 한국어로 말해도 괜찮아!</span>
 <sc-for list="{{ shown }}" as="m" hint-placeholder-count="2">
 <sc-if value="{{ m.isText }}" hint-placeholder-val="{{ true }}">
 <div style="{{ m.wrap }}">
 <button onClick="{{ m.open }}" style="{{ m.bubble }}">{{ m.text }}</button>
-<sc-if value="{{ m.fix }}" hint-placeholder-val="{{ false }}"><button onClick="{{ m.open }}" style="border: 0; background: none; display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: #1A56C4; font-weight: 700; padding: 4px 6px; font-family: inherit"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg>{{ m.fixLabel }} 보기</button></sc-if>
+<sc-if value="{{ m.fix }}" hint-placeholder-val="{{ false }}"><button onClick="{{ m.open }}" style="border: 0; background: none; display: inline-flex; align-items: center; gap: 4px; font-size: 14px; color: #1A56C4; font-weight: 700; padding: 4px 6px; font-family: inherit"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg>{{ m.fixLabel }} 보기</button></sc-if>
 </div>
 </sc-if>
 <sc-if value="{{ m.isPhoto }}" hint-placeholder-val="{{ false }}">
 <div style="align-self: flex-end; display: flex; flex-direction: column; align-items: flex-end; gap: 4px">
 <img src="{{ m.src }}" alt="올린 책 사진" style="width: 150px; max-height: 200px; object-fit: cover; border-radius: 16px 16px 4px 16px; border: 1px solid #E3E8E4">
-<span style="font-size: 11px; color: #5C6B60">{{ m.note }}</span>
+<span style="font-size: 13px; color: #5C6B60">{{ m.note }}</span>
 </div>
 </sc-if>
 <sc-if value="{{ m.isUpload }}" hint-placeholder-val="{{ false }}">
 <div style="align-self: flex-start; max-width: 88%; display: flex; flex-direction: column; gap: 8px">
-<div style="padding: 12px 14px; font-size: 15px; line-height: 1.5; border-radius: 18px 18px 18px 4px; background: #F4F6F4; color: #16201A; font-family: 'Noto Sans KR', sans-serif">{{ m.text }}</div>
+<div style="padding: 12px 14px; font-size: 17px; line-height: 1.5; border-radius: 18px 18px 18px 4px; background: #F4F6F4; color: #16201A; font-family: 'Noto Sans KR', sans-serif">{{ m.text }}</div>
 <div style="display: flex; gap: 8px">
-<label style="min-height: 44px; padding: 0 16px; border-radius: 999px; background: #0E6B2C; color: #FFFFFF; font-size: 14px; font-weight: 800; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-family: 'Noto Sans KR', sans-serif"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>찍어 올리기<input type="file" accept="image/*" capture="environment" onChange="{{ onPhoto }}" style="display: none"></label>
-<label style="min-height: 44px; padding: 0 16px; border-radius: 999px; background: #FFFFFF; border: 1px solid #9CC7A8; color: #0B5E25; font-size: 14px; font-weight: 800; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-family: 'Noto Sans KR', sans-serif"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>앨범에서<input type="file" accept="image/*" onChange="{{ onPhoto }}" style="display: none"></label>
+<label style="min-height: 44px; padding: 0 16px; border-radius: 999px; background: #0E6B2C; color: #FFFFFF; font-size: 16px; font-weight: 800; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-family: 'Noto Sans KR', sans-serif"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>찍어 올리기<input type="file" accept="image/*" capture="environment" onChange="{{ onPhoto }}" style="display: none"></label>
+<label style="min-height: 44px; padding: 0 16px; border-radius: 999px; background: #FFFFFF; border: 1px solid #9CC7A8; color: #0B5E25; font-size: 16px; font-weight: 800; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-family: 'Noto Sans KR', sans-serif"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>앨범에서<input type="file" accept="image/*" multiple onChange="{{ onPhoto }}" style="display: none"></label>
 </div>
 </div>
 </sc-if>
 <sc-if value="{{ m.isBook }}" hint-placeholder-val="{{ false }}">
 <div style="align-self: flex-start; width: 88%; border: 1px solid #E3E8E4; border-radius: 18px 18px 18px 4px; padding: 14px; display: flex; flex-direction: column; gap: 10px; font-family: 'Noto Sans KR', sans-serif">
-<span style="font-size: 12px; font-weight: 700; color: #0B5E25">다 읽었어! · {{ m.pages }}쪽 · {{ m.difficulty }}</span>
-<b style="font-size: 17px; font-family: 'Plus Jakarta Sans', sans-serif">{{ m.title }}</b>
-<span style="font-size: 13px; color: #5C6B60; line-height: 1.5">{{ m.topic }}</span>
-<span style="font-size: 13px; color: #2E3A31; line-height: 1.6; background: #F4F6F4; border-radius: 10px; padding: 10px; font-family: 'Plus Jakarta Sans', sans-serif">{{ m.excerpt }}</span>
+<span style="font-size: 14px; font-weight: 700; color: #0B5E25">{{ m.pages }}쪽 · {{ m.difficulty }}</span>
+<b style="font-size: 19px; font-family: 'Plus Jakarta Sans', sans-serif">{{ m.title }}</b>
+<span style="font-size: 15px; color: #5C6B60; line-height: 1.5">{{ m.topic }}</span>
+<div class="scroll" style="max-height: 220px; overflow-y: auto; font-size: 18px; color: #16201A; line-height: 1.75; background: #F4F6F4; border-radius: 10px; padding: 12px; white-space: pre-wrap; font-family: 'Plus Jakarta Sans', sans-serif">{{ m.passage }}</div>
 <div style="display: flex; gap: 6px; flex-wrap: wrap">
-<sc-for list="{{ m.words }}" as="w" hint-placeholder-count="3"><button onClick="{{ w.say }}" style="border: 1px solid #E3E8E4; background: #FFF; color: #16201A; min-height: 32px; padding: 0 10px; border-radius: 999px; font-size: 12px; font-family: 'Plus Jakarta Sans', sans-serif">{{ w.en }} <span style="color: #5C6B60">{{ w.ko }}</span></button></sc-for>
+<sc-for list="{{ m.words }}" as="w" hint-placeholder-count="3"><button onClick="{{ w.say }}" style="border: 1px solid #E3E8E4; background: #FFF; color: #16201A; min-height: 32px; padding: 0 10px; border-radius: 999px; font-size: 14px; font-family: 'Plus Jakarta Sans', sans-serif">{{ w.en }} <span style="color: #5C6B60">{{ w.ko }}</span></button></sc-for>
 </div>
-<sc-if value="{{ m.active }}" hint-placeholder-val="{{ true }}">
-<button onClick="{{ startFromChat }}" style="border: 0; min-height: 48px; border-radius: 999px; background: #0E6B2C; color: #FFFFFF; font-size: 15px; font-weight: 800">이 글로 이야기 시작</button>
-<div style="display: flex; gap: 8px; justify-content: center">
-<label style="min-height: 40px; padding: 0 12px; display: inline-flex; align-items: center; gap: 4px; color: #1A56C4; font-size: 13px; font-weight: 700; cursor: pointer">+ 다음 쪽 더 올리기<input type="file" accept="image/*" onChange="{{ onPhoto }}" style="display: none"></label>
-<button onClick="{{ goConfirm }}" style="border: 0; background: none; min-height: 40px; padding: 0 12px; color: #5C6B60; font-size: 13px; font-weight: 700">글 확인·고치기</button>
+<div style="display: flex; gap: 8px; flex-wrap: wrap">
+<button onClick="{{ readAgain }}" style="flex: 1; min-width: 120px; border: 0; min-height: 44px; border-radius: 999px; background: #E8F0FE; color: #1A56C4; font-size: 16px; font-weight: 800">▶ {{ readLabel }}</button>
+<sc-if value="{{ m.reading }}" hint-placeholder-val="{{ false }}"><button onClick="{{ skipRead }}" style="flex: 1; min-width: 120px; border: 0; min-height: 44px; border-radius: 999px; background: #0E6B2C; color: #FFFFFF; font-size: 16px; font-weight: 800">건너뛰고 이야기하기</button></sc-if>
 </div>
-</sc-if>
+<button onClick="{{ goConfirm }}" style="align-self: center; border: 0; background: none; min-height: 36px; padding: 0 12px; color: #5C6B60; font-size: 15px; font-weight: 700">글이 틀렸으면 고치기</button>
 </div>
 </sc-if>
 <sc-if value="{{ m.isGoals }}" hint-placeholder-val="{{ false }}">
 <div style="align-self: flex-start; width: 88%; background: #0E6B2C; color: #FFFFFF; border-radius: 18px 18px 18px 4px; padding: 14px; display: flex; flex-direction: column; gap: 10px; font-family: 'Noto Sans KR', sans-serif">
-<span style="font-size: 12px; font-weight: 700; color: #D3E9D9">오늘의 이야기 · 질문 {{ m.qCount }}개</span>
-<b style="font-size: 17px; font-family: 'Plus Jakarta Sans', sans-serif; color: #FFFFFF">{{ m.title }}</b>
-<span style="font-size: 13px; color: #D3E9D9">오늘 써 볼 표현 · 쓰면 위에 ✓가 켜져요</span>
+<span style="font-size: 14px; font-weight: 700; color: #D3E9D9">오늘의 이야기 · 질문 {{ m.qCount }}개</span>
+<b style="font-size: 19px; font-family: 'Plus Jakarta Sans', sans-serif; color: #FFFFFF">{{ m.title }}</b>
+<span style="font-size: 15px; color: #D3E9D9">오늘 써 볼 표현 · 쓰면 위에 ✓가 켜져요</span>
 <sc-for list="{{ m.goals }}" as="g" hint-placeholder-count="3">
-<button onClick="{{ g.say }}" style="border: 0; background: rgba(255,255,255,0.12); color: #FFFFFF; border-radius: 12px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; text-align: left"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg><span style="flex: 1; display: flex; flex-direction: column"><b style="font-size: 14px; font-family: 'Plus Jakarta Sans', sans-serif; color: #FFFFFF">{{ g.en }}</b><span style="font-size: 12px; color: #D3E9D9">{{ g.ko }}</span></span></button>
+<button onClick="{{ g.say }}" style="border: 0; background: rgba(255,255,255,0.12); color: #FFFFFF; border-radius: 12px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; text-align: left"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg><span style="flex: 1; display: flex; flex-direction: column"><b style="font-size: 16px; font-family: 'Plus Jakarta Sans', sans-serif; color: #FFFFFF">{{ g.en }}</b><span style="font-size: 14px; color: #D3E9D9">{{ g.ko }}</span></span></button>
 </sc-for>
-<span style="font-size: 12px; color: #D3E9D9">한국어로 말해도 괜찮아. 영어로 바꿔 줄게!</span>
+<span style="font-size: 14px; color: #D3E9D9">한국어로 말해도 괜찮아. 영어로 바꿔 줄게!</span>
 </div>
 </sc-if>
 </sc-for>
 <sc-if value="{{ thinking }}" hint-placeholder-val="{{ false }}">
-<div style="align-self: flex-start; background: #F4F6F4; color: #5C6B60; border-radius: 18px 18px 18px 4px; padding: 12px 16px; font-size: 14px">{{ tutorName }}가 생각 중…</div>
+<div style="align-self: flex-start; background: #F4F6F4; color: #5C6B60; border-radius: 18px 18px 18px 4px; padding: 12px 16px; font-size: 16px">{{ tutorName }}가 생각 중…</div>
 </sc-if>
 <sc-if value="{{ showHint }}" hint-placeholder-val="{{ false }}">
-<div style="align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; background: #FFF0E3; color: #8A3E06; border-radius: 999px; padding: 8px 12px; font-size: 13px; font-weight: 700">
+<div style="align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; background: #FFF0E3; color: #8A3E06; border-radius: 999px; padding: 8px 12px; font-size: 15px; font-weight: 700">
 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>{{ hintText }}
 </div>
 </sc-if>
-<sc-if value="{{ err }}" hint-placeholder-val="{{ false }}"><div role="alert" style="background: #FFF0E3; color: #8A3E06; border-radius: 14px; padding: 10px 12px; font-size: 13px; font-family: 'Noto Sans KR', sans-serif">{{ err }}</div></sc-if>
+<sc-if value="{{ err }}" hint-placeholder-val="{{ false }}"><div role="alert" style="background: #FFF0E3; color: #8A3E06; border-radius: 14px; padding: 10px 12px; font-size: 15px; font-family: 'Noto Sans KR', sans-serif">{{ err }}</div></sc-if>
 </div>
 <div style="padding: 10px 16px 24px; display: flex; flex-direction: column; align-items: center; gap: 10px; border-top: 1px solid #E3E8E4">
 <div style="display: flex; align-items: center; gap: 28px">
@@ -437,32 +441,32 @@ body{display:block;background:#FFFFFF !important}
 <button aria-label="누르고 말하기" onClick="{{ speak }}" style="{{ micStyle }}"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg></button>
 <button aria-label="도란이 말 다시 듣기" onClick="{{ replay }}" style="width: 48px; height: 48px; border: 0; border-radius: 50%; background: #E8F0FE; color: #1A56C4; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg></button>
 </div>
-<span style="font-size: 13px; color: #5C6B60">{{ speakLabel }}</span>
+<span style="font-size: 15px; color: #5C6B60">{{ speakLabel }}</span>
 <form onSubmit="{{ sendTyped }}" style="width: 100%; display: flex; gap: 8px">
 <label for="typed" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">영어로 입력하기</label>
-<input id="typed" type="text" autocomplete="off" placeholder="말 대신 써도 돼요 (한국어도 OK)" style="flex: 1; min-width: 0; min-height: 44px; border: 1px solid #E3E8E4; border-radius: 999px; padding: 0 16px; font-size: 15px; font-family: inherit">
-<button type="submit" style="flex: none; min-height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: #0E6B2C; color: #FFF; font-size: 14px; font-weight: 800">보내기</button>
+<input id="typed" type="text" autocomplete="off" placeholder="말 대신 써도 돼요" style="flex: 1; min-width: 0; min-height: 44px; border: 1px solid #E3E8E4; border-radius: 999px; padding: 0 16px; font-size: 17px; font-family: inherit">
+<button type="submit" style="flex: none; min-height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: #0E6B2C; color: #FFF; font-size: 16px; font-weight: 800">보내기</button>
 </form>
 </div>
 <sc-if value="{{ fbOpen }}" hint-placeholder-val="{{ false }}">
 <div onClick="{{ closeFb }}" style="position: absolute; inset: 0; background: rgba(10,20,14,0.45); z-index: 5"></div>
 <div role="dialog" aria-label="심층 피드백" style="position: absolute; left: 0; right: 0; bottom: 0; z-index: 6; background: #FFFFFF; border-radius: 24px 24px 0 0; padding: 20px 20px 28px; display: flex; flex-direction: column; gap: 14px; font-family: 'Noto Sans KR', sans-serif">
 <div style="align-self: center; width: 40px; height: 4px; border-radius: 2px; background: #DDE5DF"></div>
-<div style="align-self: flex-end; max-width: 90%; padding: 12px 14px; border-radius: 18px 18px 4px 18px; background: #0E6B2C; color: #FFFFFF; font-size: 16px; font-family: 'Plus Jakarta Sans', 'Noto Sans KR', sans-serif">{{ fb.text }}</div>
+<div style="align-self: flex-end; max-width: 90%; padding: 12px 14px; border-radius: 18px 18px 4px 18px; background: #0E6B2C; color: #FFFFFF; font-size: 18px; font-family: 'Plus Jakarta Sans', 'Noto Sans KR', sans-serif">{{ fb.text }}</div>
 <sc-if value="{{ fb.hasFix }}" hint-placeholder-val="{{ true }}">
 <div style="display: flex; flex-direction: column; gap: 6px">
-<span style="display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 800; color: #0B5E25"><span style="width: 20px; height: 20px; border-radius: 50%; background: #0E6B2C; color: #FFFFFF; display: inline-flex; align-items: center; justify-content: center; font-size: 12px">✓</span>{{ fb.label }}</span>
-<button onClick="{{ fb.say }}" style="border: 1px solid #E3E8E4; background: #F4F6F4; color: #16201A; border-radius: 14px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; text-align: left; font-size: 16px; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif"><span style="flex: 1">{{ fb.fix }}</span><span style="color: #1A56C4"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg></span></button>
+<span style="display: inline-flex; align-items: center; gap: 6px; font-size: 16px; font-weight: 800; color: #0B5E25"><span style="width: 20px; height: 20px; border-radius: 50%; background: #0E6B2C; color: #FFFFFF; display: inline-flex; align-items: center; justify-content: center; font-size: 14px">✓</span>{{ fb.label }}</span>
+<button onClick="{{ fb.say }}" style="border: 1px solid #E3E8E4; background: #F4F6F4; color: #16201A; border-radius: 14px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; text-align: left; font-size: 18px; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif"><span style="flex: 1">{{ fb.fix }}</span><span style="color: #1A56C4"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg></span></button>
 </div>
 </sc-if>
-<sc-if value="{{ fb.noFix }}" hint-placeholder-val="{{ false }}"><span style="font-size: 15px; font-weight: 700; color: #0B5E25">잘 말했어요! 고칠 곳이 없어요.</span></sc-if>
+<sc-if value="{{ fb.noFix }}" hint-placeholder-val="{{ false }}"><span style="font-size: 17px; font-weight: 700; color: #0B5E25">잘 말했어요! 고칠 곳이 없어요.</span></sc-if>
 <sc-if value="{{ fb.why }}" hint-placeholder-val="{{ true }}">
 <div style="display: flex; flex-direction: column; gap: 6px">
-<span style="display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 800; color: #B4530B"><span style="width: 20px; height: 20px; border-radius: 50%; background: #E8650A; color: #FFFFFF; display: inline-flex; align-items: center; justify-content: center; font-size: 12px">!</span>설명</span>
-<span style="font-size: 14px; line-height: 1.7; color: #2E3A31">{{ fb.why }}</span>
+<span style="display: inline-flex; align-items: center; gap: 6px; font-size: 16px; font-weight: 800; color: #B4530B"><span style="width: 20px; height: 20px; border-radius: 50%; background: #E8650A; color: #FFFFFF; display: inline-flex; align-items: center; justify-content: center; font-size: 14px">!</span>설명</span>
+<span style="font-size: 16px; line-height: 1.7; color: #2E3A31">{{ fb.why }}</span>
 </div>
 </sc-if>
-<button onClick="{{ fb.retry }}" style="border: 0; min-height: 52px; border-radius: 999px; background: #0E6B2C; color: #FFFFFF; font-size: 16px; font-weight: 800">따라 말해 보기</button>
+<button onClick="{{ fb.retry }}" style="border: 0; min-height: 52px; border-radius: 999px; background: #0E6B2C; color: #FFFFFF; font-size: 18px; font-weight: 800">따라 말해 보기</button>
 </div>
 </sc-if>
 </div>
@@ -473,16 +477,16 @@ body{display:block;background:#FFFFFF !important}
 <div style="flex: 1; display: flex; flex-direction: column; padding: 16px 20px 28px; gap: 18px">
 <div style="display: flex; align-items: center; gap: 8px">
 <button aria-label="닫기" onClick="{{ goHome }}" style="width: 44px; height: 44px; border: 0; border-radius: 50%; background: #F4F6F4; color: #16201A; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
-<b style="font-size: 17px">다시 말하기 · {{ reviewNo }}/{{ reviewTotal }}</b>
+<b style="font-size: 19px">다시 말하기 · {{ reviewNo }}/{{ reviewTotal }}</b>
 </div>
 <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 20px; text-align: center">
-<span style="font-size: 14px; color: #5C6B60">지난번에 이렇게 말했어요</span>
-<s style="font-size: 18px; color: #8A968D; font-family: 'Plus Jakarta Sans', sans-serif">{{ reviewFrom }}</s>
-<span style="font-size: 14px; color: #5C6B60">이번엔 이렇게 말해 볼까요?</span>
+<span style="font-size: 16px; color: #5C6B60">지난번에 이렇게 말했어요</span>
+<s style="font-size: 20px; color: #8A968D; font-family: 'Plus Jakarta Sans', sans-serif">{{ reviewFrom }}</s>
+<span style="font-size: 16px; color: #5C6B60">이번엔 이렇게 말해 볼까요?</span>
 <b style="font-size: 24px; line-height: 1.4; color: #0E6B2C; font-family: 'Plus Jakarta Sans', sans-serif">{{ reviewTo }}</b>
-<button onClick="{{ sayReview }}" style="align-self: center; border: 1px solid #CFDDF8; background: #FFF; color: #1A56C4; min-height: 44px; padding: 0 18px; border-radius: 999px; font-size: 14px; font-weight: 700">먼저 들어 보기</button>
+<button onClick="{{ sayReview }}" style="align-self: center; border: 1px solid #CFDDF8; background: #FFF; color: #1A56C4; min-height: 44px; padding: 0 18px; border-radius: 999px; font-size: 16px; font-weight: 700">먼저 들어 보기</button>
 </div>
-<button onClick="{{ nextReview }}" style="border: 0; min-height: 56px; border-radius: 999px; background: #0E6B2C; color: #FFF; font-size: 17px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>{{ reviewBtn }}</button>
+<button onClick="{{ nextReview }}" style="border: 0; min-height: 56px; border-radius: 999px; background: #0E6B2C; color: #FFF; font-size: 19px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>{{ reviewBtn }}</button>
 </div>
 </sc-if>
 
@@ -500,13 +504,13 @@ body{display:block;background:#FFFFFF !important}
 </svg>
 <b style="font-size: 30px; line-height: 1.3; letter-spacing: -1px">오늘도 멋지게<br>이야기했어!</b>
 <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; width: 100%">
-<div style="background: #FFFFFF; color: #16201A; border-radius: 16px; padding: 14px 8px; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 24px; color: #0E6B2C">{{ st.sentences }}</b><span style="font-size: 12px; color: #5C6B60">말한 문장</span></div>
-<div style="background: #FFFFFF; color: #16201A; border-radius: 16px; padding: 14px 8px; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 24px; color: #1A56C4">{{ st.unique }}</b><span style="font-size: 12px; color: #5C6B60">쓴 단어 종류</span></div>
-<div style="background: #FFFFFF; color: #16201A; border-radius: 16px; padding: 14px 8px; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 24px; color: #B4530B">{{ st.minutes }}분</b><span style="font-size: 12px; color: #5C6B60">대화 시간</span></div>
+<div style="background: #FFFFFF; color: #16201A; border-radius: 16px; padding: 14px 8px; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 24px; color: #0E6B2C">{{ st.sentences }}</b><span style="font-size: 14px; color: #5C6B60">말한 문장</span></div>
+<div style="background: #FFFFFF; color: #16201A; border-radius: 16px; padding: 14px 8px; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 24px; color: #1A56C4">{{ st.unique }}</b><span style="font-size: 14px; color: #5C6B60">쓴 단어 종류</span></div>
+<div style="background: #FFFFFF; color: #16201A; border-radius: 16px; padding: 14px 8px; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 24px; color: #B4530B">{{ st.minutes }}분</b><span style="font-size: 14px; color: #5C6B60">대화 시간</span></div>
 </div>
-<span style="font-size: 14px; color: #D3E9D9">{{ doneNote }}</span>
-<button onClick="{{ goReport }}" style="width: 100%; border: 0; min-height: 56px; border-radius: 999px; background: #FFFFFF; color: #0E6B2C; font-size: 17px; font-weight: 800">리포트 보기</button>
-<button onClick="{{ goHome }}" style="border: 0; background: none; color: #FFFFFF; font-size: 15px; font-weight: 700; min-height: 44px">홈으로</button>
+<span style="font-size: 16px; color: #D3E9D9">{{ doneNote }}</span>
+<button onClick="{{ goReport }}" style="width: 100%; border: 0; min-height: 56px; border-radius: 999px; background: #FFFFFF; color: #0E6B2C; font-size: 19px; font-weight: 800">리포트 보기</button>
+<button onClick="{{ goHome }}" style="border: 0; background: none; color: #FFFFFF; font-size: 17px; font-weight: 700; min-height: 44px">홈으로</button>
 </div>
 </sc-if>
 
@@ -514,7 +518,7 @@ body{display:block;background:#FFFFFF !important}
 <sc-if value="{{ isReport }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="flex: 1; overflow-y: auto; padding: 0 20px 24px; display: flex; flex-direction: column; gap: 16px">
 <div class="topbar" style="padding-top: 20px; display: flex; flex-direction: column; gap: 4px">
-<span style="font-size: 13px; color: #5C6B60">오늘의 이야기 · {{ rp.date }}</span>
+<span style="font-size: 15px; color: #5C6B60">오늘의 이야기 · {{ rp.date }}</span>
 <b style="font-size: 24px; letter-spacing: -0.5px">{{ rp.title }}</b>
 </div>
 <div style="display: flex; background: #F4F6F4; border-radius: 999px; padding: 4px">
@@ -524,7 +528,7 @@ body{display:block;background:#FFFFFF !important}
 </div>
 
 <sc-if value="{{ reportBusy }}" hint-placeholder-val="{{ false }}">
-<div style="display: flex; align-items: center; gap: 12px; background: #F4F8FF; border-radius: 14px; padding: 12px 14px; font-size: 14px; color: #1A56C4">
+<div style="display: flex; align-items: center; gap: 12px; background: #F4F8FF; border-radius: 14px; padding: 12px 14px; font-size: 16px; color: #1A56C4">
 <div style="width: 20px; height: 20px; flex: none; border-radius: 50%; border: 3px solid #CFDDF8; border-top-color: #1F6FEB; animation: spin 0.9s linear infinite"></div>도란이가 리포트를 쓰고 있어요
 </div>
 </sc-if>
@@ -532,32 +536,32 @@ body{display:block;background:#FFFFFF !important}
 <sc-if value="{{ rSum }}" hint-placeholder-val="{{ true }}">
 <div style="display: flex; flex-direction: column; gap: 14px">
 <div style="background: #0E6B2C; color: #FFFFFF; border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 10px">
-<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 15px">내가 말한 비율</b><b style="font-size: 26px">{{ rp.ratio }}%</b></div>
+<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 17px">내가 말한 비율</b><b style="font-size: 26px">{{ rp.ratio }}%</b></div>
 <div style="height: 10px; border-radius: 5px; background: rgba(255,255,255,0.25); overflow: hidden"><div style="{{ rp.ratioStyle }}"></div></div>
-<span style="font-size: 12px; color: #D3E9D9">대화에 나온 단어 중 아이가 말한 단어의 비율이에요 · 대화 {{ rp.minutes }}분</span>
+<span style="font-size: 14px; color: #D3E9D9">대화에 나온 단어 중 아이가 말한 단어의 비율이에요 · 대화 {{ rp.minutes }}분</span>
 </div>
 <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
-<div style="background: #F4F6F4; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #5C6B60">말한 문장</span><b style="font-size: 26px; color: #0E6B2C">{{ rp.sentences }}</b><span style="font-size: 11px; color: #5C6B60">{{ rp.turns }}번 대답했어요</span></div>
-<div style="background: #F4F6F4; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #5C6B60">평균 문장 길이</span><b style="font-size: 26px; color: #0E6B2C">{{ rp.avg }}단어</b><span style="font-size: 11px; color: #5C6B60">길수록 자세히 말한 거예요</span></div>
-<div style="background: #F4F6F4; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #5C6B60">스스로 말하기</span><b style="font-size: 26px; color: #0E6B2C">{{ rp.self }}%</b><span style="font-size: 11px; color: #5C6B60">힌트 {{ rp.hints }}회 사용</span></div>
-<div style="background: #F4F6F4; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #5C6B60">고친 표현</span><b style="font-size: 26px; color: #0E6B2C">{{ rp.fixCount }}개</b><span style="font-size: 11px; color: #5C6B60">교정 탭에서 확인</span></div>
+<div style="background: #F4F6F4; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 14px; color: #5C6B60">말한 문장</span><b style="font-size: 26px; color: #0E6B2C">{{ rp.sentences }}</b><span style="font-size: 13px; color: #5C6B60">{{ rp.turns }}번 대답했어요</span></div>
+<div style="background: #F4F6F4; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 14px; color: #5C6B60">평균 문장 길이</span><b style="font-size: 26px; color: #0E6B2C">{{ rp.avg }}단어</b><span style="font-size: 13px; color: #5C6B60">길수록 자세히 말한 거예요</span></div>
+<div style="background: #F4F6F4; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 14px; color: #5C6B60">스스로 말하기</span><b style="font-size: 26px; color: #0E6B2C">{{ rp.self }}%</b><span style="font-size: 13px; color: #5C6B60">힌트 {{ rp.hints }}회 사용</span></div>
+<div style="background: #F4F6F4; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 14px; color: #5C6B60">고친 표현</span><b style="font-size: 26px; color: #0E6B2C">{{ rp.fixCount }}개</b><span style="font-size: 13px; color: #5C6B60">교정 탭에서 확인</span></div>
 </div>
 <sc-if value="{{ rp.hasGoals }}" hint-placeholder-val="{{ false }}">
 <div style="border: 1px solid #E3E8E4; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
-<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 15px">오늘의 목표 표현</b><b style="font-size: 15px; color: #0E6B2C">{{ rp.goalScore }}</b></div>
+<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 17px">오늘의 목표 표현</b><b style="font-size: 17px; color: #0E6B2C">{{ rp.goalScore }}</b></div>
 <sc-for list="{{ rp.goals }}" as="g" hint-placeholder-count="3">
-<div style="display: flex; align-items: center; gap: 10px"><span style="{{ g.badge }}">{{ g.mark }}</span><span style="flex: 1; font-size: 14px; font-family: 'Plus Jakarta Sans', sans-serif">{{ g.en }}</span><span style="font-size: 12px; color: #5C6B60">{{ g.state }}</span></div>
+<div style="display: flex; align-items: center; gap: 10px"><span style="{{ g.badge }}">{{ g.mark }}</span><span style="flex: 1; font-size: 16px; font-family: 'Plus Jakarta Sans', sans-serif">{{ g.en }}</span><span style="font-size: 14px; color: #5C6B60">{{ g.state }}</span></div>
 </sc-for>
-<span style="font-size: 12px; color: #5C6B60">{{ rp.sourceNote }}</span>
+<span style="font-size: 14px; color: #5C6B60">{{ rp.sourceNote }}</span>
 </div>
 </sc-if>
 <div style="background: #E7F3EA; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 8px">
-<b style="font-size: 15px; color: #0B5E25">잘했어요</b>
-<span style="font-size: 14px; line-height: 1.6; color: #2E3A31">{{ rp.praise }}</span>
+<b style="font-size: 17px; color: #0B5E25">잘했어요</b>
+<span style="font-size: 16px; line-height: 1.6; color: #2E3A31">{{ rp.praise }}</span>
 </div>
 <div style="border: 1px solid #E3E8E4; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 6px">
-<b style="font-size: 15px">내용 이해</b>
-<span style="font-size: 14px; line-height: 1.6; color: #2E3A31">{{ rp.comprehension }}</span>
+<b style="font-size: 17px">내용 이해</b>
+<span style="font-size: 16px; line-height: 1.6; color: #2E3A31">{{ rp.comprehension }}</span>
 </div>
 </div>
 </sc-if>
@@ -565,26 +569,26 @@ body{display:block;background:#FFFFFF !important}
 <sc-if value="{{ rWord }}" hint-placeholder-val="{{ false }}">
 <div style="display: flex; flex-direction: column; gap: 14px">
 <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
-<div style="background: #F4F6F4; border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 11px; color: #5C6B60">말한 단어</span><b style="font-size: 22px; color: #0E6B2C">{{ rp.total }}</b></div>
-<div style="background: #F4F6F4; border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 11px; color: #5C6B60">서로 다른 단어</span><b style="font-size: 22px; color: #1A56C4">{{ rp.unique }}</b></div>
-<div style="background: #F4F6F4; border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 11px; color: #5C6B60">어휘 다양도</span><b style="font-size: 22px; color: #B4530B">{{ rp.ttr }}%</b></div>
+<div style="background: #F4F6F4; border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; color: #5C6B60">말한 단어</span><b style="font-size: 22px; color: #0E6B2C">{{ rp.total }}</b></div>
+<div style="background: #F4F6F4; border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; color: #5C6B60">서로 다른 단어</span><b style="font-size: 22px; color: #1A56C4">{{ rp.unique }}</b></div>
+<div style="background: #F4F6F4; border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; color: #5C6B60">어휘 다양도</span><b style="font-size: 22px; color: #B4530B">{{ rp.ttr }}%</b></div>
 </div>
 <div style="border: 1px solid #E3E8E4; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
-<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 15px">많이 쓴 단어</b><span style="font-size: 11px; color: #767676">a, the 같은 기본 단어 제외</span></div>
+<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 17px">많이 쓴 단어</b><span style="font-size: 13px; color: #767676">a, the 같은 기본 단어 제외</span></div>
 <sc-for list="{{ rp.topWords }}" as="t" hint-placeholder-count="6">
 <div style="display: flex; align-items: center; gap: 10px">
-<span style="width: 84px; font-size: 14px; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; text-overflow: ellipsis">{{ t.w }}</span>
+<span style="width: 84px; font-size: 16px; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; text-overflow: ellipsis">{{ t.w }}</span>
 <div style="flex: 1; height: 10px; border-radius: 5px; background: #EEF1EE; overflow: hidden"><div style="{{ t.style }}"></div></div>
-<span style="width: 30px; text-align: right; font-size: 13px; color: #5C6B60">{{ t.n }}회</span>
+<span style="width: 30px; text-align: right; font-size: 15px; color: #5C6B60">{{ t.n }}회</span>
 </div>
 </sc-for>
 </div>
 <div style="border: 1px solid #E3E8E4; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
-<b style="font-size: 15px">책에서 배운 단어, 써 봤을까?</b>
+<b style="font-size: 17px">책에서 배운 단어, 써 봤을까?</b>
 <div style="display: flex; flex-direction: column; gap: 8px">
 <sc-for list="{{ rp.bookWords }}" as="b" hint-placeholder-count="5">
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
-<span style="font-size: 14px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700">{{ b.w }}</span>
+<span style="font-size: 16px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700">{{ b.w }}</span>
 <span style="{{ b.style }}">{{ b.label }}</span>
 </div>
 </sc-for>
@@ -592,17 +596,17 @@ body{display:block;background:#FFFFFF !important}
 </div>
 <sc-if value="{{ rp.overWord }}" hint-placeholder-val="{{ false }}">
 <div style="background: #FFF8F2; border: 1px solid #F6D3B5; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 8px">
-<b style="font-size: 15px; color: #8A3E06">자주 쓴 단어, 이렇게도 말해 봐</b>
-<span style="font-size: 14px; color: #2E3A31"><b style="font-family: 'Plus Jakarta Sans', sans-serif">{{ rp.overWord }}</b> 대신</span>
+<b style="font-size: 17px; color: #8A3E06">자주 쓴 단어, 이렇게도 말해 봐</b>
+<span style="font-size: 16px; color: #2E3A31"><b style="font-family: 'Plus Jakarta Sans', sans-serif">{{ rp.overWord }}</b> 대신</span>
 <div style="display: flex; gap: 6px; flex-wrap: wrap">
-<sc-for list="{{ rp.overAlt }}" as="o" hint-placeholder-count="3"><span style="padding: 6px 12px; border-radius: 999px; background: #FFF; border: 1px solid #F6D3B5; font-size: 13px; font-family: 'Plus Jakarta Sans', sans-serif">{{ o }}</span></sc-for>
+<sc-for list="{{ rp.overAlt }}" as="o" hint-placeholder-count="3"><span style="padding: 6px 12px; border-radius: 999px; background: #FFF; border: 1px solid #F6D3B5; font-size: 15px; font-family: 'Plus Jakarta Sans', sans-serif">{{ o }}</span></sc-for>
 </div>
 </div>
 </sc-if>
 <div style="border: 1px solid #E3E8E4; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
-<b style="font-size: 15px">새로 배운 표현</b>
+<b style="font-size: 17px">새로 배운 표현</b>
 <div style="display: flex; gap: 8px; flex-wrap: wrap">
-<sc-for list="{{ rp.expressions }}" as="e" hint-placeholder-count="4"><span style="padding: 7px 12px; border-radius: 999px; background: #E7F3EA; color: #0B5E25; font-size: 13px; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif">{{ e }}</span></sc-for>
+<sc-for list="{{ rp.expressions }}" as="e" hint-placeholder-count="4"><span style="padding: 7px 12px; border-radius: 999px; background: #E7F3EA; color: #0B5E25; font-size: 15px; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif">{{ e }}</span></sc-for>
 </div>
 </div>
 </div>
@@ -611,26 +615,26 @@ body{display:block;background:#FFFFFF !important}
 <sc-if value="{{ rFix }}" hint-placeholder-val="{{ false }}">
 <div style="display: flex; flex-direction: column; gap: 14px">
 <div style="border: 1px solid #E3E8E4; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 4px">
-<b style="font-size: 15px; padding-bottom: 6px">표현 교정</b>
-<sc-if value="{{ rp.noFix }}" hint-placeholder-val="{{ false }}"><span style="font-size: 14px; color: #5C6B60">고칠 문장이 없었어요. 아주 잘했어요!</span></sc-if>
+<b style="font-size: 17px; padding-bottom: 6px">표현 교정</b>
+<sc-if value="{{ rp.noFix }}" hint-placeholder-val="{{ false }}"><span style="font-size: 16px; color: #5C6B60">고칠 문장이 없었어요. 아주 잘했어요!</span></sc-if>
 <sc-for list="{{ rp.fixes }}" as="f" hint-placeholder-count="3">
-<div style="display: flex; flex-direction: column; gap: 2px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; padding: 10px 0; border-top: 1px solid #EEF1EE">
+<div style="display: flex; flex-direction: column; gap: 2px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; padding: 10px 0; border-top: 1px solid #EEF1EE">
 <s style="color: #8A968D">{{ f.from }}</s>
 <b style="color: #0E6B2C">{{ f.to }}</b>
-<span style="font-size: 12px; color: #5C6B60; font-family: 'Noto Sans KR', sans-serif">{{ f.why }}</span>
+<span style="font-size: 14px; color: #5C6B60; font-family: 'Noto Sans KR', sans-serif">{{ f.why }}</span>
 </div>
 </sc-for>
 </div>
 <div style="background: #F4F8FF; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 6px">
-<b style="font-size: 15px; color: #1A56C4">다음 북토킹 팁</b>
-<span style="font-size: 14px; line-height: 1.6; color: #2E3A31">{{ rp.nextTip }}</span>
+<b style="font-size: 17px; color: #1A56C4">다음 북토킹 팁</b>
+<span style="font-size: 16px; line-height: 1.6; color: #2E3A31">{{ rp.nextTip }}</span>
 </div>
-<button onClick="{{ goReview }}" style="border: 0; min-height: 52px; border-radius: 999px; background: #0E6B2C; color: #FFF; font-size: 15px; font-weight: 800">고친 표현 다시 말하기</button>
+<button onClick="{{ goReview }}" style="border: 0; min-height: 52px; border-radius: 999px; background: #0E6B2C; color: #FFF; font-size: 17px; font-weight: 800">고친 표현 다시 말하기</button>
 </div>
 </sc-if>
 
-<button onClick="{{ shareReport }}" style="border: 1px solid #CFDDF8; min-height: 52px; border-radius: 999px; background: #FFFFFF; color: #1A56C4; font-size: 15px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>부모님께 리포트 보내기</button>
-<span style="font-size: 12px; color: #767676; text-align: center">{{ rp.note }}</span>
+<button onClick="{{ shareReport }}" style="border: 1px solid #CFDDF8; min-height: 52px; border-radius: 999px; background: #FFFFFF; color: #1A56C4; font-size: 17px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>부모님께 리포트 보내기</button>
+<span style="font-size: 14px; color: #767676; text-align: center">{{ rp.note }}</span>
 </div>
 </sc-if>
 
@@ -646,49 +650,49 @@ body{display:block;background:#FFFFFF !important}
 </div>
 </div>
 <div style="border: 1px solid #E3E8E4; border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 14px">
-<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 15px">말한 문장 수</b><span style="font-size: 13px; color: #0E6B2C; font-weight: 700">{{ trend }}</span></div>
+<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 17px">말한 문장 수</b><span style="font-size: 15px; color: #0E6B2C; font-weight: 700">{{ trend }}</span></div>
 <div style="height: 150px; display: flex; align-items: flex-end; gap: 8px">
 <sc-for list="{{ bars }}" as="d" hint-placeholder-count="7">
 <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px">
-<span style="font-size: 11px; color: #5C6B60">{{ d.v }}</span>
+<span style="font-size: 13px; color: #5C6B60">{{ d.v }}</span>
 <div style="{{ d.style }}"></div>
-<span style="font-size: 11px; color: #5C6B60">{{ d.label }}</span>
+<span style="font-size: 13px; color: #5C6B60">{{ d.label }}</span>
 </div>
 </sc-for>
 </div>
 </div>
 <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
-<div style="background: #0E6B2C; color: #FFF; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #D3E9D9">{{ periodName }} 읽은 책</span><b style="font-size: 28px">{{ books }}권</b></div>
-<div style="background: #E8F0FE; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #1A56C4">지금까지 쓴 어휘</span><b style="font-size: 28px; color: #1A56C4">{{ vocab }}개</b></div>
-<div style="background: #FFF0E3; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #B4530B">{{ periodName }} 쓴 단어</span><b style="font-size: 28px; color: #B4530B">{{ newWords }}개</b></div>
-<div style="background: #F4F6F4; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: #5C6B60">대화 시간</span><b style="font-size: 28px">{{ minutes }}분</b></div>
+<div style="background: #0E6B2C; color: #FFF; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 14px; color: #D3E9D9">{{ periodName }} 읽은 책</span><b style="font-size: 28px">{{ books }}권</b></div>
+<div style="background: #E8F0FE; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 14px; color: #1A56C4">지금까지 쓴 어휘</span><b style="font-size: 28px; color: #1A56C4">{{ vocab }}개</b></div>
+<div style="background: #FFF0E3; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 14px; color: #B4530B">{{ periodName }} 쓴 단어</span><b style="font-size: 28px; color: #B4530B">{{ newWords }}개</b></div>
+<div style="background: #F4F6F4; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 14px; color: #5C6B60">대화 시간</span><b style="font-size: 28px">{{ minutes }}분</b></div>
 </div>
 <div style="border: 1px solid #E3E8E4; border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 12px">
-<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 15px">무엇으로 이야기했나</b><span style="font-size: 12px; color: #5C6B60">{{ periodName }}</span></div>
+<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 17px">무엇으로 이야기했나</b><span style="font-size: 14px; color: #5C6B60">{{ periodName }}</span></div>
 <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px">
 <sc-for list="{{ srcList }}" as="x" hint-placeholder-count="4">
-<div style="background: #F4F6F4; border-radius: 12px; padding: 10px 6px; display: flex; flex-direction: column; align-items: center; gap: 2px"><b style="{{ x.style }}">{{ x.n }}</b><span style="font-size: 11px; color: #5C6B60">{{ x.name }}</span></div>
+<div style="background: #F4F6F4; border-radius: 12px; padding: 10px 6px; display: flex; flex-direction: column; align-items: center; gap: 2px"><b style="{{ x.style }}">{{ x.n }}</b><span style="font-size: 13px; color: #5C6B60">{{ x.name }}</span></div>
 </sc-for>
 </div>
-<span style="font-size: 12px; color: #5C6B60">목표 표현 성공률 {{ goalRate }}</span>
+<span style="font-size: 14px; color: #5C6B60">목표 표현 성공률 {{ goalRate }}</span>
 </div>
 <div style="border: 1px solid #E3E8E4; border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 14px">
-<b style="font-size: 15px">말하기 역량</b>
+<b style="font-size: 17px">말하기 역량</b>
 <sc-for list="{{ skills }}" as="s" hint-placeholder-count="4">
 <div style="display: flex; flex-direction: column; gap: 6px">
-<div style="display: flex; justify-content: space-between; font-size: 13px"><span>{{ s.name }}</span><span style="color: #5C6B60">{{ s.v }}%</span></div>
+<div style="display: flex; justify-content: space-between; font-size: 15px"><span>{{ s.name }}</span><span style="color: #5C6B60">{{ s.v }}%</span></div>
 <div style="height: 8px; border-radius: 4px; background: #EEF1EE; overflow: hidden"><div style="{{ s.style }}"></div></div>
 </div>
 </sc-for>
 </div>
 <button onClick="{{ goPlan }}" style="border: 0; background: #F4F6F4; border-radius: 20px; padding: 18px; display: flex; gap: 14px; align-items: center; text-align: left; color: #16201A">
-<span style="width: 52px; height: 52px; border-radius: 16px; background: #0E6B2C; color: #FFF; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 17px; flex: none">Lv.3</span>
+<span style="width: 52px; height: 52px; border-radius: 16px; background: #0E6B2C; color: #FFF; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 19px; flex: none">Lv.3</span>
 <span style="flex: 1; display: flex; flex-direction: column; gap: 6px">
-<b style="font-size: 15px">중급 리더 · 2주 플랜 5/14</b>
+<b style="font-size: 17px">중급 리더 · 2주 플랜 5/14</b>
 <span style="height: 8px; border-radius: 4px; background: #DDE5DF; overflow: hidden; display: block"><span style="width: 36%; height: 100%; background: #0E6B2C; display: block"></span></span>
 </span>
 </button>
-<span style="font-size: 12px; color: #767676; text-align: center">{{ statsNote }}</span>
+<span style="font-size: 14px; color: #767676; text-align: center">{{ statsNote }}</span>
 </div>
 </sc-if>
 
@@ -697,7 +701,7 @@ body{display:block;background:#FFFFFF !important}
 <div class="scroll" style="flex: 1; overflow-y: auto; padding: 0 20px 24px; display: flex; flex-direction: column; gap: 14px">
 <div class="topbar" style="padding-top: 20px; display: flex; justify-content: space-between; align-items: center">
 <b style="font-size: 24px; letter-spacing: -0.5px">리딩 성장 기록</b>
-<span style="padding: 6px 12px; border-radius: 999px; background: #F4F6F4; font-size: 13px; font-weight: 700">2026년 11월</span>
+<span style="padding: 6px 12px; border-radius: 999px; background: #F4F6F4; font-size: 15px; font-weight: 700">2026년 11월</span>
 </div>
 <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-bottom: 1px solid #E3E8E4">
 <button onClick="{{ setBoard }}" style="{{ subBoard }}">리더보드</button>
@@ -712,38 +716,38 @@ body{display:block;background:#FFFFFF !important}
 <button onClick="{{ setRead }}" style="{{ kRead }}">다독왕</button>
 <button onClick="{{ setDays }}" style="{{ kDays }}">개근왕</button>
 </div>
-<button onClick="{{ toggleSame }}" style="border: 0; background: none; display: flex; align-items: center; gap: 8px; font-size: 13px; color: #16201A; min-height: 44px">
+<button onClick="{{ toggleSame }}" style="border: 0; background: none; display: flex; align-items: center; gap: 8px; font-size: 15px; color: #16201A; min-height: 44px">
 <span style="{{ sameTrack }}"><span style="{{ sameKnob }}"></span></span>같은 학년만</button>
 </div>
-<span style="font-size: 12px; color: #5C6B60">{{ boardDesc }} · 집계 11.01 ~ 11.08</span>
+<span style="font-size: 14px; color: #5C6B60">{{ boardDesc }} · 집계 11.01 ~ 11.08</span>
 <div style="background: #0E6B2C; color: #FFF; border-radius: 16px; padding: 14px 16px; display: flex; align-items: center; gap: 12px">
-<span style="width: 28px; font-weight: 900; font-size: 16px; text-align: center">{{ myRank }}</span>
+<span style="width: 28px; font-weight: 900; font-size: 18px; text-align: center">{{ myRank }}</span>
 <span style="width: 40px; height: 40px; border-radius: 50%; background: #E8650A; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 900">{{ childInit }}</span>
-<span style="flex: 1; display: flex; flex-direction: column"><b style="font-size: 15px">{{ childName }} <span style="font-size: 11px; padding: 2px 6px; border-radius: 6px; background: #FFF; color: #0E6B2C; margin-left: 4px">나</span></b><span style="font-size: 12px; color: #D3E9D9">{{ childMeta }}</span></span>
-<b style="font-size: 17px">{{ myScore }}</b>
+<span style="flex: 1; display: flex; flex-direction: column"><b style="font-size: 17px">{{ childName }} <span style="font-size: 13px; padding: 2px 6px; border-radius: 6px; background: #FFF; color: #0E6B2C; margin-left: 4px">나</span></b><span style="font-size: 14px; color: #D3E9D9">{{ childMeta }}</span></span>
+<b style="font-size: 19px">{{ myScore }}</b>
 </div>
 <div style="display: flex; flex-direction: column">
 <sc-for list="{{ board }}" as="r" hint-placeholder-count="6">
 <div style="display: flex; align-items: center; gap: 12px; padding: 12px 4px; border-bottom: 1px solid #EEF1EE">
 <span style="{{ r.rankStyle }}">{{ r.rank }}</span>
 <span style="{{ r.avatar }}">{{ r.init }}</span>
-<span style="flex: 1; display: flex; flex-direction: column"><b style="font-size: 15px">{{ r.name }}</b><span style="font-size: 12px; color: #5C6B60">{{ r.meta }}</span></span>
-<b style="font-size: 15px">{{ r.score }}</b>
+<span style="flex: 1; display: flex; flex-direction: column"><b style="font-size: 17px">{{ r.name }}</b><span style="font-size: 14px; color: #5C6B60">{{ r.meta }}</span></span>
+<b style="font-size: 17px">{{ r.score }}</b>
 </div>
 </sc-for>
 </div>
-<span style="font-size: 11px; color: #767676; line-height: 1.6">아이 이름은 닉네임으로만 보여요. 보호자 설정에서 랭킹 참여를 끌 수 있어요.</span>
+<span style="font-size: 13px; color: #767676; line-height: 1.6">아이 이름은 닉네임으로만 보여요. 보호자 설정에서 랭킹 참여를 끌 수 있어요.</span>
 </div>
 </sc-if>
 
 <sc-if value="{{ vMile }}" hint-placeholder-val="{{ false }}">
 <div style="display: flex; flex-direction: column; gap: 12px">
-<span style="font-size: 13px; color: #5C6B60">완독한 책이 쌓이면 클럽 배지를 받아요. 지금까지 {{ totalBooks }}권!</span>
+<span style="font-size: 15px; color: #5C6B60">완독한 책이 쌓이면 클럽 배지를 받아요. 지금까지 {{ totalBooks }}권!</span>
 <sc-for list="{{ miles }}" as="m" hint-placeholder-count="5">
 <div style="display: flex; align-items: center; gap: 14px; padding: 14px; border: 1px solid #E3E8E4; border-radius: 16px">
 <span style="{{ m.badge }}">{{ m.n }}</span>
 <span style="flex: 1; display: flex; flex-direction: column; gap: 6px">
-<span style="display: flex; justify-content: space-between"><b style="font-size: 15px">{{ m.name }}</b><span style="font-size: 12px; color: #5C6B60">{{ m.state }}</span></span>
+<span style="display: flex; justify-content: space-between"><b style="font-size: 17px">{{ m.name }}</b><span style="font-size: 14px; color: #5C6B60">{{ m.state }}</span></span>
 <span style="height: 8px; border-radius: 4px; background: #EEF1EE; overflow: hidden; display: block"><span style="{{ m.bar }}"></span></span>
 </span>
 </div>
@@ -753,13 +757,13 @@ body{display:block;background:#FFFFFF !important}
 
 <sc-if value="{{ vHall }}" hint-placeholder-val="{{ false }}">
 <div style="display: flex; flex-direction: column; gap: 12px">
-<span style="font-size: 13px; color: #5C6B60">지난달의 다독왕과 개근왕</span>
+<span style="font-size: 15px; color: #5C6B60">지난달의 다독왕과 개근왕</span>
 <sc-for list="{{ hall }}" as="h" hint-placeholder-count="3">
 <div style="border: 1px solid #E3E8E4; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
-<b style="font-size: 15px">{{ h.month }}</b>
+<b style="font-size: 17px">{{ h.month }}</b>
 <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
-<div style="background: #FFF0E3; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: #B4530B; font-weight: 700">다독왕</span><b style="font-size: 15px">{{ h.reader }}</b><span style="font-size: 12px; color: #5C6B60">{{ h.books }}</span></div>
-<div style="background: #E8F0FE; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: #1A56C4; font-weight: 700">개근왕</span><b style="font-size: 15px">{{ h.steady }}</b><span style="font-size: 12px; color: #5C6B60">{{ h.days }}</span></div>
+<div style="background: #FFF0E3; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #B4530B; font-weight: 700">다독왕</span><b style="font-size: 17px">{{ h.reader }}</b><span style="font-size: 14px; color: #5C6B60">{{ h.books }}</span></div>
+<div style="background: #E8F0FE; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; color: #1A56C4; font-weight: 700">개근왕</span><b style="font-size: 17px">{{ h.steady }}</b><span style="font-size: 14px; color: #5C6B60">{{ h.days }}</span></div>
 </div>
 </div>
 </sc-for>
@@ -773,18 +777,18 @@ body{display:block;background:#FFFFFF !important}
 <div class="scroll" style="flex: 1; overflow-y: auto; padding: 0 20px 24px; display: flex; flex-direction: column; gap: 16px">
 <div class="topbar" style="padding-top: 20px; display: flex; align-items: center; gap: 8px">
 <button aria-label="뒤로" onClick="{{ goHome }}" style="width: 44px; height: 44px; border: 0; border-radius: 50%; background: #F4F6F4; color: #16201A; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
-<b style="font-size: 22px; letter-spacing: -0.5px; flex: 1">내 책장</b><span style="font-size: 14px; color: #5C6B60">{{ shelfCount }}권</span>
+<b style="font-size: 22px; letter-spacing: -0.5px; flex: 1">내 책장</b><span style="font-size: 16px; color: #5C6B60">{{ shelfCount }}권</span>
 </div>
 <div style="display: flex; gap: 8px">
-<span style="padding: 8px 14px; border-radius: 999px; background: #0E6B2C; color: #FFF; font-size: 13px; font-weight: 700">영어</span>
-<span style="padding: 8px 14px; border-radius: 999px; background: #F4F6F4; color: #5C6B60; font-size: 13px; font-weight: 700">한국어 · 준비 중</span>
+<span style="padding: 8px 14px; border-radius: 999px; background: #0E6B2C; color: #FFF; font-size: 15px; font-weight: 700">영어</span>
+<span style="padding: 8px 14px; border-radius: 999px; background: #F4F6F4; color: #5C6B60; font-size: 15px; font-weight: 700">한국어 · 준비 중</span>
 </div>
 <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
 <sc-for list="{{ shelf }}" as="b" hint-placeholder-count="6">
 <button onClick="{{ goReport }}" style="border: 0; background: #F4F6F4; border-radius: 14px; padding: 10px; display: flex; flex-direction: column; gap: 8px; text-align: left; color: #16201A">
 <span style="{{ b.cover }}">{{ b.short }}</span>
-<b style="font-size: 14px; line-height: 1.35">{{ b.title }}</b>
-<span style="font-size: 12px; color: #5C6B60">{{ b.date }} · {{ b.count }}문장</span>
+<b style="font-size: 16px; line-height: 1.35">{{ b.title }}</b>
+<span style="font-size: 14px; color: #5C6B60">{{ b.date }} · {{ b.count }}문장</span>
 </button>
 </sc-for>
 </div>
@@ -932,11 +936,12 @@ class Component extends DCLogic {
   /* 북토킹 시작: 바로 채팅창을 열고, 도란이가 책 사진을 달라고 한다 */
   openBookTalk() {
     var BT = window.BookTalk;
+    this._lead = null;
     var hi = '안녕, ' + BT.host.child.name + '! 오늘 읽은 책을 보여 줄래? 읽은 쪽을 찍어서 올려 줘.';
     this.setState({
       screen: 'talk', source: 'book', analysis: null, pages: 0, lessonPlan: null, done: false, err: '',
       messages: [{ role: 'tutor', kind: 'upload', text: hi }], kidTurns: 0, hintsUsed: 0, step: 0, off: 0, goalsUsed: [],
-      thinking: false, hint: false, stage: '책 올리기', fb: -1, startedAt: 0
+      thinking: false, hint: false, stage: '책 올리기', fb: -1, startedAt: 0, reading: false
     });
     this.say("Hi! Show me the book you read today.");
   }
@@ -945,42 +950,90 @@ class Component extends DCLogic {
     return this.state.messages.concat(list);
   }
 
+  /* 책 사진 올리기: 여러 장이면 차례로 읽고 합친 뒤, 도란이가 먼저 읽어 주고 대화를 이끈다 */
   onPhoto(e) {
     var self = this;
-    var file = e.target.files && e.target.files[0];
-    if (!file || this.state.thinking) return;
-    var appending = !!this.state.analysis;
-    this.shrink(file)
-      .then(function (b64) {
-        var msgs = self.state.messages.map(function (m) { return m.kind === 'book' ? Object.assign({}, m, { active: false }) : m; });
-        msgs.push({ role: 'kid', kind: 'photo', src: 'data:image/jpeg;base64,' + b64, note: appending ? (self.state.pages + 1) + '쪽째' : '' });
-        self.setState({ screen: 'talk', messages: msgs, thinking: true, err: '' });
+    var files = Array.prototype.slice.call((e.target && e.target.files) || []).slice(0, 6);
+    if (!files.length || this.state.thinking) return;
+    if (e.target) try { e.target.value = ''; } catch (er) {}
+    var merged = null, pages = 0, reason = '';
+    var msgs = this.state.messages.slice();
+    this.setState({ screen: 'talk', thinking: true, err: '' });
+    var step = Promise.resolve();
+    files.forEach(function (file, idx) {
+      step = step.then(function () { return self.shrink(file); }).then(function (b64) {
+        msgs = msgs.concat([{ role: 'kid', kind: 'photo', src: 'data:image/jpeg;base64,' + b64, note: files.length > 1 ? (idx + 1) + '/' + files.length + '쪽' : '' }]);
+        self.setState({ messages: msgs });
         return self.api({ task: 'analyze', image: b64, mediaType: 'image/jpeg', level: self.state.level });
-      })
-      .then(function (res) {
-        if (!res.ok) {
-          self.setState({ thinking: false, messages: self.push([{ role: 'tutor', kind: 'upload', text: (res.reason || '영어 글을 찾지 못했어.') + ' 글자가 잘 보이게 다시 찍어 줄래?' }]) });
-          return;
-        }
-        var a = res;
-        if (appending) {
-          var prev = self.state.analysis, seen = {};
-          var words = prev.words.concat(res.words || []).filter(function (w) { var k = (w.en || '').toLowerCase(); if (seen[k]) return false; seen[k] = 1; return true; }).slice(0, 8);
-          a = Object.assign({}, prev, { passage: prev.passage + '\n\n' + (res.passage || ''), words: words });
-        }
-        var pages = (appending ? self.state.pages : 0) + 1;
-        self.setState({
-          thinking: false, analysis: a, pages: pages,
-          messages: self.push([{ role: 'tutor', kind: 'book', active: true, pages: pages, title: a.title, topic: a.topic, difficulty: a.difficulty || '', excerpt: a.excerpt || (a.passage || '').slice(0, 160), words: a.words || [] }])
+      }).then(function (res) {
+        if (!res.ok) { reason = res.reason || reason; return; }
+        pages++;
+        if (!merged) { merged = res; return; }
+        var seen = {};
+        merged = Object.assign({}, merged, {
+          passage: merged.passage + '\n\n' + (res.passage || ''),
+          words: merged.words.concat(res.words || []).filter(function (w) { var k = (w.en || '').toLowerCase(); if (seen[k]) return false; seen[k] = 1; return true; }).slice(0, 8)
         });
-        self.say("Got it! Let's talk about " + a.title + '.');
-      })
-      .catch(function (er) { self.setState({ thinking: false, err: '사진을 읽지 못했어요: ' + er.message }); });
+      });
+    });
+    step.then(function () {
+      if (!merged) {
+        self.setState({ thinking: false, messages: msgs.concat([{ role: 'tutor', kind: 'upload', text: (reason || '영어 글을 찾지 못했어.') + ' 글자가 잘 보이게 다시 찍어 줄래?' }]) });
+        return;
+      }
+      self.state.messages = msgs;
+      self.state.analysis = merged; self.state.pages = pages;
+      self.leadBook();
+    }).catch(function (er) { self.setState({ thinking: false, err: '사진을 읽지 못했어요: ' + er.message }); });
+  }
+
+  /* 도란이가 리드: 먼저 소리 내어 읽어 주고(그동안 수업 계획 준비), 다 읽으면 바로 첫 질문 */
+  leadBook() {
+    var self = this, a = this.state.analysis, V = window.BookTalk.voice;
+    var lead = this._lead = { read: false, plan: null, error: null };
+    var card = { role: 'tutor', kind: 'book', reading: true, pages: this.state.pages, title: a.title, topic: a.topic, difficulty: a.difficulty || '', passage: a.passage || '', words: a.words || [] };
+    this.setState({
+      thinking: false, lessonPlan: null, done: false, reading: true, kidTurns: 0, hintsUsed: 0, step: 0, off: 0, goalsUsed: [], fb: -1,
+      messages: this.state.messages.concat([{ role: 'tutor', text: '다 읽었어! 먼저 내가 소리 내어 읽어 줄게. 글을 보면서 잘 들어 봐.' }, card])
+    });
+    var go = function () {
+      if (self._lead !== lead || !lead.read || !(lead.plan || lead.error)) return;
+      self.markReading(false);
+      if (lead.error) { self.setState({ err: '이야기를 준비하지 못했어요: ' + lead.error.message }); return; }
+      self.beginPlan(lead.plan, a);
+    };
+    lead.finishRead = function () { if (lead.read) return; lead.read = true; go(); };
+    V.say("Let me read it for you.", function () { V.read(a.passage || a.excerpt || a.title, lead.finishRead); });
+    this.api({ task: 'plan', source: 'book', level: this.state.level, title: a.title, passage: a.passage || '' })
+      .then(function (lp) { lead.plan = lp; go(); })
+      .catch(function (er) { lead.error = er; go(); });
+  }
+
+  markReading(on) {
+    var msgs = this.state.messages.map(function (m) { return m.kind === 'book' ? Object.assign({}, m, { reading: on && m.reading }) : m; });
+    this.setState({ reading: on, messages: msgs });
+  }
+
+  skipRead() {
+    window.BookTalk.voice.stop();
+    if (this._lead && this._lead.finishRead) this._lead.finishRead();
+  }
+
+  beginPlan(lp, a) {
+    var words = a.words && a.words.length ? a.words : (lp.words || []);
+    var q0 = lp.questions[0];
+    this.setState({
+      thinking: false, lessonPlan: lp, analysis: Object.assign({}, a, { words: words }), startedAt: Date.now(),
+      messages: this.state.messages.concat([{ role: 'tutor', kind: 'goals', title: lp.title || a.title, goals: lp.goals || [], qCount: lp.questions.length }, { role: 'tutor', text: q0.q }]),
+      hintText: q0.hint || 'I think…', stage: q0.stage || '마음 열기'
+    });
+    this.say(q0.q);
   }
 
   /* 수업 계획표 만들기 → 채팅창에 '오늘의 이야기' 카드 + 첫 질문 */
   makePlan(source, info) {
     var self = this;
+    this._lead = null; this.state.reading = false;
     var req = { task: 'plan', source: source, level: this.state.level, title: info.title, passage: info.passage || '', extra: info.extra || '' };
     var base = source === 'book' ? this.state.analysis : null;
     var msgs = source === 'book'
@@ -990,15 +1043,8 @@ class Component extends DCLogic {
       kidTurns: 0, hintsUsed: 0, step: 0, off: 0, goalsUsed: [], fb: -1, stage: '준비 중' });
     this.api(req)
       .then(function (lp) {
-        var a = base ? Object.assign({}, base, { words: (base.words && base.words.length ? base.words : lp.words) })
-                     : { title: lp.title || info.title, topic: lp.topic || info.ko || '', difficulty: '', passage: '', words: lp.words || [] };
-        var q0 = lp.questions[0];
-        self.setState({
-          thinking: false, lessonPlan: lp, analysis: a, startedAt: Date.now(),
-          messages: self.push([{ role: 'tutor', kind: 'goals', title: lp.title || a.title, goals: lp.goals || [], qCount: lp.questions.length }, { role: 'tutor', text: q0.q }]),
-          hintText: q0.hint || 'I think…', stage: q0.stage || '마음 열기'
-        });
-        self.say(q0.q);
+        var a = base || { title: lp.title || info.title, topic: lp.topic || info.ko || '', difficulty: '', passage: '', words: lp.words || [] };
+        self.beginPlan(lp, a);
       })
       .catch(function (er) { self.setState({ thinking: false, err: '이야기를 준비하지 못했어요: ' + er.message }); });
   }
@@ -1106,6 +1152,14 @@ class Component extends DCLogic {
     if (this._talking) document.querySelectorAll('.doran').forEach(function (el) { el.classList.add('talking'); });
   }
 
+  checkSvc() {
+    var self = this;
+    this.setState({ svc: null });
+    window.BookTalk.api.call({ task: 'config' })
+      .then(function (c) { self.setState({ svc: c }); })
+      .catch(function (e) { self.setState({ svc: { error: e.message } }); });
+  }
+
   setLook(v) {
     try { localStorage.setItem('booktalk.look', v); } catch (e) {}
     this.setState({ look: v });
@@ -1122,10 +1176,10 @@ class Component extends DCLogic {
     var G = '#0E6B2C', B = '#1F6FEB', O = '#E8650A';
     var go = function (name) { return function () { self.setState({ screen: name, review: 0, err: '' }); }; };
     var set = function (obj) { return function () { self.setState(obj); }; };
-    var seg = function (on) { return 'flex:1;border:0;border-radius:999px;padding:6px 12px;min-height:36px;font-size:13px;font-weight:700;' + (on ? 'background:' + G + ';color:#FFF' : 'background:none;color:#5C6B60'); };
-    var under = function (on) { return 'border:0;background:none;min-height:44px;font-size:14px;font-weight:700;border-bottom:3px solid ' + (on ? G : 'transparent') + ';color:' + (on ? G : '#8A968D'); };
-    var tab = function (name) { var on = s.screen === name; return 'border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px;font-weight:700;color:' + (on ? G : '#8A968D'); };
-    var cover = function (c, ink) { return 'height:92px;border-radius:10px;background:' + c + ';color:' + ink + ';display:flex;align-items:flex-end;padding:10px;font-weight:900;font-size:18px;font-family:Plus Jakarta Sans,sans-serif;overflow:hidden'; };
+    var seg = function (on) { return 'flex:1;border:0;border-radius:999px;padding:6px 12px;min-height:36px;font-size:15px;font-weight:700;' + (on ? 'background:' + G + ';color:#FFF' : 'background:none;color:#5C6B60'); };
+    var under = function (on) { return 'border:0;background:none;min-height:44px;font-size:16px;font-weight:700;border-bottom:3px solid ' + (on ? G : 'transparent') + ';color:' + (on ? G : '#8A968D'); };
+    var tab = function (name) { var on = s.screen === name; return 'border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:13px;font-weight:700;color:' + (on ? G : '#8A968D'); };
+    var cover = function (c, ink) { return 'height:92px;border-radius:10px;background:' + c + ';color:' + ink + ';display:flex;align-items:flex-end;padding:10px;font-weight:900;font-size:20px;font-family:Plus Jakarta Sans,sans-serif;overflow:hidden'; };
     var palette = [[G, '#FFF'], [B, '#FFF'], [O, '#FFF'], ['#0A4F20', '#FFF'], ['#E7F3EA', '#0B5E25'], ['#E8F0FE', '#1A56C4']];
 
     /* --- 대화 화면 --- */
@@ -1136,12 +1190,12 @@ class Component extends DCLogic {
       return {
         isText: k === 'text', isPhoto: k === 'photo', isUpload: k === 'upload', isBook: k === 'book', isGoals: k === 'goals',
         text: m.text, src: m.src, note: m.note || '', active: !!m.active && !s.thinking, pages: m.pages, title: m.title, topic: m.topic,
-        difficulty: m.difficulty, excerpt: m.excerpt, words: wordBtns(m.words), qCount: m.qCount,
+        difficulty: m.difficulty, excerpt: m.excerpt, passage: m.passage || m.excerpt || '', reading: !!m.reading && !!s.reading, words: wordBtns(m.words), qCount: m.qCount,
         goals: (m.goals || []).map(function (g) { return { en: g.en, ko: g.ko, say: function () { self.say(g.en); } }; }),
         fix: tutor ? '' : (m.fix || ''), fixLabel: m.korean ? '영어로는' : '더 나은 표현',
         open: function () { if (tutor) self.say(m.text); else if (m.checked) self.setState({ fb: i }); },
         wrap: 'display:flex;flex-direction:column;align-items:' + (tutor ? 'flex-start' : 'flex-end') + ';gap:2px',
-        bubble: 'border:0;text-align:left;font-family:inherit;max-width:84%;padding:12px 14px;font-size:15px;line-height:1.5;border-radius:' + (tutor ? '18px 18px 18px 4px;background:#F4F6F4;color:#16201A' : '18px 18px 4px 18px;background:' + G + ';color:#FFFFFF')
+        bubble: 'border:0;text-align:left;font-family:inherit;max-width:84%;padding:12px 14px;font-size:17px;line-height:1.5;border-radius:' + (tutor ? '18px 18px 18px 4px;background:#F4F6F4;color:#16201A' : '18px 18px 4px 18px;background:' + G + ';color:#FFFFFF')
       };
     });
     var fm = s.fb > -1 ? s.messages[s.fb] : null;
@@ -1154,7 +1208,7 @@ class Component extends DCLogic {
     var LP = s.lessonPlan || { questions: [], goals: [], words: [] };
     var qn = LP.questions.length || 6;
     var pct = s.done ? 100 : Math.min(100, Math.round(s.step / qn * 100));
-    var goalChips = (LP.goals || []).map(function (g, i) { var on = s.goalsUsed.indexOf(i) > -1; return { en: g.en, mark: on ? '✓' : '○', style: 'padding:5px 10px;border-radius:999px;font-size:12px;font-weight:700;font-family:Plus Jakarta Sans,sans-serif;' + (on ? 'background:' + G + ';color:#FFF' : 'background:#F4F6F4;color:#5C6B60') }; });
+    var goalChips = (LP.goals || []).map(function (g, i) { var on = s.goalsUsed.indexOf(i) > -1; return { en: g.en, mark: on ? '✓' : '○', style: 'padding:5px 10px;border-radius:999px;font-size:14px;font-weight:700;font-family:Plus Jakarta Sans,sans-serif;' + (on ? 'background:' + G + ';color:#FFF' : 'background:#F4F6F4;color:#5C6B60') }; });
     var SRC = { book: '북토킹', topic: '오늘의 주제', textbook: '교과서', novel: '원서' };
     var TP = window.BookTalk.topics;
     var todayT = TP.today(new Date());
@@ -1181,13 +1235,13 @@ class Component extends DCLogic {
         fixCount: (rr.fixes || []).length, praise: rr.praise || '리포트를 만드는 중이에요…', comprehension: rr.comprehension || '—',
         total: st.total, unique: st.unique, ttr: st.ttr,
         topWords: st.top.map(function (t, i) { return { w: t[0], n: t[1], style: 'width:' + Math.round(t[1] / mx * 100) + '%;height:100%;border-radius:5px;background:' + (i === 0 ? G : '#9CC7A8') }; }),
-        bookWords: st.bookWords.map(function (b) { return { w: b[0], label: b[1] ? '말했어요' : '다음에 써 보기', style: 'padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700;' + (b[1] ? 'background:#E7F3EA;color:#0B5E25' : 'background:#FFF0E3;color:#8A3E06') }; }),
+        bookWords: st.bookWords.map(function (b) { return { w: b[0], label: b[1] ? '말했어요' : '다음에 써 보기', style: 'padding:4px 10px;border-radius:999px;font-size:14px;font-weight:700;' + (b[1] ? 'background:#E7F3EA;color:#0B5E25' : 'background:#FFF0E3;color:#8A3E06') }; }),
         overWord: (rr.overused && rr.overused.word) || '', overAlt: (rr.overused && rr.overused.alternatives) || [],
         expressions: rr.expressions || [], fixes: rr.fixes || [], noFix: !!cur.report && !(rr.fixes || []).length,
         nextTip: rr.nextTip || '—', note: '단어 수·비율은 대화 기록으로 계산하고, 칭찬·교정은 Claude가 작성해요',
         hasGoals: !!(cur.goals && cur.goals.length),
         goalScore: (cur.goals || []).filter(function (g) { return g.used; }).length + '/' + (cur.goals || []).length,
-        goals: (cur.goals || []).map(function (g) { return { en: g.en, mark: g.used ? '✓' : '·', state: g.used ? '썼어요' : '다음에 써 보기', badge: 'width:24px;height:24px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;' + (g.used ? 'background:' + G + ';color:#FFF' : 'background:#FFF0E3;color:#8A3E06') }; }),
+        goals: (cur.goals || []).map(function (g) { return { en: g.en, mark: g.used ? '✓' : '·', state: g.used ? '썼어요' : '다음에 써 보기', badge: 'width:24px;height:24px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;' + (g.used ? 'background:' + G + ';color:#FFF' : 'background:#FFF0E3;color:#8A3E06') }; }),
         sourceNote: (SRC[cur.source] || '북토킹') + (cur.koreanTurns ? ' · 한국어로 말한 뒤 영어로 바꿔 본 문장 ' + cur.koreanTurns + '개' : '')
       };
     } else {
@@ -1197,12 +1251,12 @@ class Component extends DCLogic {
         praise: '고래가 노래하는 이유를 "to talk to friends"라며 자기 생각으로 설명했어요.', comprehension: '확인 질문 2개에 모두 바르게 답했어요.',
         total: 112, unique: 58, ttr: 52,
         topWords: [['they', 9], ['sing', 7], ['whales', 6], ['think', 4], ['because', 3], ['ocean', 3]].map(function (t, i) { return { w: t[0], n: t[1], style: 'width:' + Math.round(t[1] / 9 * 100) + '%;height:100%;border-radius:5px;background:' + (i === 0 ? G : '#9CC7A8') }; }),
-        bookWords: [['humpback', true], ['migrate', true], ['repeat', false]].map(function (b) { return { w: b[0], label: b[1] ? '말했어요' : '다음에 써 보기', style: 'padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700;' + (b[1] ? 'background:#E7F3EA;color:#0B5E25' : 'background:#FFF0E3;color:#8A3E06') }; }),
+        bookWords: [['humpback', true], ['migrate', true], ['repeat', false]].map(function (b) { return { w: b[0], label: b[1] ? '말했어요' : '다음에 써 보기', style: 'padding:4px 10px;border-radius:999px;font-size:14px;font-weight:700;' + (b[1] ? 'background:#E7F3EA;color:#0B5E25' : 'background:#FFF0E3;color:#8A3E06') }; }),
         overWord: 'good', overAlt: ['great', 'amazing', 'wonderful'], expressions: ['migrate', 'for hours', 'talk to'],
         fixes: [{ from: 'They sing song for a long time.', to: 'They sing songs for a long time.', why: '노래가 여러 곡이면 songs' }],
         noFix: false, nextTip: '이유를 말할 때 because로 시작해 보게 해 주세요.', note: '아직 북토킹 기록이 없어서 샘플 리포트를 보여 줘요',
         hasGoals: true, goalScore: '2/3', sourceNote: '북토킹 · 샘플',
-        goals: [['I think ... because ...', true], ['It sounds like ...', true], ['If I were ..., I would ...', false]].map(function (g) { return { en: g[0], mark: g[1] ? '✓' : '·', state: g[1] ? '썼어요' : '다음에 써 보기', badge: 'width:24px;height:24px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;' + (g[1] ? 'background:' + G + ';color:#FFF' : 'background:#FFF0E3;color:#8A3E06') }; })
+        goals: [['I think ... because ...', true], ['It sounds like ...', true], ['If I were ..., I would ...', false]].map(function (g) { return { en: g[0], mark: g[1] ? '✓' : '·', state: g[1] ? '썼어요' : '다음에 써 보기', badge: 'width:24px;height:24px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;' + (g[1] ? 'background:' + G + ';color:#FFF' : 'background:#FFF0E3;color:#8A3E06') }; })
       };
     }
     var fixesForReview = rp.fixes.length ? rp.fixes : [{ from: 'They sing song.', to: 'They sing songs.' }];
@@ -1228,7 +1282,8 @@ class Component extends DCLogic {
     var skillBase = hasReal && ag.books ? ag.skills : { amount: 78, length: 64, variety: 58, self: 71 };
     var srcCount = hasReal ? ag.sources : { book: 6, topic: 4, textbook: 1, novel: 1 };
     var srcColor = { book: G, topic: '#B4530B', textbook: '#1A56C4', novel: '#0A4F20' };
-    var srcList = ['book', 'topic', 'textbook', 'novel'].map(function (k) { return { name: SRC[k], n: srcCount[k] || 0, style: 'font-size:20px;color:' + srcColor[k] }; });
+    var SRC_SHORT = { book: '북토킹', topic: '주제', textbook: '교과서', novel: '원서' };
+    var srcList = ['book', 'topic', 'textbook', 'novel'].map(function (k) { return { name: SRC_SHORT[k], n: srcCount[k] || 0, style: 'font-size:20px;color:' + srcColor[k] }; });
     var goalRate = hasReal ? (ag.goalRate == null ? '아직 없어요' : ag.goalRate + '%') : '67%';
     var skills = [
       { name: '말하기 양', v: skillBase.amount, c: G }, { name: '문장 길이', v: skillBase.length, c: B },
@@ -1238,8 +1293,8 @@ class Component extends DCLogic {
     /* --- 2주 플랜 (샘플) --- */
     var titles = [['Nate the Great', '탐정 · 챕터북'], ['Henry and Mudge', '우정 · 리더스'], ['Frog and Toad Are Friends', '우정 · 리더스'], ['Amelia Bedelia', '유머 · 리더스'], ['Mercy Watson to the Rescue', '동물 · 챕터북'], ['Fly Guy', '유머 · 리더스'], ['Magic Tree House #1', '모험 · 챕터북'], ['Cam Jansen', '탐정 · 챕터북'], ['Junie B. Jones', '학교 · 챕터북'], ['Flat Stanley', '모험 · 챕터북'], ['Kids Times 기사', '시사 · 신문'], ['The Black Lagoon', '학교 · 챕터북'], ['Mercy Watson Fights Crime', '동물 · 챕터북'], ['Magic Tree House #2', '모험 · 챕터북']];
     var doneN = 4, today = 4;
-    var days = titles.map(function (t, i) { var bg = i < doneN ? G : (i === today ? B : '#EEF1EE'); return { n: i < doneN ? '✓' : String(i + 1), style: 'aspect-ratio:1;border-radius:10px;background:' + bg + ';color:' + (i <= today ? '#FFF' : '#5C6B60') + ';display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800' }; });
-    var plan = titles.map(function (t, i) { var c = i < doneN ? G : (i === today ? '#1A56C4' : '#767676'); return { day: 'D' + (i + 1), title: t[0], genre: t[1], state: i < doneN ? '완료' : (i === today ? '오늘' : '예정'), badge: 'width:40px;height:40px;flex:none;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;background:' + (i < doneN ? '#E7F3EA' : (i === today ? '#E8F0FE' : '#F4F6F4')) + ';color:' + c, stateStyle: 'font-size:12px;font-weight:700;color:' + c }; });
+    var days = titles.map(function (t, i) { var bg = i < doneN ? G : (i === today ? B : '#EEF1EE'); return { n: i < doneN ? '✓' : String(i + 1), style: 'aspect-ratio:1;border-radius:10px;background:' + bg + ';color:' + (i <= today ? '#FFF' : '#5C6B60') + ';display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800' }; });
+    var plan = titles.map(function (t, i) { var c = i < doneN ? G : (i === today ? '#1A56C4' : '#767676'); return { day: 'D' + (i + 1), title: t[0], genre: t[1], state: i < doneN ? '완료' : (i === today ? '오늘' : '예정'), badge: 'width:40px;height:40px;flex:none;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;background:' + (i < doneN ? '#E7F3EA' : (i === today ? '#E8F0FE' : '#F4F6F4')) + ';color:' + c, stateStyle: 'font-size:14px;font-weight:700;color:' + c }; });
 
     /* --- 랭킹 (샘플) --- */
     var kidsRead = [['지호', '초5 · Lv.4', '9권'], ['하린', '초5 · Lv.3', '8권'], ['도윤', '초4 · Lv.3', '7권'], ['서준', '초5 · Lv.2', '6권'], ['민서', '초6 · Lv.4', '6권'], ['예린', '초5 · Lv.3', '5권']];
@@ -1247,9 +1302,9 @@ class Component extends DCLogic {
     var list = s.kind === 'read' ? kidsRead : kidsDays;
     if (s.same) list = list.filter(function (k2) { return k2[1].indexOf('초5') === 0; });
     var avatarC = [G, B, '#B4530B', '#0A4F20', '#1A56C4', '#0B5E25'], medal = ['#D99A06', '#7D8790', '#B0652A'];
-    var board = list.map(function (k2, i) { return { rank: i + 1, name: k2[0], meta: k2[1], score: k2[2], init: k2[0].charAt(0), rankStyle: 'width:28px;height:28px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;' + (i < 3 ? 'background:' + medal[i] + ';color:#FFF' : 'color:#5C6B60'), avatar: 'width:40px;height:40px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;color:#FFF;background:' + avatarC[i % 6] }; });
+    var board = list.map(function (k2, i) { return { rank: i + 1, name: k2[0], meta: k2[1], score: k2[2], init: k2[0].charAt(0), rankStyle: 'width:28px;height:28px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;' + (i < 3 ? 'background:' + medal[i] + ';color:#FFF' : 'color:#5C6B60'), avatar: 'width:40px;height:40px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;color:#FFF;background:' + avatarC[i % 6] }; });
     var totalBooks = 32 + s.sessions.length;
-    var miles = [10, 30, 50, 100, 200].map(function (n) { var got = totalBooks >= n; var p = Math.min(100, Math.round(totalBooks / n * 100)); return { n: n, name: n + '권 클럽', state: got ? '달성!' : (totalBooks + '/' + n + '권'), badge: 'width:52px;height:52px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;' + (got ? 'background:' + O + ';color:#FFF' : 'background:#F4F6F4;color:#767676;border:2px dashed #C9D1CB'), bar: 'display:block;height:100%;border-radius:4px;width:' + p + '%;background:' + (got ? O : G) }; });
+    var miles = [10, 30, 50, 100, 200].map(function (n) { var got = totalBooks >= n; var p = Math.min(100, Math.round(totalBooks / n * 100)); return { n: n, name: n + '권 클럽', state: got ? '달성!' : (totalBooks + '/' + n + '권'), badge: 'width:52px;height:52px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;' + (got ? 'background:' + O + ';color:#FFF' : 'background:#F4F6F4;color:#767676;border:2px dashed #C9D1CB'), bar: 'display:block;height:100%;border-radius:4px;width:' + p + '%;background:' + (got ? O : G) }; });
     var hall = [{ month: '2026년 10월', reader: '지호', books: '완독 18권', steady: '하린', days: '27일 출석' }, { month: '2026년 9월', reader: '민서', books: '완독 15권', steady: '서준', days: '25일 출석' }, { month: '2026년 8월', reader: '하린', books: '완독 14권', steady: '하린', days: '24일 출석' }];
 
     var host = window.BookTalk.host;
@@ -1262,11 +1317,23 @@ class Component extends DCLogic {
       isDone: s.screen === 'done', isReport: s.screen === 'report', isStats: s.screen === 'stats', isShelf: s.screen === 'shelf',
       isReview: s.screen === 'review', isPlan: s.screen === 'plan', isRank: s.screen === 'rank',
       isPick: s.screen === 'pick', isMe: s.screen === 'me',
-      goMe: function () { self.setState({ screen: 'me', meGrade: host.child.grade, meName: host.child.name, meSaved: false, clearAsk: false }); },
+      goMe: function () { self.checkSvc(); self.setState({ screen: 'me', meGrade: host.child.grade, meName: host.child.name, meSaved: false, clearAsk: false }); },
+      recheckSvc: function () { self.checkSvc(); },
+      svcRows: (function () {
+        var v = s.svc, L = window.BookTalk.listen;
+        var row = function (name, ok, okText, noText) { return { name: name, state: v ? (ok ? okText : noText) : '확인 중…', dot: 'width:10px;height:10px;border-radius:50%;flex:none;background:' + (!v ? '#C9D3CC' : ok ? '#1E9E4A' : O) }; };
+        var err = v && v.error;
+        return [
+          row('대화 AI (Claude)', v && v.claude, '연결됨', err ? '서버 연결 실패' : 'API 키 없음'),
+          row('도란이 목소리', v && v.tts, '자연스러운 목소리', '기본(기계음) 목소리'),
+          row('음성 인식', v && v.stt && L.canRecord(), 'OpenAI · 한국어 섞어도 OK', v && v.stt ? '이 브라우저는 녹음 불가' : (L.hasBrowserStt() ? '브라우저 기본 · 영어만' : '사용 불가 · 글로 입력')),
+          row('마이크 녹음', L.canRecord(), '사용 가능', '이 브라우저에서 불가')
+        ];
+      })(),
       meNameVal: s.meName == null ? host.child.name : s.meName,
       typeName: function (e) { self.state.meName = e.target.value; self.state.meSaved = false; },
       meEditable: window.BookTalk.profile.editable, meLocked: !window.BookTalk.profile.editable, hostAppName: host.appName,
-      meGrades: ['초1', '초2', '초3', '초4', '초5', '초6'].map(function (g) { var on = g === s.meGrade; return { name: g.slice(1) + '학년', pick: set({ meGrade: g, meSaved: false }), style: 'border:0;min-height:44px;border-radius:12px;font-size:13px;font-weight:700;' + (on ? 'background:' + G + ';color:#FFF' : 'background:#F4F6F4;color:#5C6B60') }; }),
+      meGrades: ['초1', '초2', '초3', '초4', '초5', '초6'].map(function (g) { var on = g === s.meGrade; return { name: g.slice(1) + '학년', pick: set({ meGrade: g, meSaved: false }), style: 'border:0;min-height:44px;border-radius:12px;font-size:15px;font-weight:700;' + (on ? 'background:' + G + ';color:#FFF' : 'background:#F4F6F4;color:#5C6B60') }; }),
       meLevels: [1, 2, 3, 4, 5].map(function (n) { var on = n === s.level; return { n: n, desc: ['', '첫걸음 · 짧은 문장, 고르기 질문', '기초 · 쉬운 단어, 이유 한 번', '중급 · 이유와 생각 말하기', '중상급 · 비교·예측·의견', '상급 · 깊이 생각하는 질문'][n], pick: set({ level: n, meSaved: false }), style: 'display:flex;align-items:center;gap:10px;min-height:48px;padding:0 14px;border-radius:14px;' + (on ? 'border:2px solid ' + G + ';background:#E7F3EA;color:#0B5E25' : 'border:1px solid #E3E8E4;background:#FFF;color:#16201A') }; }),
       avBigBtn: seg(s.avatar === 'big'), avSmallBtn: seg(s.avatar === 'small'), avHideBtn: seg(s.avatar === 'hide'),
       setAvBig: function () { self.setAvatar('big'); }, setAvSmall: function () { self.setAvatar('small'); }, setAvHide: function () { self.setAvatar('hide'); },
@@ -1277,7 +1344,7 @@ class Component extends DCLogic {
       meSaved: s.meSaved, sessionCount: s.sessions.length,
       storeWhere: window.BookTalk.profile.editable ? '이 기기(브라우저)에만' : host.appName + ' 계정',
       clearBtnLabel: s.clearAsk ? '정말 지울게요 (한 번 더 누르기)' : '기록 지우기',
-      clearBtnStyle: 'min-height:48px;border-radius:999px;font-size:14px;font-weight:800;' + (s.clearAsk ? 'border:0;background:' + O + ';color:#FFF' : 'border:1px solid #F6D3B5;background:#FFF;color:#B4530B'),
+      clearBtnStyle: 'min-height:48px;border-radius:999px;font-size:16px;font-weight:800;' + (s.clearAsk ? 'border:0;background:' + O + ';color:#FFF' : 'border:1px solid #F6D3B5;background:#FFF;color:#B4530B'),
       askClear: function () { if (!s.clearAsk) { self.setState({ clearAsk: true }); return; } self.setState({ sessions: window.BookTalk.store.clear(), current: null, clearAsk: false }); },
       fbOpen: !!fm, fb: fb, closeFb: set({ fb: -1 }),
       avatarSrc: (host.assetBase || '') + 'booktalk/assets/doran-' + (s.look === 'boy' ? 'boy' : 'girl') + '.webp',
@@ -1291,6 +1358,9 @@ class Component extends DCLogic {
       cycleAvatar: function () { self.setAvatar({ big: 'small', small: 'hide', hide: 'big' }[s.avatar] || 'small'); },
       avatarToBig: function () { self.setAvatar('big'); }, avatarToSmall: function () { self.setAvatar('small'); },
       goBookTalk: function () { self.openBookTalk(); },
+      readAgain: function () { var a0 = s.analysis; if (!a0) return; var ld = self._lead; window.BookTalk.voice.read(a0.passage || a0.excerpt || '', s.reading && ld ? ld.finishRead : null); },
+      readLabel: s.reading ? '처음부터 다시 읽기' : '다시 읽어 주기',
+      skipRead: function () { self.skipRead(); },
       startFromChat: function () { var a0 = s.analysis; if (a0) self.makePlan('book', { title: a0.title, passage: a0.passage }); },
       showTabs: tabs.indexOf(s.screen) > -1,
       tabBarStyle: 'flex:none;height:80px;padding-bottom:14px;background:#FFFFFF;border-top:1px solid #E3E8E4;display:grid;grid-template-columns:repeat(' + tabs.length + ',minmax(0,1fr))',
@@ -1314,7 +1384,7 @@ class Component extends DCLogic {
       pickIsBook: s.pickTab === 'textbook', pickIsNovel: s.pickTab === 'novel',
       pickBookBtn: seg(s.pickTab === 'textbook'), pickNovelBtn: seg(s.pickTab === 'novel'),
       setPickBook: set({ pickTab: 'textbook' }), setPickNovel: set({ pickTab: 'novel' }),
-      grades: TP.grades.map(function (g) { var on = g === s.grade; return { name: g, pick: set({ grade: g }), style: 'border:0;min-height:36px;padding:0 14px;border-radius:999px;font-size:13px;font-weight:700;' + (on ? 'background:' + G + ';color:#FFF' : 'background:#F4F6F4;color:#5C6B60') }; }),
+      grades: TP.grades.map(function (g) { var on = g === s.grade; return { name: g, pick: set({ grade: g }), style: 'border:0;min-height:36px;padding:0 14px;border-radius:999px;font-size:15px;font-weight:700;' + (on ? 'background:' + G + ';color:#FFF' : 'background:#F4F6F4;color:#5C6B60') }; }),
       units: (TP.textbook[s.grade] || []).map(function (u, i) { return { no: i + 1, en: u.en, ko: u.ko, extra: u.extra, go: function () { self.state.analysis = null; self.makePlan('textbook', { title: u.en, extra: u.extra, ko: u.ko }); } }; }),
       novels: titles.map(function (t) { return { title: t[0], genre: t[1], go: function () { self.state.analysis = null; self.makePlan('novel', { title: t[0], extra: '(' + t[1] + ')' }); } }; }),
       goNovelTyped: function () { var inp = document.getElementById('novelTitle'); var v = inp ? inp.value.trim() : ''; if (!v) return; self.state.analysis = null; self.makePlan('novel', { title: v }); },
@@ -1327,7 +1397,7 @@ class Component extends DCLogic {
       toggleHint: function () { self.setState({ hint: !s.hint, hintsUsed: s.hint ? s.hintsUsed : s.hintsUsed + 1 }); },
       speak: function () { self.speak(); },
       micStyle: 'width:76px;height:76px;border:0;border-radius:50%;color:#FFF;display:flex;align-items:center;justify-content:center;background:' + (s.listening ? O : G) + (s.listening ? ';box-shadow:0 0 0 8px rgba(232,101,10,.2)' : ''),
-      speakLabel: !s.lessonPlan ? (s.thinking ? '도란이가 준비하고 있어요' : (s.analysis ? '「이 글로 이야기 시작」을 눌러요' : '먼저 책 사진을 올려요')) : s.done ? '눌러서 마치기' : (s.listening ? '듣는 중… 다 말하면 다시 눌러요' : (s.thinking ? '도란이가 생각 중이에요' : '누르고 말하기 · 한국어도 OK')),
+      speakLabel: !s.lessonPlan ? (s.reading ? '도란이가 읽어 주고 있어요 · 다 읽으면 질문할게요' : s.thinking ? '도란이가 준비하고 있어요' : (s.analysis ? '「이 글로 이야기 시작」을 눌러요' : '먼저 책 사진을 올려요')) : s.done ? '눌러서 마치기' : (s.listening ? '듣는 중… 다 말하면 다시 눌러요' : (s.thinking ? '도란이가 생각 중이에요' : '누르고 말하기 · 한국어도 OK')),
       replay: function () { self.say(lastTutor && lastTutor.text); },
       sendTyped: function (e) { e.preventDefault(); var inp = document.getElementById('typed'); var v = inp ? inp.value : ''; if (inp) inp.value = ''; self.sendKid(v); },
       canFinish: s.kidTurns >= 2, finishTalk: function () { self.finishTalk(); },

@@ -277,7 +277,7 @@ async function handleBookTalk(body, options) {
     ocrModel: o.model || o.ocrModel || DEFAULT_OCR_MODEL,
     chatModel: o.model || o.chatModel || DEFAULT_CHAT_MODEL
   });
-  if (body.task === 'config') return { tts: !!OPTS.openaiKey, stt: !!OPTS.openaiKey };
+  if (body.task === 'config') return { claude: !!OPTS.apiKey, tts: !!OPTS.openaiKey, stt: !!OPTS.openaiKey };
   if (body.task === 'transcribe') {
     if (!OPTS.openaiKey) throw new Error('서버에 OPENAI_API_KEY가 설정되지 않았어요');
     return transcribe(body);
