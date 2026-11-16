@@ -40,7 +40,8 @@ async function callClaude({ system, messages, maxTokens = 1024, model, temperatu
       'x-api-key': OPTS.apiKey,
       'anthropic-version': '2023-06-01'
     },
-    body: JSON.stringify(Object.assign({ model, max_tokens: maxTokens, system, messages }, temperature == null ? {} : { temperature }))
+    // temperature는 보내지 않는다: 최신 Claude 모델은 이 설정을 받지 않는다 (보내면 요청이 거절됨)
+    body: JSON.stringify({ model, max_tokens: maxTokens, system, messages })
   });
   const data = await res.json();
   if (!res.ok) {
