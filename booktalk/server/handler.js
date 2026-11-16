@@ -18,6 +18,7 @@ const STT_URL = 'https://api.openai.com/v1/audio/transcriptions';
 const DEFAULT_OCR_MODEL = 'claude-sonnet-5-5';
 const DEFAULT_CHAT_MODEL = 'claude-haiku-5-5';
 let OPTS = {};
+const usage = require('./usage');
 
 const LEVELS = {
   1: '초급: 아주 짧고 쉬운 문장(5단어 안팎), 예/아니오나 고르기 질문 위주',
@@ -44,8 +45,12 @@ async function callClaude({ system, messages, maxTokens = 1024, model, temperatu
   const data = await res.json();
   if (!res.ok) {
     const msg = (data && data.error && data.error.message) || ('Claude API 오류 ' + res.status);
+    usage.record({ provider: 'anthropic', model, ok: false, error: msg });
     throw new Error(msg);
   }
+  const u = data.usage || {};
+  const inTok = (u.input_tokens || 0) + (u.cache_creation_input_tokens || 0) + (u.cache_read_input_tokens || 0);
+  usage.record({ provider: 'anthropic', model: data.model || model, input_tokens: inTok, output_tokens: u.output_tokens || 0, cost_usd: usage.claudeCost(model, inTok, u.output_tokens || 0) });
   return (data.content || []).filter((b) => b.type === 'text').map((b) => b.text).join('');
 }
 
@@ -247,9 +252,11 @@ async function tts(body) {
   if (!res.ok) {
     let msg = 'OpenAI 음성 오류 ' + res.status;
     try { const j = await res.json(); if (j.error && j.error.message) msg = j.error.message; } catch (e) {}
+    usage.record({ provider: 'openai', model: OPTS.ttsModel || 'gpt-4o-mini-tts', chars: text.length, ok: false, error: msg });
     throw new Error(msg);
   }
   const buf = Buffer.from(await res.arrayBuffer());
+  usage.record({ provider: 'openai', model: OPTS.ttsModel || 'gpt-4o-mini-tts', chars: text.length, cost_usd: usage.ttsCost(text.length) });
   return { audio: buf.toString('base64'), mime: 'audio/mpeg' };
 }
 
@@ -267,11 +274,18 @@ async function transcribe(body) {
   form.append('prompt', 'A Korean elementary school child is practicing English. The child may speak English, Korean, or mix both' + (words ? '. English words that may appear: ' + words : '') + '. Write Korean in Hangul and keep the child\'s English grammar mistakes as spoken.');
   const res = await fetch(STT_URL, { method: 'POST', headers: { authorization: 'Bearer ' + OPTS.openaiKey }, body: form });
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error((data.error && data.error.message) || ('OpenAI 음성 인식 오류 ' + res.status));
+  const sttModel = OPTS.sttModel || 'gpt-4o-mini-transcribe';
+  const seconds = Math.max(0, Math.min(120, (Number(body.durationMs) || 0) / 1000)) || buf.length / 4000; // 녹음 길이(앱이 보내 줌), 없으면 크기로 추정
+  if (!res.ok) {
+    const msg = (data.error && data.error.message) || ('OpenAI 음성 인식 오류 ' + res.status);
+    usage.record({ provider: 'openai', model: sttModel, seconds, ok: false, error: msg });
+    throw new Error(msg);
+  }
+  usage.record({ provider: 'openai', model: sttModel, seconds: Number(seconds.toFixed(1)), cost_usd: usage.sttCost(sttModel, seconds) });
   return { text: String(data.text || '').trim() };
 }
 
-async function handleBookTalk(body, options) {
+async function handleTask(body, options) {
   const o = options || {};
   OPTS = Object.assign({}, o, {
     ocrModel: o.model || o.ocrModel || DEFAULT_OCR_MODEL,
@@ -292,6 +306,19 @@ async function handleBookTalk(body, options) {
   if (body.task === 'chat') return chat(body);
   if (body.task === 'report') return report(body);
   throw new Error('알 수 없는 요청이에요');
+}
+
+// 요청 하나를 처리하면서 그 안의 AI 호출 사용량을 모아 저장한다
+async function handleBookTalk(body, options) {
+  const o = options || {};
+  const { out, err, rows } = await usage.track(() => handleTask(body, o));
+  if (rows.length) {
+    const ctx = { task: body && body.task, childId: body && body.cid, app: o.app };
+    if (typeof o.onUsage === 'function') { try { await o.onUsage(rows, ctx); } catch (e) {} }
+    else await usage.save(rows, ctx);
+  }
+  if (err) throw err;
+  return out;
 }
 
 module.exports = { handleBookTalk };

@@ -59,3 +59,22 @@ python3 scripts/build.py booktalk/ui/App.dc.html scripts/runtime.js index.html
    - 답은 3문장 이내로 다듬고, 넘어가는데 질문이 빠지면 다음 질문을 붙여요.
    - 아이가 한국어로 말하면 뜻을 영어로 바꿔 보여 주고(`korean: true`) 따라 말하게 해요.
 3. 리포트·통계 — 목표 표현 사용 여부, 소재별 대화 수, 목표 표현 성공률이 남아요.
+
+## 관리자 · AI 사용량 실시간 확인 (`/admin`)
+
+Claude·OpenAI를 부를 때마다 토큰/글자/녹음 시간과 추정 비용을 Supabase `booktalk_usage` 표에 기록하고, `/admin`에서 10초마다 새로고침해 보여줘요.
+
+1. Supabase → SQL Editor에 `docs/usage.sql` 내용을 붙여 넣고 Run (IUX.STUDIO와 같은 프로젝트를 써도 돼요)
+2. Vercel 환경변수 추가 (Secret)
+
+| 이름 | 값 |
+|---|---|
+| `SUPABASE_URL` | Supabase → Project Settings → API → Project URL |
+| `SUPABASE_SERVICE_ROLE_KEY` | 같은 화면의 `service_role` 키 (절대 브라우저 코드에 넣지 않기) |
+| `ADMIN_PASSWORD` | 관리자 화면 비밀번호 (직접 정하기) |
+| `USD_KRW` | 선택, 환율 (기본 1400) |
+| `ADMIN_BUDGET_KRW` | 선택, 월 예산(원). 넣으면 예산 대비 % 막대 표시 |
+
+3. Redeploy → `https://<도메인>/admin` 접속 → 비밀번호 입력
+
+비용은 공식 단가로 계산한 추정치예요. 단가는 `booktalk/server/usage.js`의 `PRICES`에서 바꿔요.

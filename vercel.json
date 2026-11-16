@@ -1,5 +1,9 @@
 {
   "functions": {
-    "api/booktalk.js": { "maxDuration": 60, "includeFiles": "booktalk/server/**" }
-  }
+    "api/booktalk.js": { "maxDuration": 60, "includeFiles": "booktalk/server/**" },
+    "api/admin.js": { "maxDuration": 30 }
+  },
+  "rewrites": [
+    { "source": "/admin", "destination": "/admin.html" }
+  ]
 }

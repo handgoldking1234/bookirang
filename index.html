@@ -936,7 +936,7 @@ class Component extends DCLogic {
   /* 북토킹 시작: 바로 채팅창을 열고, 도란이가 책 사진을 달라고 한다 */
   openBookTalk() {
     var BT = window.BookTalk;
-    this._lead = null;
+    this._lead = null; this._lastPlan = null;
     var hi = '안녕, ' + BT.host.child.name + '! 오늘 읽은 책을 보여 줄래? 읽은 쪽을 찍어서 올려 줘.';
     this.setState({
       screen: 'talk', source: 'book', analysis: null, pages: 0, lessonPlan: null, done: false, err: '',
@@ -1002,6 +1002,7 @@ class Component extends DCLogic {
       if (lead.error) { self.setState({ err: '이야기를 준비하지 못했어요: ' + lead.error.message }); return; }
       self.beginPlan(lead.plan, a);
     };
+    this._lastPlan = { source: 'book', info: { title: a.title, passage: a.passage } };
     lead.finishRead = function () { if (lead.read) return; lead.read = true; go(); };
     V.say("Let me read it for you.", function () { V.read(a.passage || a.excerpt || a.title, lead.finishRead); });
     this.api({ task: 'plan', source: 'book', level: this.state.level, title: a.title, passage: a.passage || '' })
@@ -1033,6 +1034,7 @@ class Component extends DCLogic {
   /* 수업 계획표 만들기 → 채팅창에 '오늘의 이야기' 카드 + 첫 질문 */
   makePlan(source, info) {
     var self = this;
+    this._lastPlan = { source: source, info: info };
     this._lead = null; this.state.reading = false;
     var req = { task: 'plan', source: source, level: this.state.level, title: info.title, passage: info.passage || '', extra: info.extra || '' };
     var base = source === 'book' ? this.state.analysis : null;
@@ -1056,11 +1058,24 @@ class Component extends DCLogic {
     this.makePlan('book', { title: a.title, passage: a.passage });
   }
 
+  /* 아직 질문이 시작되지 않았는데 말하거나 글을 보냈을 때 */
+  notReady() {
+    var s = this.state;
+    if (s.reading) { this.setState({ err: '도란이가 다 읽으면 바로 질문할게. 조금만 기다려 줘!' }); return; }
+    if (s.thinking) { this.setState({ err: '도란이가 준비하고 있어. 잠깐만!' }); return; }
+    if (this._lastPlan) { // 준비가 실패했던 경우: 다시 시도
+      this.setState({ err: '' });
+      this.makePlan(this._lastPlan.source, this._lastPlan.info);
+      return;
+    }
+    this.setState({ err: '먼저 책 사진을 올리거나, 홈에서 오늘의 주제를 골라 줘!' });
+  }
+
   sendKid(text) {
     var self = this;
     text = (text || '').trim();
     if (!text || this.state.thinking || this.state.done) return;
-    if (!this.state.lessonPlan) { this.setState({ err: this.state.analysis ? '「이 글로 이야기 시작」을 눌러 줘!' : '먼저 책 사진을 올려 줘!' }); return; }
+    if (!this.state.lessonPlan) { this.notReady(); return; }
     var msgs = this.state.messages.concat([{ role: 'kid', text: text }]);
     var turns = this.state.kidTurns + 1;
     this.setState({ messages: msgs, kidTurns: turns, thinking: true, hint: false, err: '' });
@@ -1088,7 +1103,7 @@ class Component extends DCLogic {
     var L = window.BookTalk.listen;
     if (this.state.done) { this.finishTalk(); return; }
     if (this.state.thinking) return;
-    if (!this.state.lessonPlan) { this.setState({ err: this.state.analysis ? '「이 글로 이야기 시작」을 눌러 줘!' : '먼저 책 사진을 올려 줘!' }); return; }
+    if (!this.state.lessonPlan) { this.notReady(); return; }
     if (this.state.listening) { L.stop(); return; }
     var lp = this.state.lessonPlan || {};
     var words = (lp.words || []).map(function (w) { return w.en; }).concat((lp.goals || []).map(function (g) { return g.en; }));
@@ -1397,7 +1412,7 @@ class Component extends DCLogic {
       toggleHint: function () { self.setState({ hint: !s.hint, hintsUsed: s.hint ? s.hintsUsed : s.hintsUsed + 1 }); },
       speak: function () { self.speak(); },
       micStyle: 'width:76px;height:76px;border:0;border-radius:50%;color:#FFF;display:flex;align-items:center;justify-content:center;background:' + (s.listening ? O : G) + (s.listening ? ';box-shadow:0 0 0 8px rgba(232,101,10,.2)' : ''),
-      speakLabel: !s.lessonPlan ? (s.reading ? '도란이가 읽어 주고 있어요 · 다 읽으면 질문할게요' : s.thinking ? '도란이가 준비하고 있어요' : (s.analysis ? '「이 글로 이야기 시작」을 눌러요' : '먼저 책 사진을 올려요')) : s.done ? '눌러서 마치기' : (s.listening ? '듣는 중… 다 말하면 다시 눌러요' : (s.thinking ? '도란이가 생각 중이에요' : '누르고 말하기 · 한국어도 OK')),
+      speakLabel: !s.lessonPlan ? (s.reading ? '도란이가 읽어 주고 있어요 · 다 읽으면 질문할게요' : s.thinking ? '도란이가 준비하고 있어요' : (self._lastPlan ? '준비가 안 됐어요 · 누르면 다시 준비해요' : '먼저 책 사진을 올려요')) : s.done ? '눌러서 마치기' : (s.listening ? '듣는 중… 다 말하면 다시 눌러요' : (s.thinking ? '도란이가 생각 중이에요' : '누르고 말하기 · 한국어도 OK')),
       replay: function () { self.say(lastTutor && lastTutor.text); },
       sendTyped: function (e) { e.preventDefault(); var inp = document.getElementById('typed'); var v = inp ? inp.value : ''; if (inp) inp.value = ''; self.sendKid(v); },
       canFinish: s.kidTurns >= 2, finishTalk: function () { self.finishTalk(); },

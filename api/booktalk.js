@@ -1,6 +1,7 @@
 // Vercel 어댑터: /api/booktalk → 북토킹 모듈 서버 로직
 // 환경변수: ANTHROPIC_API_KEY (필수), OPENAI_API_KEY (선택, 자연스러운 목소리)
 //          CLAUDE_MODEL_OCR, CLAUDE_MODEL_CHAT, CLAUDE_MODEL, OPENAI_TTS_MODEL, OPENAI_TTS_VOICE, OPENAI_STT_MODEL (선택)
+//          SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY (선택, 넣으면 사용량을 booktalk_usage 표에 기록 → /admin에서 확인)
 const { handleBookTalk } = require('../booktalk/server/handler');
 
 module.exports = async function (req, res) {

@@ -9,7 +9,7 @@
 (function () {
   var BT = window.BookTalk;
   var serverStt = null;
-  var rec = null, chunks = [], stream = null, timer = null, sr = null, opts = null;
+  var rec = null, chunks = [], stream = null, timer = null, sr = null, opts = null, startedAt = 0;
   var MAX_MS = 30000;
 
   // 서버 설정 확인: 성공한 결과만 기억한다 (네트워크 실패는 다음에 다시 확인)
@@ -61,11 +61,12 @@
         rec.onstop = function () {
           var type = (rec && rec.mimeType) || mime || 'audio/webm';
           var blob = new Blob(chunks, { type: type });
+          var dur = startedAt ? Date.now() - startedAt : 0;
           cleanup();
           if (blob.size < 1200) { state('idle'); opts.onError && opts.onError('잘 듣지 못했어요. 조금 더 크게 말해 볼까?'); return; }
           state('thinking');
           toBase64(blob)
-            .then(function (b64) { return BT.api.call({ task: 'transcribe', audio: b64, mime: type, words: opts.words || [] }); })
+            .then(function (b64) { return BT.api.call({ task: 'transcribe', audio: b64, mime: type, words: opts.words || [], durationMs: dur }); })
             .then(function (r) {
               state('idle');
               if (!r.text) { opts.onError && opts.onError('잘 듣지 못했어요. 다시 말해 볼까?'); return; }
@@ -74,6 +75,7 @@
             .catch(function (er) { fail('말을 글자로 바꾸지 못했어요: ' + er.message); });
         };
         rec.start();
+        startedAt = Date.now();
         state('listening');
         timer = setTimeout(function () { BT.listen.stop(); }, MAX_MS);
       })
