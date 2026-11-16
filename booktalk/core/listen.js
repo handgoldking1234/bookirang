@@ -53,6 +53,7 @@
         an.getByteTimeDomainData(buf);
         var sum = 0; for (var i = 0; i < buf.length; i++) { var v = (buf[i] - 128) / 128; sum += v * v; }
         var rms = Math.sqrt(sum / buf.length), now = Date.now();
+        if (opts && opts.onLevel) opts.onLevel(Math.min(1, rms * 8));
         if (now - start < 400) { floor = Math.max(floor, rms); return; }       // 처음 0.4초로 주변 소음 크기를 잰다
         var loud = rms > Math.max(0.02, floor * 2.2);
         if (loud) { spoke = true; quietSince = now; }

@@ -360,6 +360,7 @@ button{font-family:inherit;cursor:pointer}
 <sc-if value="{{ m.isText }}" hint-placeholder-val="{{ true }}">
 <div style="{{ m.wrap }}">
 <button onClick="{{ m.open }}" style="{{ m.bubble }}">{{ m.text }}</button>
+<sc-if value="{{ m.ko }}" hint-placeholder-val="{{ false }}"><button onClick="{{ m.sayKo }}" style="border: 0; text-align: left; max-width: 84%; background: #FFF8EC; color: #6B4A12; border-radius: 12px; padding: 8px 12px; font-size: 15px; line-height: 1.55; font-family: 'Noto Sans KR', sans-serif">🇰🇷 {{ m.ko }}</button></sc-if>
 <sc-if value="{{ m.fix }}" hint-placeholder-val="{{ false }}"><button onClick="{{ m.open }}" style="border: 0; background: none; display: inline-flex; align-items: center; gap: 4px; font-size: 14px; color: #1A56C4; font-weight: 700; padding: 4px 6px; font-family: inherit"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg>{{ m.fixLabel }} 보기</button></sc-if>
 </div>
 </sc-if>
@@ -406,6 +407,12 @@ button{font-family:inherit;cursor:pointer}
 </div>
 </sc-if>
 </sc-for>
+<sc-if value="{{ listening }}" hint-placeholder-val="{{ false }}">
+<div style="align-self: flex-end; display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 18px 18px 4px 18px; background: #FFF0E3; color: #8A3E06; font-size: 15px; font-weight: 700">
+<span style="display: inline-flex; align-items: flex-end; gap: 3px; height: 22px"><i class="lvbar" style="width: 4px; height: 4px; border-radius: 2px; background: #E8650A; display: block"></i><i class="lvbar" style="width: 4px; height: 4px; border-radius: 2px; background: #E8650A; display: block"></i><i class="lvbar" style="width: 4px; height: 4px; border-radius: 2px; background: #E8650A; display: block"></i><i class="lvbar" style="width: 4px; height: 4px; border-radius: 2px; background: #E8650A; display: block"></i><i class="lvbar" style="width: 4px; height: 4px; border-radius: 2px; background: #E8650A; display: block"></i></span>
+듣고 있어요… 말해 보세요
+</div>
+</sc-if>
 <sc-if value="{{ thinking }}" hint-placeholder-val="{{ false }}">
 <div style="align-self: flex-start; background: #F4F6F4; color: #5C6B60; border-radius: 18px 18px 18px 4px; padding: 12px 16px; font-size: 16px">{{ tutorName }}가 생각 중…</div>
 </sc-if>
@@ -930,12 +937,13 @@ class Component extends DCLogic {
   beginPlan(lp, a) {
     var words = a.words && a.words.length ? a.words : (lp.words || []);
     var q0 = lp.questions[0];
+    var first = (q0.teach ? q0.teach + ' ' : '') + q0.q;
     this.setState({
       thinking: false, lessonPlan: lp, analysis: Object.assign({}, a, { words: words }), startedAt: Date.now(),
-      messages: this.state.messages.concat([{ role: 'tutor', kind: 'goals', title: lp.title || a.title, goals: lp.goals || [], qCount: lp.questions.length }, { role: 'tutor', text: q0.q }]),
+      messages: this.state.messages.concat([{ role: 'tutor', kind: 'goals', title: lp.title || a.title, goals: lp.goals || [], qCount: lp.questions.length }, { role: 'tutor', text: first, ko: q0.teachKo || '' }]),
       hintText: q0.hint || 'I think…', stage: q0.stage || '마음 열기'
     });
-    this.say(q0.q);
+    this.say(first);
   }
 
   /* 수업 계획표 만들기 → 채팅창에 '오늘의 이야기' 카드 + 첫 질문 */
@@ -993,14 +1001,14 @@ class Component extends DCLogic {
       .then(function (r) {
         var list = self.state.messages.slice();
         list[list.length - 1] = Object.assign({}, list[list.length - 1], { fix: r.fix || '', korean: !!r.korean, why: r.why || '', checked: true });
-        list.push({ role: 'tutor', text: r.reply });
+        list.push({ role: 'tutor', text: r.reply, ko: r.ko || r.koGloss || '', koSpeak: !!r.ko });
         var used = self.state.goalsUsed.slice();
         (r.usedGoals || []).forEach(function (n) { if (used.indexOf(n) < 0) used.push(n); });
         self.setState({
           messages: list, thinking: false, stage: r.stage || self.state.stage, hintText: r.hint || self.state.hintText,
           done: !!r.done, step: r.step != null ? r.step : self.state.step, off: r.off || 0, goalsUsed: used
         });
-        self.say(r.reply);
+        if (r.ko) { window.BookTalk.voice.say(r.ko, function () { window.BookTalk.voice.say(r.reply); }); } else self.say(r.reply);
       })
       .catch(function (er) { self.setState({ thinking: false, err: '도란이가 대답하지 못했어요: ' + er.message }); });
   }
@@ -1017,6 +1025,10 @@ class Component extends DCLogic {
     L.start({
       words: words,
       onState: function (st) { self.setState({ listening: st === 'listening', thinking: st === 'thinking' }); },
+      onLevel: function (v) { // 목소리 크기 막대 (다시 그리지 않고 높이만 바꾼다)
+        var bars = document.querySelectorAll('.lvbar'), w = [0.6, 0.9, 1, 0.85, 0.65];
+        for (var i = 0; i < bars.length; i++) bars[i].style.height = Math.max(4, Math.round(22 * Math.min(1, v * w[i] * (0.8 + Math.random() * 0.4)))) + 'px';
+      },
       onText: function (t) { self.setState({ thinking: false }); self.sendKid(t); },
       onError: function (msg) { self.setState({ listening: false, thinking: false, err: msg }); }
     });
@@ -1114,6 +1126,7 @@ class Component extends DCLogic {
         text: m.text, src: m.src, note: m.note || '', active: !!m.active && !s.thinking, pages: m.pages, title: m.title, topic: m.topic,
         difficulty: m.difficulty, excerpt: m.excerpt, passage: m.passage || m.excerpt || '', reading: !!m.reading && !!s.reading, words: wordBtns(m.words), qCount: m.qCount,
         goals: (m.goals || []).map(function (g) { return { en: g.en, ko: g.ko, say: function () { self.say(g.en); } }; }),
+        ko: tutor ? (m.ko || '') : '', sayKo: function () { window.BookTalk.voice.say(m.ko); },
         fix: tutor ? '' : (m.fix || ''), fixLabel: m.korean ? '영어로는' : '더 나은 표현',
         open: function () { if (tutor) self.say(m.text); else if (m.checked) self.setState({ fb: i }); },
         wrap: 'display:flex;flex-direction:column;align-items:' + (tutor ? 'flex-start' : 'flex-end') + ';gap:2px',
@@ -1318,6 +1331,7 @@ class Component extends DCLogic {
       showHint: s.hint, hintText: '이렇게 시작해 봐: ' + s.hintText,
       toggleHint: function () { self.setState({ hint: !s.hint, hintsUsed: s.hint ? s.hintsUsed : s.hintsUsed + 1 }); },
       speak: function () { self.speak(); },
+      listening: !!s.listening,
       micStyle: 'width:76px;height:76px;border:0;border-radius:50%;color:#FFF;display:flex;align-items:center;justify-content:center;background:' + (s.listening ? O : G) + (s.listening ? ';box-shadow:0 0 0 8px rgba(232,101,10,.2)' : ''),
       speakLabel: !s.lessonPlan ? (s.reading ? '도란이가 읽어 주고 있어요 · 다 읽으면 질문할게요' : s.thinking ? '도란이가 준비하고 있어요' : (self._lastPlan ? '준비가 안 됐어요 · 누르면 다시 준비해요' : '먼저 책 사진을 올려요')) : s.done ? '눌러서 마치기' : (s.listening ? '듣고 있어요 · 말이 끝나면 자동으로 보내요' : (s.thinking ? '도란이가 생각 중이에요' : '누르고 말하기 · 한국어도 OK')),
       replay: function () { self.say(lastTutor && lastTutor.text); },

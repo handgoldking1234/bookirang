@@ -35,7 +35,7 @@
       if (!window.speechSynthesis) { finish(t); return; }
       window.speechSynthesis.cancel();
       var u = new SpeechSynthesisUtterance(text);
-      u.lang = 'en-US'; u.rate = 0.92;
+      u.lang = /[가-힣]/.test(text) ? 'ko-KR' : 'en-US'; u.rate = 0.92;
       u.onstart = function () { emit('speak'); };
       u.onend = u.onerror = function () { emit('quiet'); finish(t); };
       window.speechSynthesis.speak(u);
