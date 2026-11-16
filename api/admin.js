@@ -32,7 +32,7 @@ module.exports = async function (req, res) {
   const days14 = Date.parse(today + 'T00:00:00+09:00') - 13 * 86400000;
   const since = new Date(Math.min(monthStart, days14)).toISOString();
 
-  const q = url.replace(/\/$/, '') + '/rest/v1/booktalk_usage?select=created_at,task,provider,model,input_tokens,output_tokens,chars,seconds,cost_usd,child_id,ok,error'
+  const q = url.replace(/\/$/, '') + '/rest/v1/booktalk_usage?select=created_at,task,provider,model,input_tokens,output_tokens,chars,seconds,cost_usd,child_id,ip,ok,error'
     + '&created_at=gte.' + encodeURIComponent(since) + '&order=created_at.desc&limit=20000';
   let rows;
   try {
@@ -45,13 +45,15 @@ module.exports = async function (req, res) {
   }
 
   const won = (usd) => Math.round(usd * rate * 10) / 10;
-  const empty = () => ({ cost: 0, calls: 0, errors: 0, kids: new Set() });
+  const empty = () => ({ cost: 0, calls: 0, errors: 0, blocked: 0, kids: new Set() });
+  const GUARD = { 'daily-budget': '하루 예산 초과', 'ip-limit': 'IP 하루 한도 초과', 'child-limit': '아이 하루 한도 초과', size: '요청 크기 초과' };
   const T = empty(), M = empty();
   const byProvider = {}, byTask = {}, daily = {}, hourly = Array.from({ length: 24 }, () => ({ cost: 0, calls: 0 }));
   for (let i = 0; i < 14; i++) daily[dayKey(days14 + i * 86400000)] = { cost: 0, calls: 0 };
 
   rows.forEach((r) => {
     const t = Date.parse(r.created_at), d = dayKey(t), c = Number(r.cost_usd) || 0;
+    if (r.provider === 'guard') { if (t >= monthStart) M.blocked++; if (d === today) T.blocked++; return; }
     if (daily[d]) { daily[d].cost += c; daily[d].calls++; }
     const add = (agg) => { agg.cost += c; agg.calls++; if (!r.ok) agg.errors++; if (r.child_id) agg.kids.add(r.child_id); };
     if (t >= monthStart) {
@@ -68,7 +70,7 @@ module.exports = async function (req, res) {
     if (d === today) { add(T); hourly[hourOf(t)].cost += c; hourly[hourOf(t)].calls++; }
   });
 
-  const pack = (a) => ({ costKrw: won(a.cost), costUsd: Number(a.cost.toFixed(4)), calls: a.calls, errors: a.errors, kids: a.kids.size });
+  const pack = (a) => ({ costKrw: won(a.cost), costUsd: Number(a.cost.toFixed(4)), calls: a.calls, errors: a.errors, blocked: a.blocked, kids: a.kids.size });
   res.status(200).json({
     now: new Date(now).toISOString(), rate, budgetKrw: budget,
     today: pack(T), month: pack(M),
@@ -78,8 +80,9 @@ module.exports = async function (req, res) {
     hourly: hourly.map((h, i) => ({ hour: i, costKrw: won(h.cost), calls: h.calls })),
     recent: rows.slice(0, 40).map((r) => ({
       at: r.created_at, task: TASK_NAME[r.task] || r.task, provider: r.provider, model: r.model,
-      detail: r.provider === 'anthropic' ? (r.input_tokens + '→' + r.output_tokens + ' 토큰') : r.chars ? (r.chars + '자') : r.seconds ? (Number(r.seconds).toFixed(1) + '초') : '',
-      costKrw: won(Number(r.cost_usd) || 0), ok: r.ok, error: r.error, child: r.child_id
+      blocked: r.provider === 'guard',
+      detail: r.provider === 'guard' ? (GUARD[r.model] || '차단') : r.provider === 'anthropic' ? (r.input_tokens + '→' + r.output_tokens + ' 토큰') : r.chars ? (r.chars + '자') : r.seconds ? (Number(r.seconds).toFixed(1) + '초') : '',
+      costKrw: won(Number(r.cost_usd) || 0), ok: r.ok, error: r.error, child: r.child_id, ip: r.ip ? String(r.ip).replace(/(\d+)$/, '*') : ''
     }))
   });
 };

@@ -20,3 +20,21 @@ create index if not exists booktalk_usage_created_idx on public.booktalk_usage (
 
 -- 보안: 브라우저(anon 키)로는 읽기·쓰기 불가. 서버(service_role 키)만 접근.
 alter table public.booktalk_usage enable row level security;
+
+-- ── API 보호(하루 한도)용 ─────────────────────────────────────────────
+-- 이미 위 표를 만들었어도 이 아래만 다시 Run 하면 돼요 (여러 번 실행해도 안전)
+alter table public.booktalk_usage add column if not exists ip text;
+create index if not exists booktalk_usage_ip_idx on public.booktalk_usage (ip, created_at desc);
+create index if not exists booktalk_usage_child_idx on public.booktalk_usage (child_id, created_at desc);
+
+-- 오늘(p_since 이후) IP별·아이별 호출 수와 전체 비용을 한 번에 알려 주는 함수 (서버만 호출 가능)
+create or replace function public.booktalk_guard(p_ip text, p_child text, p_since timestamptz)
+returns table (ip_calls bigint, child_calls bigint, total_cost numeric)
+language sql stable security definer set search_path = public as $$
+  select
+    (select count(*) from public.booktalk_usage where ip = p_ip and created_at >= p_since and provider <> 'guard'),
+    (select count(*) from public.booktalk_usage where p_child <> '' and child_id = p_child and created_at >= p_since and provider <> 'guard'),
+    (select coalesce(sum(cost_usd), 0) from public.booktalk_usage where created_at >= p_since);
+$$;
+revoke all on function public.booktalk_guard(text, text, timestamptz) from public, anon, authenticated;
+grant execute on function public.booktalk_guard(text, text, timestamptz) to service_role;

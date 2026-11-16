@@ -112,7 +112,7 @@
 
     <div class="card" style="margin-top: 12px">
       <h2>최근 호출</h2><div class="sub">가장 최근 40건</div>
-      <div class="scrollx"><table><thead><tr><th>시각</th><th>기능</th><th>모델</th><th>사용량</th><th class="num">비용</th><th>상태</th><th>아이</th></tr></thead><tbody id="tbRecent"></tbody></table></div>
+      <div class="scrollx"><table><thead><tr><th>시각</th><th>기능</th><th>모델</th><th>사용량</th><th class="num">비용</th><th>상태</th><th>아이 · IP</th></tr></thead><tbody id="tbRecent"></tbody></table></div>
     </div>
   </div>
 </div>
@@ -160,7 +160,9 @@
       $('tMonthS').textContent = d.month.calls.toLocaleString() + '회 호출 · 아이 ' + d.month.kids + '명';
     }
     $('tCalls').textContent = d.today.calls.toLocaleString() + '회';
-    $('tCallsS').textContent = d.today.errors ? '오류 ' + d.today.errors + '건 · 아래 최근 호출에서 확인' : '오류 없음';
+    var bits = [d.today.errors ? '오류 ' + d.today.errors + '건' : '오류 없음'];
+    if (d.today.blocked) bits.push('차단 ' + d.today.blocked + '건');
+    $('tCallsS').textContent = bits.join(' · ');
     $('tKids').textContent = d.today.kids + '명';
     $('tKidsS').textContent = d.today.kids ? '1명당 평균 ' + won(d.today.costKrw / d.today.kids) : '아직 없어요';
 
@@ -181,9 +183,9 @@
     }).join('') : '<tr><td colspan="3" style="color: var(--mute)">기록이 아직 없어요</td></tr>';
     $('tbRecent').innerHTML = d.recent.length ? d.recent.map(function (r) {
       var tm = new Date(r.at).toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });
-      return '<tr><td>' + tm + '</td><td>' + esc(r.task) + '</td><td>' + esc(r.model) + '</td><td>' + esc(r.detail) + '</td><td class="num">' + won(r.costKrw) + '</td><td>' +
-        (r.ok ? '<span class="tag">정상</span>' : '<span class="tag err" title="' + esc(r.error) + '">오류</span> <span style="font-size: 12px; color: var(--warn)">' + esc(r.error).slice(0, 60) + '</span>') +
-        '</td><td style="color: var(--mute)">' + esc(r.child || '') + '</td></tr>';
+      return '<tr><td>' + tm + '</td><td>' + esc(r.task) + '</td><td>' + esc(r.blocked ? '—' : r.model) + '</td><td>' + esc(r.blocked ? '' : r.detail) + '</td><td class="num">' + won(r.costKrw) + '</td><td>' +
+        (r.blocked ? '<span class="tag err">차단</span> <span style="font-size: 12px; color: var(--warn)">' + esc(r.detail) + '</span>' : r.ok ? '<span class="tag">정상</span>' : '<span class="tag err" title="' + esc(r.error) + '">오류</span> <span style="font-size: 12px; color: var(--warn)">' + esc(r.error).slice(0, 60) + '</span>') +
+        '</td><td style="color: var(--mute)">' + esc(r.child || '') + (r.ip ? ' · ' + esc(r.ip) : '') + '</td></tr>';
     }).join('') : '<tr><td colspan="7" style="color: var(--mute)">아직 호출 기록이 없어요. 북이랑에서 북토킹을 한 번 해 보세요</td></tr>';
   }
 

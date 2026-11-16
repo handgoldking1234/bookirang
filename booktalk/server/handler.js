@@ -313,7 +313,7 @@ async function handleBookTalk(body, options) {
   const o = options || {};
   const { out, err, rows } = await usage.track(() => handleTask(body, o));
   if (rows.length) {
-    const ctx = { task: body && body.task, childId: body && body.cid, app: o.app };
+    const ctx = { task: body && body.task, childId: body && body.cid, app: o.app, ip: o.ip };
     if (typeof o.onUsage === 'function') { try { await o.onUsage(rows, ctx); } catch (e) {} }
     else await usage.save(rows, ctx);
   }

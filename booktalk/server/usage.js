@@ -56,6 +56,7 @@ async function save(rows, ctx) {
     app: ctx.app || 'bookirang',
     task: ctx.task || null,
     child_id: ctx.childId ? String(ctx.childId).slice(0, 64) : null,
+    ip: ctx.ip ? String(ctx.ip).slice(0, 64) : null,
     provider: r.provider,
     model: r.model || null,
     input_tokens: r.input_tokens || 0,
