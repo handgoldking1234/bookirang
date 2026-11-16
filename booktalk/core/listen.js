@@ -40,8 +40,37 @@
     });
   }
 
+  // 말이 끝나면 자동으로 녹음을 마친다: 소리 크기를 보고, 말한 뒤 1.3초 조용하면 끝 (8초 동안 아무 말 없으면 끝)
+  var vad = null;
+  function watchSilence(stream) {
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      var ctx = new AC(), src = ctx.createMediaStreamSource(stream), an = ctx.createAnalyser();
+      an.fftSize = 1024; src.connect(an);
+      var buf = new Uint8Array(an.fftSize), spoke = false, quietSince = Date.now(), start = Date.now(), floor = 0;
+      vad = { ctx: ctx, iv: setInterval(function () {
+        an.getByteTimeDomainData(buf);
+        var sum = 0; for (var i = 0; i < buf.length; i++) { var v = (buf[i] - 128) / 128; sum += v * v; }
+        var rms = Math.sqrt(sum / buf.length), now = Date.now();
+        if (now - start < 400) { floor = Math.max(floor, rms); return; }       // 처음 0.4초로 주변 소음 크기를 잰다
+        var loud = rms > Math.max(0.02, floor * 2.2);
+        if (loud) { spoke = true; quietSince = now; }
+        if (spoke && now - quietSince > 1300) BT.listen.stop();
+        else if (!spoke && now - start > 8000) BT.listen.stop();
+      }, 100) };
+    } catch (e) { vad = null; }
+  }
+  function stopVad() {
+    if (!vad) return;
+    clearInterval(vad.iv);
+    try { vad.ctx.close(); } catch (e) {}
+    vad = null;
+  }
+
   function cleanup() {
     clearTimeout(timer); timer = null;
+    stopVad();
     if (sr) { try { sr.onend = sr.onresult = sr.onerror = null; sr.abort(); } catch (e) {} sr = null; }
     if (stream) { stream.getTracks().forEach(function (t) { t.stop(); }); stream = null; }
     rec = null; chunks = [];
@@ -78,6 +107,7 @@
         startedAt = Date.now();
         state('listening');
         timer = setTimeout(function () { BT.listen.stop(); }, MAX_MS);
+        watchSilence(s);
       })
       .catch(function () { fail('마이크 사용을 허용해 주세요.'); });
   }
@@ -104,6 +134,7 @@
       check().then(function (ok) { if (ok && canRecord()) startRecording(); else startBrowser(); });
     },
     stop: function () {
+      stopVad();
       if (rec && rec.state !== 'inactive') { try { rec.stop(); } catch (e) { fail('녹음을 멈추지 못했어요'); } return; }
       if (sr) { try { sr.stop(); } catch (e) {} }
     },

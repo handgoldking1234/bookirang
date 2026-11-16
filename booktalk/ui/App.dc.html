@@ -1319,7 +1319,7 @@ class Component extends DCLogic {
       toggleHint: function () { self.setState({ hint: !s.hint, hintsUsed: s.hint ? s.hintsUsed : s.hintsUsed + 1 }); },
       speak: function () { self.speak(); },
       micStyle: 'width:76px;height:76px;border:0;border-radius:50%;color:#FFF;display:flex;align-items:center;justify-content:center;background:' + (s.listening ? O : G) + (s.listening ? ';box-shadow:0 0 0 8px rgba(232,101,10,.2)' : ''),
-      speakLabel: !s.lessonPlan ? (s.reading ? '도란이가 읽어 주고 있어요 · 다 읽으면 질문할게요' : s.thinking ? '도란이가 준비하고 있어요' : (self._lastPlan ? '준비가 안 됐어요 · 누르면 다시 준비해요' : '먼저 책 사진을 올려요')) : s.done ? '눌러서 마치기' : (s.listening ? '듣는 중… 다 말하면 다시 눌러요' : (s.thinking ? '도란이가 생각 중이에요' : '누르고 말하기 · 한국어도 OK')),
+      speakLabel: !s.lessonPlan ? (s.reading ? '도란이가 읽어 주고 있어요 · 다 읽으면 질문할게요' : s.thinking ? '도란이가 준비하고 있어요' : (self._lastPlan ? '준비가 안 됐어요 · 누르면 다시 준비해요' : '먼저 책 사진을 올려요')) : s.done ? '눌러서 마치기' : (s.listening ? '듣고 있어요 · 말이 끝나면 자동으로 보내요' : (s.thinking ? '도란이가 생각 중이에요' : '누르고 말하기 · 한국어도 OK')),
       replay: function () { self.say(lastTutor && lastTutor.text); },
       sendTyped: function (e) { e.preventDefault(); var inp = document.getElementById('typed'); var v = inp ? inp.value : ''; if (inp) inp.value = ''; self.sendKid(v); },
       canFinish: s.kidTurns >= 2, finishTalk: function () { self.finishTalk(); },

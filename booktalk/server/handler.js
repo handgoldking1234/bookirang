@@ -51,7 +51,15 @@ const SCHEMA = {
     comprehension: S.str, nextTip: S.str })
 };
 
-async function callClaude({ system, messages, maxTokens = 1024, model, json }) {
+async function callClaude(opts) {
+  // 최신 모델은 답하기 전에 생각하는 데 토큰을 쓰므로, 답이 비면 여유를 두 배로 늘려 한 번 더 시도한다
+  let r = await callClaudeOnce(opts);
+  if (!r.text.trim() && r.stop === 'max_tokens') r = await callClaudeOnce(Object.assign({}, opts, { maxTokens: Math.min(16000, (opts.maxTokens || 1024) * 2) }));
+  if (!r.text.trim()) throw new Error('Claude 답이 비어 있어요 (' + (r.stop || '이유 모름') + ')');
+  return r.text;
+}
+
+async function callClaudeOnce({ system, messages, maxTokens = 1024, model, json }) {
   const res = await fetch(API_URL, {
     method: 'POST',
     headers: {
@@ -80,16 +88,16 @@ async function callClaude({ system, messages, maxTokens = 1024, model, json }) {
     if (keys.length === 1 && typeof input[keys[0]] === 'string' && /^\s*\{/.test(input[keys[0]])) {
       try { input = JSON.parse(input[keys[0]]); } catch (e) {}
     }
-    return JSON.stringify(input);
+    return { text: JSON.stringify(input), stop: data.stop_reason };
   }
-  return (data.content || []).filter((b) => b.type === 'text').map((b) => b.text).join('');
+  return { text: (data.content || []).filter((b) => b.type === 'text').map((b) => b.text).join(''), stop: data.stop_reason };
 }
 
 function parseJson(text) {
   try { return JSON.parse(text); } catch (e) { /* 아래에서 바깥 {} 만 잘라 다시 시도 */ }
   const start = text.indexOf('{');
   const end = text.lastIndexOf('}');
-  if (start < 0 || end < 0) throw new Error('응답을 읽지 못했어요');
+  if (start < 0 || end < 0) throw new Error('응답을 읽지 못했어요: ' + String(text).slice(0, 80));
   return JSON.parse(text.slice(start, end + 1));
 }
 
@@ -112,7 +120,7 @@ async function analyze(body) {
     '영어 글이 아니거나 글자를 읽을 수 없으면 {"ok":false,"reason":"한국어 이유"} 만 출력해.';
   const text = await callClaude({
     system,
-    maxTokens: 2000,
+    maxTokens: 6000,
     model: OPTS.ocrModel,
     json: SCHEMA.analyze,
     messages: [{
@@ -147,7 +155,7 @@ async function plan(body) {
     '"words":[{"en":"핵심 단어","ko":"뜻"}] (5개),' +
     '"questions":[{"stage":"마음 열기|내용 확인|생각 말하기","q":"영어 질문 1문장","hint":"아이가 막힐 때 쓸 영어 시작 문장"}] ' +
     '(정확히 6개: 마음 열기 1, 내용 확인 2, 생각 말하기 3. 목표 표현을 쓰게 되는 질문으로)}';
-  const out = parseJson(await callClaude({ system, messages: [{ role: 'user', content: prompt }], maxTokens: 1600, model: OPTS.chatModel, json: SCHEMA.plan }));
+  const out = parseJson(await callClaude({ system, messages: [{ role: 'user', content: prompt }], maxTokens: 6000, model: OPTS.chatModel, json: SCHEMA.plan }));
   out.questions = (out.questions || []).filter((q) => q && q.q).slice(0, 6);
   if (!out.questions.length) throw new Error('대화 계획을 만들지 못했어요');
   out.goals = (out.goals || []).slice(0, 3);
@@ -207,10 +215,10 @@ async function chat(body) {
 
   let r;
   try {
-    r = parseJson(await callClaude({ system, messages, maxTokens: 600, model: OPTS.chatModel, json: SCHEMA.chat }));
+    r = parseJson(await callClaude({ system, messages, maxTokens: 4000, model: OPTS.chatModel, json: SCHEMA.chat }));
   } catch (e) {
     // 형식이 깨지면 한 번만 다시 (더 보수적으로)
-    r = parseJson(await callClaude({ system, messages, maxTokens: 600, model: OPTS.chatModel, json: SCHEMA.chat }));
+    r = parseJson(await callClaude({ system, messages, maxTokens: 4000, model: OPTS.chatModel, json: SCHEMA.chat }));
   }
   const onTopic = r.onTopic !== false;
   let advance = !!r.advance;
@@ -246,7 +254,7 @@ async function chatLegacy(body) {
     content: m.text
   }));
   if (!messages.length || messages[0].role !== 'user') messages.unshift({ role: 'user', content: '(대화 시작)' });
-  const text = await callClaude({ system, messages, maxTokens: 600, model: OPTS.chatModel, json: SCHEMA.chatLegacy });
+  const text = await callClaude({ system, messages, maxTokens: 4000, model: OPTS.chatModel, json: SCHEMA.chatLegacy });
   return parseJson(text);
 }
 
@@ -263,7 +271,7 @@ async function report(body) {
     '"overused":{"word":"아이가 자주 쓴 쉬운 단어(없으면 빈 문자열)","alternatives":["대신 쓸 말 3개"]},' +
     '"comprehension":"내용 이해 정도 한국어 한 문장",' +
     '"nextTip":"다음 북토킹을 위한 한국어 팁 한 문장"}';
-  const text = await callClaude({ system, messages: [{ role: 'user', content: prompt }], maxTokens: 1400, model: OPTS.chatModel, json: SCHEMA.report });
+  const text = await callClaude({ system, messages: [{ role: 'user', content: prompt }], maxTokens: 6000, model: OPTS.chatModel, json: SCHEMA.report });
   return parseJson(text);
 }
 
