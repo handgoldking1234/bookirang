@@ -32,7 +32,25 @@ function levelText(level) {
   return LEVELS[level] || LEVELS[3];
 }
 
-async function callClaude({ system, messages, maxTokens = 1024, model, temperature }) {
+// 답 형식(JSON 스키마). Claude가 '도구 호출'로 답하게 하면 API가 항상 올바른 JSON을 돌려준다
+// (글로 JSON을 쓰게 하면 책 속 따옴표 때문에 형식이 깨질 수 있다)
+const S = { str: { type: 'string' }, bool: { type: 'boolean' } };
+const WORDS = { type: 'array', items: { type: 'object', properties: { en: S.str, ko: S.str }, required: ['en', 'ko'] } };
+const SCHEMA = {
+  analyze: { type: 'object', properties: { ok: S.bool, reason: S.str, title: S.str, topic: S.str, difficulty: S.str, excerpt: S.str, passage: S.str, words: WORDS, opening: S.str }, required: ['ok'] },
+  plan: { type: 'object', properties: { title: S.str, topic: S.str, goals: WORDS, words: WORDS,
+    questions: { type: 'array', items: { type: 'object', properties: { stage: S.str, q: S.str, hint: S.str }, required: ['stage', 'q'] } } }, required: ['title', 'goals', 'questions'] },
+  chat: { type: 'object', properties: { reply: S.str, fix: S.str, why: S.str, onTopic: S.bool, advance: S.bool, korean: S.bool,
+    usedGoals: { type: 'array', items: { type: 'integer' } } }, required: ['reply', 'onTopic', 'advance'] },
+  chatLegacy: { type: 'object', properties: { reply: S.str, fix: S.str, stage: S.str, hint: S.str, done: S.bool }, required: ['reply'] },
+  report: { type: 'object', properties: { praise: S.str,
+    fixes: { type: 'array', items: { type: 'object', properties: { from: S.str, to: S.str, why: S.str } } },
+    expressions: { type: 'array', items: {} },
+    overused: { type: 'object', properties: { word: S.str, alternatives: { type: 'array', items: S.str } } },
+    comprehension: S.str, nextTip: S.str }, required: ['praise'] }
+};
+
+async function callClaude({ system, messages, maxTokens = 1024, model, json }) {
   const res = await fetch(API_URL, {
     method: 'POST',
     headers: {
@@ -41,7 +59,10 @@ async function callClaude({ system, messages, maxTokens = 1024, model, temperatu
       'anthropic-version': '2023-06-01'
     },
     // temperature는 보내지 않는다: 최신 Claude 모델은 이 설정을 받지 않는다 (보내면 요청이 거절됨)
-    body: JSON.stringify({ model, max_tokens: maxTokens, system, messages })
+    body: JSON.stringify(Object.assign({ model, max_tokens: maxTokens, system, messages }, json ? {
+      tools: [{ name: 'answer', description: '요청한 형식의 답을 이 도구의 입력으로 돌려준다. 모든 글은 각 필드의 문자열 값으로 넣는다.', input_schema: json }],
+      tool_choice: { type: 'tool', name: 'answer' }
+    } : {}))
   });
   const data = await res.json();
   if (!res.ok) {
@@ -52,10 +73,21 @@ async function callClaude({ system, messages, maxTokens = 1024, model, temperatu
   const u = data.usage || {};
   const inTok = (u.input_tokens || 0) + (u.cache_creation_input_tokens || 0) + (u.cache_read_input_tokens || 0);
   usage.record({ provider: 'anthropic', model: data.model || model, input_tokens: inTok, output_tokens: u.output_tokens || 0, cost_usd: usage.claudeCost(model, inTok, u.output_tokens || 0) });
+  const call = (data.content || []).find((b) => b.type === 'tool_use');
+  if (call && call.input && typeof call.input === 'object') {
+    let input = call.input;
+    // 드물게 JSON 전체를 문자열 하나에 담아 오면 풀어서 쓴다
+    const keys = Object.keys(input);
+    if (keys.length === 1 && typeof input[keys[0]] === 'string' && /^\s*\{/.test(input[keys[0]])) {
+      try { input = JSON.parse(input[keys[0]]); } catch (e) {}
+    }
+    return JSON.stringify(input);
+  }
   return (data.content || []).filter((b) => b.type === 'text').map((b) => b.text).join('');
 }
 
 function parseJson(text) {
+  try { return JSON.parse(text); } catch (e) { /* 아래에서 바깥 {} 만 잘라 다시 시도 */ }
   const start = text.indexOf('{');
   const end = text.lastIndexOf('}');
   if (start < 0 || end < 0) throw new Error('응답을 읽지 못했어요');
@@ -83,6 +115,7 @@ async function analyze(body) {
     system,
     maxTokens: 2000,
     model: OPTS.ocrModel,
+    json: SCHEMA.analyze,
     messages: [{
       role: 'user',
       content: [
@@ -115,7 +148,7 @@ async function plan(body) {
     '"words":[{"en":"핵심 단어","ko":"뜻"}] (5개),' +
     '"questions":[{"stage":"마음 열기|내용 확인|생각 말하기","q":"영어 질문 1문장","hint":"아이가 막힐 때 쓸 영어 시작 문장"}] ' +
     '(정확히 6개: 마음 열기 1, 내용 확인 2, 생각 말하기 3. 목표 표현을 쓰게 되는 질문으로)}';
-  const out = parseJson(await callClaude({ system, messages: [{ role: 'user', content: prompt }], maxTokens: 1400, model: OPTS.chatModel, temperature: 0.5 }));
+  const out = parseJson(await callClaude({ system, messages: [{ role: 'user', content: prompt }], maxTokens: 1600, model: OPTS.chatModel, json: SCHEMA.plan }));
   out.questions = (out.questions || []).filter((q) => q && q.q).slice(0, 6);
   if (!out.questions.length) throw new Error('대화 계획을 만들지 못했어요');
   out.goals = (out.goals || []).slice(0, 3);
@@ -175,10 +208,10 @@ async function chat(body) {
 
   let r;
   try {
-    r = parseJson(await callClaude({ system, messages, maxTokens: 500, model: OPTS.chatModel, temperature: 0.4 }));
+    r = parseJson(await callClaude({ system, messages, maxTokens: 600, model: OPTS.chatModel, json: SCHEMA.chat }));
   } catch (e) {
     // 형식이 깨지면 한 번만 다시 (더 보수적으로)
-    r = parseJson(await callClaude({ system, messages, maxTokens: 500, model: OPTS.chatModel, temperature: 0 }));
+    r = parseJson(await callClaude({ system, messages, maxTokens: 600, model: OPTS.chatModel, json: SCHEMA.chat }));
   }
   const onTopic = r.onTopic !== false;
   let advance = !!r.advance;
@@ -214,7 +247,7 @@ async function chatLegacy(body) {
     content: m.text
   }));
   if (!messages.length || messages[0].role !== 'user') messages.unshift({ role: 'user', content: '(대화 시작)' });
-  const text = await callClaude({ system, messages, maxTokens: 600, model: OPTS.chatModel });
+  const text = await callClaude({ system, messages, maxTokens: 600, model: OPTS.chatModel, json: SCHEMA.chatLegacy });
   return parseJson(text);
 }
 
@@ -231,7 +264,7 @@ async function report(body) {
     '"overused":{"word":"아이가 자주 쓴 쉬운 단어(없으면 빈 문자열)","alternatives":["대신 쓸 말 3개"]},' +
     '"comprehension":"내용 이해 정도 한국어 한 문장",' +
     '"nextTip":"다음 북토킹을 위한 한국어 팁 한 문장"}';
-  const text = await callClaude({ system, messages: [{ role: 'user', content: prompt }], maxTokens: 1200, model: OPTS.chatModel });
+  const text = await callClaude({ system, messages: [{ role: 'user', content: prompt }], maxTokens: 1400, model: OPTS.chatModel, json: SCHEMA.report });
   return parseJson(text);
 }
 
