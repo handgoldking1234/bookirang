@@ -32,22 +32,23 @@ function levelText(level) {
   return LEVELS[level] || LEVELS[3];
 }
 
-// 답 형식(JSON 스키마). Claude가 '도구 호출'로 답하게 하면 API가 항상 올바른 JSON을 돌려준다
-// (글로 JSON을 쓰게 하면 책 속 따옴표 때문에 형식이 깨질 수 있다)
+// 답 형식(JSON 스키마). output_config.format(구조화된 출력)으로 보내면 API가 항상 스키마에 맞는 JSON을 돌려준다
+// (글로 JSON을 쓰게 하면 책 속 따옴표 때문에 형식이 깨질 수 있다. 최신 모델은 tool_choice 강제를 받지 않는다)
 const S = { str: { type: 'string' }, bool: { type: 'boolean' } };
-const WORDS = { type: 'array', items: { type: 'object', properties: { en: S.str, ko: S.str }, required: ['en', 'ko'] } };
+const obj = (properties, required) => ({ type: 'object', properties, required: required || Object.keys(properties), additionalProperties: false });
+const WORDS = { type: 'array', items: obj({ en: S.str, ko: S.str }) };
 const SCHEMA = {
-  analyze: { type: 'object', properties: { ok: S.bool, reason: S.str, title: S.str, topic: S.str, difficulty: S.str, excerpt: S.str, passage: S.str, words: WORDS, opening: S.str }, required: ['ok'] },
-  plan: { type: 'object', properties: { title: S.str, topic: S.str, goals: WORDS, words: WORDS,
-    questions: { type: 'array', items: { type: 'object', properties: { stage: S.str, q: S.str, hint: S.str }, required: ['stage', 'q'] } } }, required: ['title', 'goals', 'questions'] },
-  chat: { type: 'object', properties: { reply: S.str, fix: S.str, why: S.str, onTopic: S.bool, advance: S.bool, korean: S.bool,
-    usedGoals: { type: 'array', items: { type: 'integer' } } }, required: ['reply', 'onTopic', 'advance'] },
-  chatLegacy: { type: 'object', properties: { reply: S.str, fix: S.str, stage: S.str, hint: S.str, done: S.bool }, required: ['reply'] },
-  report: { type: 'object', properties: { praise: S.str,
-    fixes: { type: 'array', items: { type: 'object', properties: { from: S.str, to: S.str, why: S.str } } },
-    expressions: { type: 'array', items: {} },
-    overused: { type: 'object', properties: { word: S.str, alternatives: { type: 'array', items: S.str } } },
-    comprehension: S.str, nextTip: S.str }, required: ['praise'] }
+  analyze: obj({ ok: S.bool, reason: S.str, title: S.str, topic: S.str, difficulty: S.str, excerpt: S.str, passage: S.str, words: WORDS, opening: S.str }),
+  plan: obj({ title: S.str, topic: S.str, goals: WORDS, words: WORDS,
+    questions: { type: 'array', items: obj({ stage: S.str, q: S.str, hint: S.str }) } }),
+  chat: obj({ reply: S.str, fix: S.str, why: S.str, onTopic: S.bool, advance: S.bool, korean: S.bool,
+    usedGoals: { type: 'array', items: { type: 'integer' } } }),
+  chatLegacy: obj({ reply: S.str, fix: S.str, stage: S.str, hint: S.str, done: S.bool }),
+  report: obj({ praise: S.str,
+    fixes: { type: 'array', items: obj({ from: S.str, to: S.str, why: S.str }) },
+    expressions: { type: 'array', items: S.str },
+    overused: obj({ word: S.str, alternatives: { type: 'array', items: S.str } }),
+    comprehension: S.str, nextTip: S.str })
 };
 
 async function callClaude({ system, messages, maxTokens = 1024, model, json }) {
@@ -59,10 +60,8 @@ async function callClaude({ system, messages, maxTokens = 1024, model, json }) {
       'anthropic-version': '2023-06-01'
     },
     // temperature는 보내지 않는다: 최신 Claude 모델은 이 설정을 받지 않는다 (보내면 요청이 거절됨)
-    body: JSON.stringify(Object.assign({ model, max_tokens: maxTokens, system, messages }, json ? {
-      tools: [{ name: 'answer', description: '요청한 형식의 답을 이 도구의 입력으로 돌려준다. 모든 글은 각 필드의 문자열 값으로 넣는다.', input_schema: json }],
-      tool_choice: { type: 'tool', name: 'answer' }
-    } : {}))
+    body: JSON.stringify(Object.assign({ model, max_tokens: maxTokens, system, messages },
+      json ? { output_config: { format: { type: 'json_schema', schema: json } } } : {}))
   });
   const data = await res.json();
   if (!res.ok) {
