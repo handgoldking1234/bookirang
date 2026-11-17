@@ -19,6 +19,7 @@ const DEFAULT_OCR_MODEL = 'claude-sonnet-5-5';
 const DEFAULT_CHAT_MODEL = 'claude-haiku-5-5';
 let OPTS = {};
 const usage = require('./usage');
+const mail = require('./mail');
 
 const LEVELS = {
   1: '초급: 아주 짧고 쉬운 문장(5단어 안팎), 예/아니오나 고르기 질문 위주',
@@ -43,6 +44,7 @@ const SCHEMA = {
     questions: { type: 'array', items: obj({ stage: S.str, teach: S.str, teachKo: S.str, q: S.str, hint: S.str }) } }),
   chat: obj({ reply: S.str, replyKo: S.str, starter: S.str, ko: S.str, fix: S.str, why: S.str, onTopic: S.bool, advance: S.bool, korean: S.bool,
     usedGoals: { type: 'array', items: { type: 'integer' } } }),
+  period: obj({ summary: S.str, strengths: { type: 'array', items: S.str }, improve: { type: 'array', items: S.str }, nextPlan: S.str, parentTip: S.str }),
   chatLegacy: obj({ reply: S.str, fix: S.str, stage: S.str, hint: S.str, done: S.bool }),
   report: obj({ praise: S.str,
     fixes: { type: 'array', items: obj({ from: S.str, to: S.str, why: S.str }) },
@@ -328,6 +330,29 @@ async function report(body) {
   return parseJson(text);
 }
 
+// 4-1) 기간 리포트 분석 (주간·월간·분기·6개월·1년): 숫자는 클라이언트가 계산해 보내고, 해석만 Claude가 한다
+const KIND_KO = { week: '주간', month: '월간', quarter: '분기', half: '6개월', year: '1년' };
+async function period(body) {
+  const kind = KIND_KO[body.kind] ? body.kind : 'week';
+  const pick = (o) => { o = o || {}; const r = {}; ['sessions', 'days', 'minutes', 'sentences', 'avgLen', 'newWords', 'goalRate', 'self', 'ratio', 'koreanTurns'].forEach((k) => { if (o[k] != null) r[k] = Number(o[k]) || 0; }); return r; };
+  const sample = (arr, n, len) => (Array.isArray(arr) ? arr : []).slice(0, n).map((x) => String(x).slice(0, len));
+  const fixes = (Array.isArray(body.fixes) ? body.fixes : []).slice(0, 12).map((f) => `${String(f.from || '').slice(0, 100)} → ${String(f.to || '').slice(0, 100)}`).join('\n');
+  const prompt =
+    `${KIND_KO[kind]} 리포트 (${String(body.range || '').slice(0, 40)}), 아이 레벨: ${levelText(body.level)}\n` +
+    `이번 기간 숫자: ${JSON.stringify(pick(body.cur))}\n바로 앞 같은 기간: ${JSON.stringify(pick(body.prev))}\n` +
+    `이야기한 것: ${sample(body.titles, 20, 40).join(', ')}\n` +
+    `기간 초반 아이 문장: ${sample(body.early, 6, 120).join(' / ')}\n기간 후반 아이 문장: ${sample(body.late, 6, 120).join(' / ')}\n` +
+    `자주 고친 표현:\n${fixes || '(없음)'}\n\n` +
+    '학부모에게 보낼 한국어 분석을 써. 숫자를 지어내지 말고 위 숫자와 문장만 근거로. 앞 기간과 비교해 달라진 점을 구체적으로. 칭찬을 먼저, 부족한 점은 다음에 할 일로 바꿔서.\n' +
+    '형식: {"summary":"한눈에 보기 2문장","strengths":["좋아진 점, 근거 포함 한 문장"] (2~3개),"improve":["더 연습하면 좋은 점 한 문장"] (1~2개),' +
+    '"nextPlan":"다음 기간 학습 제안 1~2문장(횟수·주제 등 구체적으로)","parentTip":"집에서 부모가 도와줄 수 있는 쉬운 방법 1~2문장"}';
+  const text = await callClaude({ system: '너는 초등 영어 말하기 학습 기록을 분석해 학부모에게 알려 주는 리포트 작성기야. 반드시 JSON 하나만 출력해.',
+    messages: [{ role: 'user', content: prompt }], maxTokens: 6000, model: OPTS.chatModel, json: SCHEMA.period });
+  const r = parseJson(text);
+  r.strengths = (r.strengths || []).slice(0, 3); r.improve = (r.improve || []).slice(0, 2);
+  return r;
+}
+
 // 5) 도란이 목소리: 영어 문장 → mp3 (OpenAI)
 // 도란이 목소리 (OpenAI 기본 보이스 + 말투 지시). 클라이언트는 키만 보낸다.
 const VOICES = {
@@ -395,7 +420,8 @@ async function handleTask(body, options) {
     ocrModel: o.model || o.ocrModel || DEFAULT_OCR_MODEL,
     chatModel: o.model || o.chatModel || DEFAULT_CHAT_MODEL
   });
-  if (body.task === 'config') return { claude: !!OPTS.apiKey, tts: !!OPTS.openaiKey, stt: !!OPTS.openaiKey };
+  if (body.task === 'config') return { claude: !!OPTS.apiKey, tts: !!OPTS.openaiKey, stt: !!OPTS.openaiKey, mail: mail.enabled() };
+  if (body.task === 'mail') return mail.send(body, { childId: body.cid, ip: o.ip });
   if (body.task === 'transcribe') {
     if (!OPTS.openaiKey) throw new Error('서버에 OPENAI_API_KEY가 설정되지 않았어요');
     return transcribe(body);
@@ -409,6 +435,7 @@ async function handleTask(body, options) {
   if (body.task === 'plan') return plan(body);
   if (body.task === 'chat') return chat(body);
   if (body.task === 'report') return report(body);
+  if (body.task === 'period') return period(body);
   throw new Error('알 수 없는 요청이에요');
 }
 
