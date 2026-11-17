@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
-  :root { --g: #3D5AFE; --g2: #EEF1FF; --ink: #161A26; --ink2: #2F3445; --mute: #6B7080; --line: #E6E8EF; --grid: #EEF0F5; --bg: #F6F7FB; --warn: #B4530B; --warnbg: #FFF0E3; }
+  :root { --g: #3B6BEB; --g2: #EDF3FF; --ink: #171C35; --ink2: #2F3445; --mute: #6B7080; --line: #E6E8EF; --grid: #EEF0F5; --bg: #F6F7FB; --warn: #B4530B; --warnbg: #FFF0E3; }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--bg); color: var(--ink); font-family: 'Noto Sans KR', system-ui, sans-serif; font-size: 15px; }
   button { font-family: inherit; cursor: pointer; }
@@ -43,7 +43,7 @@
   th { text-align: left; font-size: 13px; color: var(--mute); font-weight: 700; padding: 8px 6px; border-bottom: 1px solid var(--line); }
   td { padding: 9px 6px; border-bottom: 1px solid var(--grid); color: var(--ink2); }
   td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
-  .tag { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--g2); color: #2D44D6; }
+  .tag { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--g2); color: #2C58D0; }
   .tag.err { background: var(--warnbg); color: var(--warn); }
   .scrollx { overflow-x: auto; }
   .scrollx td, .scrollx th { white-space: nowrap; }
@@ -208,7 +208,7 @@
       var cx = L + slot * i + slot / 2, h = Math.max(0, (x.v / top) * ih), yy = T + ih - h;
       if (h > 0) {
         var r = Math.min(4, h, bw / 2), x0 = cx - bw / 2, x1 = cx + bw / 2, yb = T + ih;
-        out.push('<path fill="#3D5AFE" d="M' + x0 + ' ' + yb + ' V' + (yy + r) + ' Q' + x0 + ' ' + yy + ' ' + (x0 + r) + ' ' + yy + ' H' + (x1 - r) + ' Q' + x1 + ' ' + yy + ' ' + x1 + ' ' + (yy + r) + ' V' + yb + ' Z"/>');
+        out.push('<path fill="#3B6BEB" d="M' + x0 + ' ' + yb + ' V' + (yy + r) + ' Q' + x0 + ' ' + yy + ' ' + (x0 + r) + ' ' + yy + ' H' + (x1 - r) + ' Q' + x1 + ' ' + yy + ' ' + x1 + ' ' + (yy + r) + ' V' + yb + ' Z"/>');
       }
       var lastOk = i === data.length - 1 && (i % labelEvery) * slot >= 46;
       if (i % labelEvery === 0 || lastOk) out.push('<text class="axis" x="' + cx + '" y="' + (H - 8) + '" text-anchor="middle">' + x.label + '</text>');

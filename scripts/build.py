@@ -9,7 +9,7 @@ out=f'''<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#3D5AFE">
+<meta name="theme-color" content="#3B6BEB">
 <title>북이랑 - 책 찍고 AI랑 도란도란</title>
 {helmet.strip()}
 <style>
