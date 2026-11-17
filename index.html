@@ -259,6 +259,16 @@ body{display:block;background:#FFFFFF !important}
 </div>
 </div>
 <div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 16px; font-weight: 700">도란이 목소리 <span style="font-weight: 400; color: #6B7080">· 누르면 들어 볼 수 있어요</span></span>
+<sc-for list="{{ voices }}" as="v" hint-placeholder-count="5">
+<button onClick="{{ v.pick }}" aria-pressed="{{ v.on }}" style="{{ v.style }}"><span style="font-size: 20px">{{ v.icon }}</span><span style="flex: 1; display: flex; flex-direction: column; gap: 2px; text-align: left"><b style="font-size: 16px">{{ v.name }}</b><span style="font-size: 14px; color: #6B7080">{{ v.desc }}</span></span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg></button>
+</sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 16px; font-weight: 700">한국어 풀이</span>
+<button onClick="{{ toggleKo }}" role="switch" aria-checked="{{ showKoAria }}" style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 14px; border: 1px solid #E6E8EF; border-radius: 14px; background: #FFFFFF; color: #171C35; text-align: left"><span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 16px">도란이 말 아래에 항상 보이기</b><span style="font-size: 14px; color: #6B7080">끄면 「한국어로 보기」를 눌렀을 때만 보여요</span></span><span style="{{ koTrack }}"><span style="{{ koKnob }}"></span></span></button>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
 <span style="font-size: 16px; font-weight: 700">대화할 때 도란이</span>
 <div style="display: flex; background: #F2F3F7; border-radius: 999px; padding: 4px">
 <button onClick="{{ setAvBig }}" style="{{ avBigBtn }}">크게</button>
@@ -426,6 +436,8 @@ body{display:block;background:#FFFFFF !important}
 <sc-if value="{{ m.isText }}" hint-placeholder-val="{{ true }}">
 <div style="{{ m.wrap }}">
 <button onClick="{{ m.open }}" style="{{ m.bubble }}">{{ m.text }}</button>
+<sc-if value="{{ m.starter }}" hint-placeholder-val="{{ false }}"><button onClick="{{ m.sayStarter }}" style="border: 1px dashed #A6C1FF; background: #FFFFFF; color: #2C58D0; border-radius: 14px; padding: 8px 12px; max-width: 86%; text-align: left; font-size: 16px; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif; display: inline-flex; align-items: center; gap: 6px"><span style="font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #6B7080; flex: none">이렇게 시작해 봐</span>{{ m.starter }}</button></sc-if>
+<sc-if value="{{ m.koBtn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ m.openKo }}" style="border: 0; background: none; display: inline-flex; align-items: center; gap: 4px; font-size: 14px; color: #6B7080; font-weight: 700; padding: 4px 6px; font-family: inherit">🇰🇷 한국어로 보기</button></sc-if>
 <sc-if value="{{ m.ko }}" hint-placeholder-val="{{ false }}"><button onClick="{{ m.sayKo }}" style="border: 0; text-align: left; max-width: 84%; background: #F4F8FF; color: #34477E; border-radius: 12px; padding: 8px 12px; font-size: 15px; line-height: 1.55; font-family: 'Noto Sans KR', sans-serif">🇰🇷 {{ m.ko }}</button></sc-if>
 <sc-if value="{{ m.fix }}" hint-placeholder-val="{{ false }}"><button onClick="{{ m.open }}" style="border: 0; background: none; display: inline-flex; align-items: center; gap: 4px; font-size: 14px; color: #3B6BEB; font-weight: 700; padding: 4px 6px; font-family: inherit"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg>{{ m.fixLabel }} 보기</button></sc-if>
 </div>
@@ -495,7 +507,7 @@ body{display:block;background:#FFFFFF !important}
 <button aria-label="누르고 말하기" onClick="{{ speak }}" style="{{ micStyle }}"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg></button>
 <button aria-label="도란이 말 다시 듣기" onClick="{{ replay }}" style="width: 48px; height: 48px; border: 0; border-radius: 50%; background: #EDF3FF; color: #3B6BEB; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg></button>
 </div>
-<span style="font-size: 15px; color: #6B7080">{{ speakLabel }}</span>
+<span style="display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap"><span style="font-size: 15px; color: #6B7080">{{ speakLabel }}</span><button onClick="{{ toggleKo }}" aria-pressed="{{ showKoAria }}" style="{{ koChipStyle }}">{{ koChip }}</button></span>
 <form onSubmit="{{ sendTyped }}" style="width: 100%; display: flex; gap: 8px">
 <label for="typed" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">영어로 입력하기</label>
 <input id="typed" type="text" autocomplete="off" placeholder="말 대신 써도 돼요" style="flex: 1; min-width: 0; min-height: 44px; border: 1px solid #E6E8EF; border-radius: 999px; padding: 0 16px; font-size: 17px; font-family: inherit">
@@ -954,6 +966,9 @@ class Component extends DCLogic {
       pickTab: 'textbook', grade: (BT.topics && BT.topics.textbook[BT.host.child.grade]) ? BT.host.child.grade : '초5',
       avatar: (function () { try { return localStorage.getItem('booktalk.avatar') || 'small'; } catch (e) { return 'small'; } })(),
       look: (function () { try { return localStorage.getItem('booktalk.look') || 'girl'; } catch (e) { return 'girl'; } })(),
+      voiceKey: (window.BookTalk.voice.style && window.BookTalk.voice.style()) || 'friend_f',
+      showKo: (function () { try { return localStorage.getItem('booktalk.ko') === '1'; } catch (e) { return false; } })(),
+      koOpen: {},
       meGrade: BT.host.child.grade, meSaved: false, clearAsk: false,
       sessions: saved
     };
@@ -994,7 +1009,7 @@ class Component extends DCLogic {
     this._lead = null; this._lastPlan = null;
     var hi = '안녕, ' + BT.host.child.name + '! 오늘 읽은 책을 보여 줄래? 읽은 쪽을 찍어서 올려 줘.';
     this.setState({
-      screen: 'talk', source: 'book', analysis: null, pages: 0, lessonPlan: null, done: false, err: '',
+      screen: 'talk', source: 'book', analysis: null, pages: 0, lessonPlan: null, done: false, err: '', koOpen: {},
       messages: [{ role: 'tutor', kind: 'upload', text: hi }], kidTurns: 0, hintsUsed: 0, step: 0, off: 0, goalsUsed: [],
       thinking: false, hint: false, stage: '책 올리기', fb: -1, startedAt: 0, reading: false
     });
@@ -1106,7 +1121,7 @@ class Component extends DCLogic {
       ? this.state.messages.map(function (m) { return m.kind === 'book' ? Object.assign({}, m, { active: false }) : m; })
       : [{ role: 'tutor', text: info.intro || ('오늘은 "' + info.title + '" 이야기를 해 보자! 준비할게.') }];
     this.setState({ screen: 'talk', source: source, lessonPlan: null, messages: msgs, thinking: true, err: '', done: false,
-      kidTurns: 0, hintsUsed: 0, step: 0, off: 0, goalsUsed: [], fb: -1, stage: '준비 중' });
+      kidTurns: 0, hintsUsed: 0, step: 0, off: 0, goalsUsed: [], fb: -1, stage: '준비 중', koOpen: {}, deep: 0 });
     this.api(req)
       .then(function (lp) {
         var a = base || { title: lp.title || info.title, topic: lp.topic || info.ko || '', difficulty: '', passage: '', words: lp.words || [] };
@@ -1145,17 +1160,17 @@ class Component extends DCLogic {
     this.setState({ messages: msgs, kidTurns: turns, thinking: true, hint: false, err: '' });
     var a = this.state.analysis, lp = this.state.lessonPlan;
     var talkOnly = msgs.filter(function (m) { return !m.kind; });
-    this.api({ task: 'chat', plan: Object.assign({ level: this.state.level }, lp), step: this.state.step, off: this.state.off,
+    this.api({ task: 'chat', plan: Object.assign({ level: this.state.level }, lp), step: this.state.step, off: this.state.off, deep: this.state.deep || 0,
       passage: a.passage, title: a.title, level: this.state.level, history: talkOnly, kidTurns: turns })
       .then(function (r) {
         var list = self.state.messages.slice();
         list[list.length - 1] = Object.assign({}, list[list.length - 1], { fix: r.fix || '', korean: !!r.korean, why: r.why || '', checked: true });
-        list.push({ role: 'tutor', text: r.reply, ko: r.ko || r.koGloss || '', koSpeak: !!r.ko });
+        list.push({ role: 'tutor', text: r.reply, ko: r.ko || r.koGloss || '', koSpeak: !!r.ko, starter: r.starter || '' });
         var used = self.state.goalsUsed.slice();
         (r.usedGoals || []).forEach(function (n) { if (used.indexOf(n) < 0) used.push(n); });
         self.setState({
-          messages: list, thinking: false, stage: r.stage || self.state.stage, hintText: r.hint || self.state.hintText,
-          done: !!r.done, step: r.step != null ? r.step : self.state.step, off: r.off || 0, goalsUsed: used
+          messages: list, thinking: false, stage: r.stage || self.state.stage, hintText: r.starter || r.hint || self.state.hintText,
+          done: !!r.done, step: r.step != null ? r.step : self.state.step, off: r.off || 0, deep: r.deep || 0, goalsUsed: used
         });
         if (r.ko) { window.BookTalk.voice.say(r.ko, function () { window.BookTalk.voice.say(r.reply); }); } else self.say(r.reply);
       })
@@ -1243,6 +1258,17 @@ class Component extends DCLogic {
       .catch(function (e) { self.setState({ svc: { error: e.message } }); });
   }
 
+  setVoice(k) {
+    window.BookTalk.voice.setStyle(k);
+    this.setState({ voiceKey: k });
+    window.BookTalk.voice.say(k === 'teacher' ? "Hi! I'm Doran. Let's read and talk together!" : "Hi! I'm Doran. What do you want to talk about?");
+  }
+
+  setShowKo(on) {
+    try { localStorage.setItem('booktalk.ko', on ? '1' : '0'); } catch (e) {}
+    this.setState({ showKo: on });
+  }
+
   setLook(v) {
     try { localStorage.setItem('booktalk.look', v); } catch (e) {}
     this.setState({ look: v });
@@ -1275,7 +1301,11 @@ class Component extends DCLogic {
         text: m.text, src: m.src, note: m.note || '', active: !!m.active && !s.thinking, pages: m.pages, title: m.title, topic: m.topic,
         difficulty: m.difficulty, excerpt: m.excerpt, passage: m.passage || m.excerpt || '', reading: !!m.reading && !!s.reading, words: wordBtns(m.words), qCount: m.qCount,
         goals: (m.goals || []).map(function (g) { return { en: g.en, ko: g.ko, say: function () { self.say(g.en); } }; }),
-        ko: tutor ? (m.ko || '') : '', sayKo: function () { window.BookTalk.voice.say(m.ko); },
+        ko: tutor && m.ko && (m.koSpeak || s.showKo || s.koOpen[i]) ? m.ko : '',
+        koBtn: tutor && m.ko && !(m.koSpeak || s.showKo || s.koOpen[i]),
+        openKo: function () { var o = Object.assign({}, s.koOpen); o[i] = true; self.setState({ koOpen: o }); },
+        sayKo: function () { window.BookTalk.voice.say(m.ko); },
+        starter: tutor && i === s.messages.length - 1 ? (m.starter || '') : '', sayStarter: function () { self.say(String(m.starter).replace(/\s*\.\.\.\s*$/, '')); },
         fix: tutor ? '' : (m.fix || ''), fixLabel: m.korean ? '영어로는' : '더 나은 표현',
         open: function () { if (tutor) self.say(m.text); else if (m.checked) self.setState({ fb: i }); },
         wrap: 'display:flex;flex-direction:column;align-items:' + (tutor ? 'flex-start' : 'flex-end') + ';gap:2px',
@@ -1487,6 +1517,12 @@ class Component extends DCLogic {
       speak: function () { self.speak(); },
       listening: !!s.listening,
       micStyle: 'width:76px;height:76px;border:0;border-radius:50%;color:#FFF;display:flex;align-items:center;justify-content:center;background:' + (s.listening ? O : G) + (s.listening ? ';box-shadow:0 0 0 8px rgba(61,90,254,.18)' : ''),
+      voices: [['friend_f', '🎀', '상큼한 친구', '또래 여자아이처럼 밝고 발랄하게'], ['friend_m', '⚡', '씩씩한 친구', '또래 남자아이처럼 신나게'], ['sister', '🌷', '다정한 언니·누나', '대학생처럼 부드럽고 또박또박'], ['brother', '🧢', '듬직한 형·오빠', '대학생처럼 편안하고 다정하게'], ['teacher', '📚', '선생님', '차분하고 천천히']].map(function (v) { var on = s.voiceKey === v[0]; return { icon: v[1], name: v[2], desc: v[3], on: on ? 'true' : 'false', pick: function () { self.setVoice(v[0]); }, style: 'display:flex;align-items:center;gap:12px;min-height:60px;padding:0 14px;border-radius:14px;' + (on ? 'border:2px solid ' + G + ';background:#EDF3FF;color:#2C58D0' : 'border:1px solid #E6E8EF;background:#FFF;color:#171C35') }; }),
+      toggleKo: function () { self.setShowKo(!s.showKo); }, showKoAria: s.showKo ? 'true' : 'false',
+      koTrack: 'flex:none;width:48px;height:28px;border-radius:999px;padding:3px;display:flex;background:' + (s.showKo ? G : '#D5D9E3') + ';justify-content:' + (s.showKo ? 'flex-end' : 'flex-start'),
+      koKnob: 'width:22px;height:22px;border-radius:50%;background:#FFFFFF;box-shadow:0 1px 3px rgba(0,0,0,.2)',
+      koChip: s.showKo ? '🇰🇷 풀이 켜짐' : '🇰🇷 풀이 꺼짐',
+      koChipStyle: 'border:0;min-height:32px;padding:0 12px;border-radius:999px;font-size:13px;font-weight:700;font-family:inherit;' + (s.showKo ? 'background:#EDF3FF;color:#2C58D0' : 'background:#F2F3F7;color:#6B7080'),
       speakLabel: !s.lessonPlan ? (s.reading ? '도란이가 읽어 주고 있어요 · 다 읽으면 질문할게요' : s.thinking ? '도란이가 준비하고 있어요' : (self._lastPlan ? '준비가 안 됐어요 · 누르면 다시 준비해요' : '먼저 책 사진을 올려요')) : s.done ? '눌러서 마치기' : (s.listening ? '듣고 있어요 · 말이 끝나면 자동으로 보내요' : (s.thinking ? '도란이가 생각 중이에요' : '누르고 말하기 · 한국어도 OK')),
       replay: function () { self.say(lastTutor && lastTutor.text); },
       sendTyped: function (e) { e.preventDefault(); var inp = document.getElementById('typed'); var v = inp ? inp.value : ''; if (inp) inp.value = ''; self.sendKid(v); },

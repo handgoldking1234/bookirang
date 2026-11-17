@@ -5,6 +5,7 @@
 (function () {
   var BT = window.BookTalk;
   var cache = {};
+  var style = (function () { try { return localStorage.getItem('booktalk.voice') || 'friend_f'; } catch (e) { return 'friend_f'; } })();
   var natural = null;           // null: 아직 모름, true/false
   var player = new Audio();     // 하나를 계속 써야 아이폰·아이패드에서 자동 재생이 막히지 않는다
   var unlocked = false;
@@ -64,19 +65,19 @@
 
   function speakOne(text, t, done) {
     onDone = done || null;
-    if (cache[text]) { play(cache[text]); return; }
+    if (cache[style + '|' + text]) { play(cache[style + '|' + text]); return; }
     check().then(function (ok) {
       if (t !== token) return;
       if (!ok) { browserSay(text, t); return; }
-      BT.api.call({ task: 'tts', text: text })
-        .then(function (r) { cache[text] = 'data:' + (r.mime || 'audio/mpeg') + ';base64,' + r.audio; if (t === token) play(cache[text]); })
+      BT.api.call({ task: 'tts', text: text, voice: style })
+        .then(function (r) { cache[style + '|' + text] = 'data:' + (r.mime || 'audio/mpeg') + ';base64,' + r.audio; if (t === token) play(cache[style + '|' + text]); })
         .catch(function () { if (t === token) browserSay(text, t); });
     });
   }
 
   function prefetch(text) {
-    if (cache[text] || natural !== true) return;
-    BT.api.call({ task: 'tts', text: text }).then(function (r) { cache[text] = 'data:' + (r.mime || 'audio/mpeg') + ';base64,' + r.audio; }).catch(function () {});
+    if (cache[style + '|' + text] || natural !== true) return;
+    BT.api.call({ task: 'tts', text: text, voice: style }).then(function (r) { cache[style + '|' + text] = 'data:' + (r.mime || 'audio/mpeg') + ';base64,' + r.audio; }).catch(function () {});
   }
 
   function check() {
@@ -109,6 +110,8 @@
       };
       next();
     },
+    style: function () { return style; },
+    setStyle: function (k) { style = k; try { localStorage.setItem('booktalk.voice', k); } catch (e) {} },
     stop: function () {
       token++; onDone = null;
       emit('quiet');

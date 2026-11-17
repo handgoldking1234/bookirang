@@ -41,7 +41,7 @@ const SCHEMA = {
   analyze: obj({ ok: S.bool, reason: S.str, title: S.str, topic: S.str, difficulty: S.str, excerpt: S.str, passage: S.str, words: WORDS, opening: S.str }),
   plan: obj({ title: S.str, topic: S.str, goals: WORDS, words: WORDS,
     questions: { type: 'array', items: obj({ stage: S.str, teach: S.str, teachKo: S.str, q: S.str, hint: S.str }) } }),
-  chat: obj({ reply: S.str, ko: S.str, fix: S.str, why: S.str, onTopic: S.bool, advance: S.bool, korean: S.bool,
+  chat: obj({ reply: S.str, replyKo: S.str, starter: S.str, ko: S.str, fix: S.str, why: S.str, onTopic: S.bool, advance: S.bool, korean: S.bool,
     usedGoals: { type: 'array', items: { type: 'integer' } } }),
   chatLegacy: obj({ reply: S.str, fix: S.str, stage: S.str, hint: S.str, done: S.bool }),
   report: obj({ praise: S.str,
@@ -155,14 +155,14 @@ async function plan(body) {
       '1) 내용 확인 - 누가 나오고 무슨 일이 있었는지, 2) 내용 확인 - 본문 속 한 장면, ' +
       '3) 단어·표현 - 본문의 핵심 단어나 문장 뜻을 알려 주고 따라 말해 보게, 4) 내용 이해 - 왜/어떻게, ' +
       '5) 생각 말하기 - 등장인물의 마음이나 나라면?, 6) 생각 말하기 - 오늘 이야기를 한 문장으로 말해 보기. ' +
-      '각 질문의 teach에는 질문 전에 선생님이 본문을 짚어 주는 쉬운 영어 1~2문장(본문 문장을 그대로 인용해도 좋아), ' +
+      '각 질문의 teach에는 질문 전에 선생님이 본문을 짚어 주는 쉬운 영어 1문장(본문 문장을 그대로 인용해도 좋아, 15단어 이내), ' +
       'teachKo에는 그 teach의 쉬운 한국어 풀이를 넣어. 본문에 없는 내용을 지어내지 마.)'
     : source === 'free'
     ? '(정확히 6개, 이 순서로: 1) 마음 열기 - 이 주제에 대해 아이가 쉽게 답할 질문, 2) 경험 말하기, 3) 자세히 말하기 - 어떻게/어디서/누구와, ' +
       '4) 좋아하는 이유 말하기, 5) 상상하기 - 만약 ~라면?, 6) 생각 말하기 - 친구에게 추천하거나 한 문장으로 정리. ' +
-      '질문은 열린 질문으로, 아이 대답에 따라 이어 갈 수 있게. teach에는 질문 전에 도란이가 자기 이야기를 짧게 들려주는 쉬운 영어 한 문장(예: "I love rainy days because ..."), teachKo에는 그 한국어 풀이.)'
+      '질문은 열린 질문으로, 아이 대답에 따라 이어 갈 수 있게. 질문 위주로: teach와 teachKo는 빈 문자열로 둬. q는 짧고 쉬운 질문 하나(12단어 이내).)'
     : '(정확히 6개: 마음 열기 1, 내용 확인 2, 생각 말하기 3. 목표 표현을 쓰게 되는 질문으로. ' +
-      'teach에는 질문 전에 선생님이 건네는 짧은 영어 한 문장(필요 없으면 빈 문자열), teachKo에는 그 한국어 풀이.)';
+      '질문 위주로: teach와 teachKo는 기본 빈 문자열, 꼭 필요할 때만 8단어 이내. q는 짧고 쉬운 질문 하나(12단어 이내).)';
   const prompt =
     `아이 레벨: ${levelText(level)}\n${material}\n\n` +
     '다음 형식으로 12분짜리 수업 계획을 만들어:\n' +
@@ -170,7 +170,8 @@ async function plan(body) {
     '"goals":[{"en":"이번에 써 볼 영어 표현(문장 틀, 예: I think ... because ...)","ko":"뜻"}] (정확히 3개),' +
     '"words":[{"en":"핵심 단어","ko":"뜻"}] (5개),' +
     '"questions":[{"stage":"내용 확인|단어·표현|내용 이해|생각 말하기|마음 열기","teach":"선생님 설명(영어)","teachKo":"한국어 풀이",' +
-    '"q":"영어 질문 1문장","hint":"아이가 막힐 때 쓸 영어 시작 문장"}] ' + flow + '}';
+    '"q":"영어 질문 1문장","hint":"아이가 막힐 때 쓸 영어 시작 문장"}] ' + flow +
+    ' 질문은 아이가 문장으로 길게 답하게 되는 열린 질문으로 만들어(What/Why/How/Tell me about). 예·아니오로 끝나는 질문은 쓰지 마.}';
   const out = parseJson(await callClaude({ system, messages: [{ role: 'user', content: prompt }], maxTokens: 6000, model: OPTS.chatModel, json: SCHEMA.plan }));
   out.questions = (out.questions || []).filter((q) => q && q.q).slice(0, 6);
   if (!out.questions.length) throw new Error('대화 계획을 만들지 못했어요');
@@ -181,10 +182,11 @@ async function plan(body) {
 }
 
 // 답이 길어지거나 형식이 깨지면 다듬는다 (아이용: 최대 3문장, 질문은 끝에 하나)
-function tidyReply(text, fallbackQ) {
+function tidyReply(text, fallbackQ, max) {
+  max = max || 3;
   let t = String(text || '').replace(/\s+/g, ' ').trim();
   const parts = (t.match(/[^.!?]+[.!?]+["')]*|[^.!?]+$/g) || []).map((x) => x.trim()).filter(Boolean);
-  if (parts.length > 3) t = parts.slice(0, 2).join(' ').trim() + ' ' + (parts.filter((x) => /\?/.test(x)).pop() || parts[2]).trim();
+  if (parts.length > max) t = parts.slice(0, max - 1).join(' ').trim() + ' ' + (parts.filter((x) => /\?/.test(x)).pop() || parts[max - 1]).trim();
   if (!t) t = fallbackQ || 'Can you tell me more?';
   return t;
 }
@@ -204,6 +206,13 @@ async function chat(body) {
   const kidSoFar = (body.history || []).filter((m) => m.role === 'kid').map((m) => m.text).join(' / ').slice(-600);
   const goals = (p.goals || []).map((g, i) => `${i}: ${g.en}`).join(' | ');
   const mustMove = off >= 1; // 이번에도 벗어나면 다음 질문으로 넘어간다
+  // 말 끌어내기: 한 질문 안에서 '더 물어보기'를 몇 번 했는지(deep). 짧게 답하면 2번, 길게 답하면 1번까지 더 묻는다.
+  const deep = Math.max(0, Number(body.deep) || 0);
+  const kidLast = String(((body.history || []).filter((m) => m.role === 'kid').pop() || {}).text || '');
+  const kidWords = (kidLast.match(/[A-Za-z][A-Za-z']*/g) || []).length;
+  const shortAnswer = kidWords <= 3;
+  const kidTurnsAll = (body.history || []).filter((m) => m.role === 'kid').length;
+  const digLeft = kidTurnsAll >= 16 ? 0 : Math.max(0, (shortAnswer ? 2 : 1) - deep);
 
   const system =
     '너는 초등학생과 영어로 이야기하는 다정한 AI 튜터 "Doran(도란이)"이야. 정해진 수업 계획을 절대 벗어나지 마. ' +
@@ -213,9 +222,17 @@ async function chat(body) {
     (isLast ? '이게 마지막 질문이야.\n' : `다음 단계: 선생님 설명 "${next.teach || ''}" → 질문 "${next.q}"\n`) +
     `목표 표현: ${goals}\n아이가 지금까지 한 말: ${kidSoFar || '(없음)'}\n` +
     '규칙:\n' +
-    '1) 답은 영어로 1~2문장 + 질문 하나. 쉬운 말로. 주제와 상관없는 새 이야기를 꺼내지 마.\n' +
-    '2) 아이가 틀려도 지적하지 말고 바른 표현으로 자연스럽게 되받아 말해(리캐스트).\n' +
-    '3) 아이가 지금 질문에 답했으면 짧게 칭찬·반응하고 ' + (isLast ? '오늘 배운 것을 한 문장으로 정리해 주며 마무리 인사를 해 (질문 없이). ' : '"다음 단계"의 선생님 설명을 자연스럽게 말한 뒤 그 질문을 물어. ') + 'advance=true.\n' +
+    '1) 목표는 아이가 영어로 많이 말하게 하는 것. 너는 아이보다 적게 말해. 대답은 항상 [듣기→공감→(설명)→질문] 순서, 전체 2~3문장, 한 문장 10단어 이내, 쉬운 말.\n' +
+    '   ① 듣기: 아이가 한 말의 핵심을 바른 영어로 되받아 말해. 아이가 쓴 낱말을 꼭 넣어 (아이 "I like pizza" → "You like pizza!"). 틀린 곳은 지적하지 말고 이때 바르게 고쳐 말해(리캐스트).\n' +
+    '   ② 공감: 그 내용에 맞는 느낌 한마디 ("That sounds yummy!", "Oh no, that\'s sad.", "Me too!"). ①과 한 문장으로 합쳐도 돼. 매번 다른 말로.\n' +
+    '   ③ 설명(필요할 때만 한 문장): 아이가 틀렸거나 한국어로 말했거나 딱 맞는 낱말이 있을 때 그 표현 하나만 알려 줘 ("We say \'stretchy cheese\'."). 필요 없으면 빼. 네 이야기를 길게 하지 마.\n' +
+    '   ④ 질문: 아이가 문장으로 길게 답하게 되는 열린 질문 하나 (Why / How / What happened / Tell me about ...). 예·아니오로 끝나는 질문과 한꺼번에 두 가지를 묻는 질문은 금지. 주제와 상관없는 새 이야기를 꺼내지 마.\n' +
+    `2) 아이의 마지막 말은 영어 낱말 ${kidWords}개. ` + (digLeft > 0
+      ? (shortAnswer
+        ? '짧게 답했어. 넘어가지 말고 같은 이야기에서 더 말하게 해: 아이 말에 나온 것을 콕 집어 "Tell me more!", "Why?", "What is it like?"처럼 묻고, starter에 대답 첫마디를 넣어. advance=false.\n'
+        : '잘 답했어. 아이 말 속에서 가장 궁금한 한 가지(누구와/어디서/어땠는지/왜)를 한 번 더 물어 이야기를 넓혀. advance=false. 단, 더 물을 게 없으면 3)으로.\n')
+      : '이 이야기는 충분히 나눴어. 이번에는 3)대로 다음으로 넘어가.\n') +
+    '3) 다음으로 넘어갈 때: ①②로 받아 준 뒤 ' + (isLast ? '오늘 이야기를 짧게 한 문장으로 정리하며 마무리 인사를 해 (질문 없이). ' : (next.teach ? '"다음 단계"의 선생님 설명을 짧게 말하고 그 질문을 물어. ' : '바로 "다음 단계" 질문을 물어. ')) + 'advance=true.\n' +
     '4) 답이 틀리거나 너무 짧거나 애매하면, 본문의 해당 문장을 짚어 주며("Let\'s look at the book: ...") 같은 질문을 더 쉽게 다시 물어. advance=false.\n' +
     '5) 아이가 주제와 상관없는 말을 하면 한 문장으로 받아 주고 지금 주제로 이어 붙여. onTopic=false. ' +
     (mustMove ? '이미 한 번 벗어났으니 이번엔 받아 주고 바로 ' + (isLast ? '마무리해' : '"다음 질문"으로 넘어가') + '. advance=true.\n' : '\n') +
@@ -230,7 +247,9 @@ async function chat(body) {
         '아이가 완전히 다른 주제로 바꾸고 싶어 하면 반갑게 받아 주고, "화면의 「주제 바꾸기」를 누르면 새 주제로 이야기할 수 있어"를 ko에 한국어로 알려 준 뒤 지금 주제로 한 번 이어 가.\n'
       : '') +
     '7) 위험하거나 아이에게 맞지 않는 이야기는 하지 말고 주제로 돌아와.\n' +
-    '반드시 JSON 하나만 출력: {"reply":"도란이의 영어 답","fix":"아이 마지막 문장의 더 자연스러운 영어 문장(고칠 게 없으면 빈 문자열)",' +
+    '8) starter: 아이가 대답을 시작하기 쉬운 영어 첫마디(예: "I like it because ..."). 아이의 마지막 말이 3단어 이하였거나 한국어였으면 꼭 넣고, 아니면 빈 문자열.\n' +
+    '9) replyKo: reply 전체의 자연스러운 한국어 번역(초등학생 말투).\n' +
+    '반드시 JSON 하나만 출력: {"reply":"도란이의 영어 답","replyKo":"reply의 한국어 번역","starter":"","fix":"아이 마지막 문장의 더 자연스러운 영어 문장(고칠 게 없으면 빈 문자열)",' +
     '"why":"fix가 있을 때 왜 그렇게 말하면 좋은지 초등학생이 이해할 한국어 1~2문장(없으면 빈 문자열)",' +
     '"ko":"","onTopic":true,"advance":false,"korean":false,"usedGoals":[아이 마지막 말에서 쓴 목표 표현 번호들]}';
   const messages = history.map((m) => ({ role: m.role === 'kid' ? 'user' : 'assistant', content: m.text }));
@@ -248,13 +267,22 @@ async function chat(body) {
   let advance = !!r.advance;
   let newOff = onTopic ? 0 : off + 1;
   if (newOff >= 2) { advance = true; newOff = 0; }      // 두 번 연속 벗어나면 서버가 강제로 넘긴다
-  let reply = tidyReply(r.reply, cur.q);
+  const forced = !advance && (deep >= 3 || newOff === 0 && !onTopic);
+  if (!advance && deep >= 3) advance = true;             // 한 질문에 너무 오래 머물지 않게 (더 묻기는 최대 3번)
+  const newDeep = advance ? 0 : deep + 1;
+  let reply = tidyReply(r.reply, cur.q, advance && next && next.teach ? 4 : 3);
+  if (forced && advance && !isLast) {                    // 서버가 넘긴 경우: 도란이의 되묻는 질문을 다음 질문으로 바꾼다
+    const keep = (reply.match(/[^.!?]+[.!?]+/g) || []).filter((x) => !/\?/.test(x)).slice(0, 2).join(' ').trim();
+    reply = (keep ? keep + ' ' : '') + (next.teach ? next.teach + ' ' : '') + next.q;
+    r.replyKo = '';
+  }
   const done = advance && isLast;
   const newStep = advance && !isLast ? step + 1 : step;
   if (advance && !isLast && !/\?/.test(reply)) reply += ' ' + next.q;   // 넘어가는데 질문이 빠졌으면 붙인다
   const used = (Array.isArray(r.usedGoals) ? r.usedGoals : []).map(Number).filter((n) => n >= 0 && n < (p.goals || []).length);
   return {
-    reply, ko: String(r.ko || '').slice(0, 400), koGloss: advance && !isLast && !r.ko ? (next.teachKo || '') : '',
+    reply, ko: String(r.ko || '').slice(0, 400), koGloss: r.ko ? '' : String(r.replyKo || (advance && !isLast ? next.teachKo : '') || '').slice(0, 300),
+    starter: done ? '' : String(r.starter || '').slice(0, 80), deep: newDeep,
     fix: r.fix || '', why: r.fix ? String(r.why || '').slice(0, 200) : '', korean: !!r.korean, onTopic, step: newStep, off: newOff, done, usedGoals: used,
     stage: done ? '마무리' : qs[newStep].stage, hint: qs[newStep].hint || ''
   };
@@ -301,19 +329,27 @@ async function report(body) {
 }
 
 // 5) 도란이 목소리: 영어 문장 → mp3 (OpenAI)
+// 도란이 목소리 (OpenAI 기본 보이스 + 말투 지시). 클라이언트는 키만 보낸다.
+const VOICES = {
+  friend_f: { voice: 'marin', en: 'Sound like a cheerful, bubbly young girl about 13 years old talking with a younger friend. Casual, upbeat, playful, natural speed, clear American pronunciation.', ko: '중학생 또래 여자아이처럼 밝고 발랄하게, 친구한테 말하듯 편하게 말해.' },
+  friend_m: { voice: 'cedar', en: 'Sound like an energetic, friendly young boy about 13 years old talking with a younger friend. Casual, fun, confident, natural speed, clear American pronunciation.', ko: '중학생 또래 남자아이처럼 씩씩하고 신나게, 친구한테 말하듯 편하게 말해.' },
+  sister:   { voice: 'coral', en: 'Sound like a kind, bright college-age older sister. Warm, soft, encouraging, slightly slow and very clear American pronunciation.', ko: '다정한 대학생 언니·누나처럼 따뜻하고 부드럽게, 또박또박 말해.' },
+  brother:  { voice: 'ash',   en: 'Sound like a relaxed, friendly college-age older brother. Warm, easygoing, encouraging, clear American pronunciation.', ko: '편안한 대학생 형·오빠처럼 다정하고 느긋하게 말해.' },
+  teacher:  { voice: 'coral', en: 'You are Doran, a warm and friendly English reading tutor for Korean elementary school children. Speak clearly, a little slowly, cheerfully, with natural American pronunciation.', ko: '너는 초등학생을 가르치는 다정한 선생님 도란이야. 자연스러운 한국어로 또박또박, 조금 천천히, 밝게 말해.' }
+};
+
 async function tts(body) {
   const text = String(body.text || '').slice(0, 600);
   if (!text) throw new Error('읽을 문장이 없어요');
+  const vp = VOICES[body.voice] || (OPTS.ttsVoice ? Object.assign({}, VOICES.teacher, { voice: OPTS.ttsVoice }) : VOICES.friend_f);
   const res = await fetch(TTS_URL, {
     method: 'POST',
     headers: { 'content-type': 'application/json', authorization: 'Bearer ' + OPTS.openaiKey },
     body: JSON.stringify({
       model: OPTS.ttsModel || 'gpt-4o-mini-tts',
-      voice: OPTS.ttsVoice || 'coral',
+      voice: vp.voice,
       input: text,
-      instructions: /[가-힣]/.test(text)
-        ? '너는 초등학생을 가르치는 다정한 선생님 도란이야. 자연스러운 한국어로 또박또박, 조금 천천히, 밝게 말해. 영어 단어가 나오면 미국식 발음으로 읽어.'
-        : 'You are Doran, a warm and friendly English reading tutor for Korean elementary school children. Speak clearly, a little slowly, cheerfully, with natural American pronunciation.',
+      instructions: /[가-힣]/.test(text) ? vp.ko + ' 영어 단어가 나오면 미국식 발음으로 읽어.' : vp.en,
       response_format: 'mp3'
     })
   });
