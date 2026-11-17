@@ -7,6 +7,16 @@
   var BT = window.BookTalk;
   var host = BT.host || {};
 
+  // 프리토킹에서 고를 수 있는 주제 (아이가 직접 써도 된다)
+  var FREE = host.freeTopics || [
+    { ko: '오늘 있었던 일', en: 'My Day Today' }, { ko: '좋아하는 음식', en: 'Food I Love' },
+    { ko: '게임', en: 'Games' }, { ko: '동물·반려동물', en: 'Animals and Pets' },
+    { ko: '친구', en: 'Friends' }, { ko: '주말 계획', en: 'Weekend Plans' },
+    { ko: '만화·영화', en: 'Cartoons and Movies' }, { ko: '운동', en: 'Sports' },
+    { ko: '여행', en: 'Travel' }, { ko: '꿈·장래희망', en: 'My Dream' },
+    { ko: '학교 이야기', en: 'School' }, { ko: '좋아하는 노래', en: 'Music I Like' }
+  ];
+
   var TOPICS = host.topics || [
     { en: 'My Favorite Weekend', ko: '내가 좋아하는 주말', extra: '주말에 하는 일, 함께하는 사람' },
     { en: 'If I Had a Pet', ko: '반려동물이 생긴다면', extra: '키우고 싶은 동물과 이유' },
@@ -76,6 +86,7 @@
 
   BT.topics = {
     list: TOPICS,
+    free: FREE,
     today: function (d) { d = d || new Date(); return TOPICS[dayIndex(d) % TOPICS.length]; },
     textbook: TEXTBOOK,
     grades: Object.keys(TEXTBOOK)

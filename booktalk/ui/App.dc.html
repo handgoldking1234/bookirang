@@ -70,7 +70,7 @@ button{font-family:inherit;cursor:pointer}
 <span style="width: 36px; height: 36px; border-radius: 12px; background: #8B6CF0; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></span>
 <span style="font-size: 14px; font-weight: 800; color: #6A4FD0">오늘의 주제</span>
 <b style="font-size: 18px; line-height: 1.3; font-family: 'Plus Jakarta Sans', sans-serif">{{ todayEn }}</b>
-<span style="font-size: 14px; color: #6B7080">{{ todayKo }} · 프리토킹</span>
+<span style="font-size: 14px; color: #6B7080">{{ todayKo }} · 매일 바뀌어요</span>
 </button>
 <button onClick="{{ goPick }}" style="border: 0; background: #E6F6EF; color: #171C35; border-radius: 22px; padding: 16px; display: flex; flex-direction: column; gap: 8px; text-align: left; min-height: 140px">
 <span style="width: 36px; height: 36px; border-radius: 12px; background: #3FB383; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg></span>
@@ -79,6 +79,16 @@ button{font-family:inherit;cursor:pointer}
 <span style="font-size: 14px; color: #6B7080">{{ childGrade }} 교과서 표현</span>
 </button>
 </div>
+
+<button onClick="{{ goFree }}" style="border: 0; background: #FFEEF4; color: #171C35; border-radius: 22px; padding: 16px; display: flex; align-items: center; gap: 14px; text-align: left">
+<span style="width: 44px; height: 44px; flex: none; border-radius: 14px; background: #F0679A; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/></svg></span>
+<span style="flex: 1; display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 14px; font-weight: 800; color: #C23C70">프리토킹</span>
+<b style="font-size: 18px">하고 싶은 이야기로 자유롭게</b>
+<span style="font-size: 14px; color: #6B7080">게임, 음식, 오늘 있었던 일… 주제는 내가 골라요</span>
+</span>
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B7080" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+</button>
 
 <button onClick="{{ goPlan }}" style="border: 0; background: #FFF2E6; color: #171C35; border-radius: 22px; padding: 16px; display: flex; align-items: center; gap: 14px; text-align: left">
 <span style="width: 56px; height: 72px; flex: none; border-radius: 10px; background: #FF9F5A; color: #FFF; display: flex; align-items: flex-end; padding: 6px; font-size: 13px; font-weight: 800; font-family: 'Plus Jakarta Sans', sans-serif">Day 5</span>
@@ -302,6 +312,33 @@ button{font-family:inherit;cursor:pointer}
 </div>
 </sc-if>
 
+<!-- ===== FREE: 프리토킹 주제 고르기 ===== -->
+<sc-if value="{{ isFree }}" hint-placeholder-val="{{ false }}">
+<div class="scroll" style="flex: 1; overflow-y: auto; padding: 0 20px 24px; display: flex; flex-direction: column; gap: 18px">
+<div class="topbar" style="padding-top: 16px; display: flex; align-items: center; gap: 8px">
+<button aria-label="뒤로" onClick="{{ goHome }}" style="width: 44px; height: 44px; border: 0; border-radius: 50%; background: #F2F3F7; color: #171C35; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+<b style="font-size: 19px">프리토킹</b>
+</div>
+<div style="display: flex; align-items: center; gap: 12px; background: #FFEEF4; border-radius: 22px; padding: 14px 16px">
+<img src="{{ avatarSrc }}" alt="" style="width: 52px; height: 52px; flex: none; border-radius: 50%; object-fit: cover; background: #FFFFFF">
+<span style="font-size: 17px; line-height: 1.5; font-weight: 700">오늘은 무슨 이야기 하고 싶어?<br><span style="font-size: 15px; font-weight: 500; color: #6B7080">고르거나 직접 써 줘. 한국어로 써도 돼!</span></span>
+</div>
+<div style="display: flex; gap: 8px">
+<label for="freeTopic" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">이야기하고 싶은 주제</label>
+<input id="freeTopic" type="text" autocomplete="off" maxlength="60" placeholder="예: 포켓몬, 수영, 우리 강아지" onKeyDown="{{ freeKey }}" style="flex: 1; min-width: 0; min-height: 52px; border: 1px solid #E6E8EF; border-radius: 16px; padding: 0 14px; font-size: 17px; font-family: inherit">
+<button onClick="{{ goFreeTyped }}" style="flex: none; min-height: 52px; padding: 0 18px; border: 0; border-radius: 16px; background: #3B6BEB; color: #FFF; font-size: 17px; font-weight: 800">시작</button>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<b style="font-size: 16px; color: #2F3445">이런 건 어때?</b>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{ freeChips }}" as="c" hint-placeholder-count="12"><button onClick="{{ c.go }}" style="border: 1px solid #E6E8EF; background: #FFFFFF; color: #171C35; border-radius: 999px; min-height: 44px; padding: 0 16px; font-size: 16px; font-weight: 700">{{ c.ko }}</button></sc-for>
+</div>
+</div>
+<button onClick="{{ goFreeRandom }}" style="border: 1px dashed #A6C1FF; background: #FFFFFF; color: #2C58D0; border-radius: 16px; min-height: 52px; font-size: 16px; font-weight: 700">🎲 {{ tutorName }}가 골라 줘</button>
+<span style="font-size: 14px; line-height: 1.6; color: #6B7080">고른 주제 안에서 {{ tutorName }}가 질문 6개로 이야기를 이끌어요. 다른 이야기가 하고 싶으면 대화 중에 「주제 바꾸기」를 눌러요.</span>
+</div>
+</sc-if>
+
 <!-- ===== CONFIRM ===== -->
 <sc-if value="{{ isConfirm }}" hint-placeholder-val="{{ false }}">
 <div class="scroll" style="flex: 1; overflow-y: auto; padding: 0 20px 24px; display: flex; flex-direction: column; gap: 16px">
@@ -342,6 +379,7 @@ button{font-family:inherit;cursor:pointer}
 <div style="height: 6px; border-radius: 3px; background: #E6E8EF; overflow: hidden"><div style="{{ progressStyle }}"></div></div>
 </div>
 <button aria-label="{{ avatarAria }}" onClick="{{ cycleAvatar }}" style="flex: none; min-height: 40px; padding: 0 10px; border: 1px solid #E6E8EF; border-radius: 999px; background: #FFFFFF; color: #2F3445; font-size: 14px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>{{ avatarBtn }}</button>
+<sc-if value="{{ isFreeTalk }}" hint-placeholder-val="{{ false }}"><button onClick="{{ goFree }}" style="flex: none; min-height: 40px; padding: 0 10px; border: 1px solid #F7C6D8; border-radius: 999px; background: #FFEEF4; color: #C23C70; font-size: 13px; font-weight: 700; white-space: nowrap">주제 바꾸기</button></sc-if>
 <sc-if value="{{ canFinish }}" hint-placeholder-val="{{ false }}">
 <button onClick="{{ finishTalk }}" style="border: 0; flex: none; min-height: 40px; padding: 0 14px; border-radius: 999px; background: #EDF3FF; color: #2C58D0; font-size: 15px; font-weight: 800">마치기</button>
 </sc-if>
@@ -507,6 +545,7 @@ button{font-family:inherit;cursor:pointer}
 </div>
 <span style="font-size: 16px; color: #D6E4FF">{{ doneNote }}</span>
 <button onClick="{{ goReport }}" style="width: 100%; border: 0; min-height: 56px; border-radius: 999px; background: #FFFFFF; color: #3B6BEB; font-size: 19px; font-weight: 800">리포트 보기</button>
+<sc-if value="{{ isFreeTalk }}" hint-placeholder-val="{{ false }}"><button onClick="{{ goFree }}" style="width: 100%; border: 2px solid rgba(255,255,255,.7); background: none; min-height: 52px; border-radius: 999px; color: #FFFFFF; font-size: 17px; font-weight: 800">다른 주제로 또 이야기하기</button></sc-if>
 <button onClick="{{ goHome }}" style="border: 0; background: none; color: #FFFFFF; font-size: 17px; font-weight: 700; min-height: 44px">홈으로</button>
 </div>
 </sc-if>
@@ -955,6 +994,14 @@ class Component extends DCLogic {
     this.say(first);
   }
 
+  /* 프리토킹: 아이가 고른 주제로 계획을 세우고 바로 대화 */
+  startFree(title, ko, extra) {
+    this.state.analysis = null;
+    var label = ko && ko !== title ? title + '(' + ko + ')' : title;
+    this.makePlan('free', { title: String(title).slice(0, 60), ko: ko || '', extra: extra ? '(' + extra + ')' : '',
+      intro: '좋아, 오늘은 "' + label + '" 이야기를 해 보자! 잠깐만 준비할게.' });
+  }
+
   /* 수업 계획표 만들기 → 채팅창에 '오늘의 이야기' 카드 + 첫 질문 */
   makePlan(source, info) {
     var self = this;
@@ -1153,7 +1200,7 @@ class Component extends DCLogic {
     var qn = LP.questions.length || 6;
     var pct = s.done ? 100 : Math.min(100, Math.round(s.step / qn * 100));
     var goalChips = (LP.goals || []).map(function (g, i) { var on = s.goalsUsed.indexOf(i) > -1; return { en: g.en, mark: on ? '✓' : '○', style: 'padding:5px 10px;border-radius:999px;font-size:14px;font-weight:700;font-family:Plus Jakarta Sans,sans-serif;' + (on ? 'background:' + G + ';color:#FFF' : 'background:#F2F3F7;color:#6B7080') }; });
-    var SRC = { book: '북토킹', topic: '오늘의 주제', textbook: '교과서', novel: '원서' };
+    var SRC = { book: '북토킹', topic: '오늘의 주제', free: '프리토킹', textbook: '교과서', novel: '원서' };
     var TP = window.BookTalk.topics;
     var todayT = TP.today(new Date());
     var lastTutor = s.messages.filter(function (m) { return m.role === 'tutor'; }).slice(-1)[0];
@@ -1224,10 +1271,10 @@ class Component extends DCLogic {
     var periodName = { week: '이번 주', month: '최근 4주', year: '최근 12개월' }[s.period];
     var agg = hasReal ? { books: ag.books, minutes: ag.minutes, newWords: ag.words, vocab: ag.vocab } : { books: sample.books, minutes: sample.minutes, newWords: sample.words, vocab: sample.vocab };
     var skillBase = hasReal && ag.books ? ag.skills : { amount: 78, length: 64, variety: 58, self: 71 };
-    var srcCount = hasReal ? ag.sources : { book: 6, topic: 4, textbook: 1, novel: 1 };
-    var srcColor = { book: G, topic: '#3B6BEB', textbook: '#3B6BEB', novel: '#244CC0' };
-    var SRC_SHORT = { book: '북토킹', topic: '주제', textbook: '교과서', novel: '원서' };
-    var srcList = ['book', 'topic', 'textbook', 'novel'].map(function (k) { return { name: SRC_SHORT[k], n: srcCount[k] || 0, style: 'font-size:20px;color:' + srcColor[k] }; });
+    var srcCount = hasReal ? ag.sources : { book: 6, topic: 3, free: 2, textbook: 1, novel: 1 };
+    var srcColor = { book: G, topic: '#6A4FD0', free: '#C23C70', textbook: '#1E8A5E', novel: '#244CC0' };
+    var SRC_SHORT = { book: '북토킹', topic: '주제', free: '프리', textbook: '교과서', novel: '원서' };
+    var srcList = ['book', 'topic', 'free', 'textbook', 'novel'].map(function (k) { return { name: SRC_SHORT[k], n: srcCount[k] || 0, style: 'font-size:20px;color:' + srcColor[k] }; });
     var goalRate = hasReal ? (ag.goalRate == null ? '아직 없어요' : ag.goalRate + '%') : '67%';
     var skills = [
       { name: '말하기 양', v: skillBase.amount, c: G }, { name: '문장 길이', v: skillBase.length, c: B },
@@ -1260,7 +1307,7 @@ class Component extends DCLogic {
       isHome: s.screen === 'home', isConfirm: s.screen === 'confirm', isTalk: s.screen === 'talk',
       isDone: s.screen === 'done', isReport: s.screen === 'report', isStats: s.screen === 'stats', isShelf: s.screen === 'shelf',
       isReview: s.screen === 'review', isPlan: s.screen === 'plan', isRank: s.screen === 'rank',
-      isPick: s.screen === 'pick', isMe: s.screen === 'me',
+      isPick: s.screen === 'pick', isMe: s.screen === 'me', isFree: s.screen === 'free', isFreeTalk: s.source === 'free' && (s.screen === 'talk' || s.screen === 'done'),
       goMe: function () { self.checkSvc(); self.setState({ screen: 'me', meGrade: host.child.grade, meName: host.child.name, meSaved: false, clearAsk: false }); },
       recheckSvc: function () { self.checkSvc(); },
       svcRows: (function () {
@@ -1325,6 +1372,11 @@ class Component extends DCLogic {
       todayEn: todayT.en, todayKo: todayT.ko, childGrade: host.child.grade,
       goTopic: function () { self.state.analysis = null; self.makePlan('topic', { title: todayT.en, extra: todayT.ko + ', ' + todayT.extra, ko: todayT.ko, intro: '오늘의 주제는 "' + todayT.en + '"(' + todayT.ko + ')야! 이야기를 준비할게.' }); },
       goPick: go('pick'),
+      goFree: function () { window.BookTalk.voice && window.BookTalk.voice.stop && window.BookTalk.voice.stop(); self.setState({ screen: 'free', err: '' }); },
+      freeChips: (TP.free || []).map(function (c) { return { ko: c.ko, go: function () { self.startFree(c.en, c.ko); } }; }),
+      goFreeTyped: function () { var inp = document.getElementById('freeTopic'); var v = inp ? inp.value.trim() : ''; if (!v) { if (inp) inp.focus(); return; } self.startFree(v, v); },
+      freeKey: function (e) { if (e.key === 'Enter' && !e.isComposing) { var v = e.target.value.trim(); if (v) self.startFree(v, v); } },
+      goFreeRandom: function () { var L = TP.list; var t = L[Math.floor(Math.random() * L.length)]; self.startFree(t.en, t.ko, t.extra); },
       pickIsBook: s.pickTab === 'textbook', pickIsNovel: s.pickTab === 'novel',
       pickBookBtn: seg(s.pickTab === 'textbook'), pickNovelBtn: seg(s.pickTab === 'novel'),
       setPickBook: set({ pickTab: 'textbook' }), setPickNovel: set({ pickTab: 'novel' }),

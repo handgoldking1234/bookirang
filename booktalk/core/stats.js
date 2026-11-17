@@ -52,7 +52,7 @@
     var inPeriod = sessions.filter(function (x) { return buckets.some(function (b) { return inB(x, b); }); });
     var vocab = {}; sessions.forEach(function (x) { (x.stats.words || []).forEach(function (w) { vocab[w] = 1; }); });
     function avg(f) { return inPeriod.length ? inPeriod.reduce(function (n, x) { return n + f(x.stats); }, 0) / inPeriod.length : 0; }
-    var sources = { book: 0, topic: 0, textbook: 0, novel: 0 };
+    var sources = { book: 0, topic: 0, free: 0, textbook: 0, novel: 0 };
     inPeriod.forEach(function (x) { var k = x.source || 'book'; sources[k] = (sources[k] || 0) + 1; });
     var gAll = 0, gUsed = 0;
     inPeriod.forEach(function (x) { (x.goals || []).forEach(function (g) { gAll++; if (g.used) gUsed++; }); });
