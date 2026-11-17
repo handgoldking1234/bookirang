@@ -9,12 +9,12 @@ out=f'''<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0E6B2C">
+<meta name="theme-color" content="#3D5AFE">
 <title>북이랑 - 책 찍고 AI랑 도란도란</title>
 {helmet.strip()}
 <style>
 html,body{{height:100%}}
-body{{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#EEF1EE !important}}
+body{{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#EEF0F5 !important}}
 #app>div{{box-shadow:0 20px 60px rgba(0,0,0,.12);border-radius:32px}}
 @media (max-width:1024px), (pointer:coarse){{
 body{{display:block;background:#FFFFFF !important}}

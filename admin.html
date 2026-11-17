@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
-  :root { --g: #0E6B2C; --g2: #E7F3EA; --ink: #16201A; --ink2: #2E3A31; --mute: #5C6B60; --line: #E3E8E4; --grid: #EEF1EE; --bg: #F6F8F6; --warn: #B4530B; --warnbg: #FFF0E3; }
+  :root { --g: #3D5AFE; --g2: #EEF1FF; --ink: #161A26; --ink2: #2F3445; --mute: #6B7080; --line: #E6E8EF; --grid: #EEF0F5; --bg: #F6F7FB; --warn: #B4530B; --warnbg: #FFF0E3; }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--bg); color: var(--ink); font-family: 'Noto Sans KR', system-ui, sans-serif; font-size: 15px; }
   button { font-family: inherit; cursor: pointer; }
@@ -20,7 +20,7 @@
   .btn, .live { white-space: nowrap; }
   .live { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--mute); }
   .dot { width: 8px; height: 8px; border-radius: 50%; background: #1E9E4A; box-shadow: 0 0 0 0 rgba(30,158,74,.5); animation: pulse 2s infinite; }
-  .dot.off { background: #C9D3CC; animation: none; }
+  .dot.off { background: #C8CCD8; animation: none; }
   @keyframes pulse { 70% { box-shadow: 0 0 0 8px rgba(30,158,74,0); } 100% { box-shadow: 0 0 0 0 rgba(30,158,74,0); } }
   .btn { border: 1px solid var(--line); background: #FFF; color: var(--ink2); border-radius: 999px; min-height: 36px; padding: 0 14px; font-size: 14px; font-weight: 700; }
   .btn.pri { background: var(--g); border-color: var(--g); color: #FFF; }
@@ -43,7 +43,7 @@
   th { text-align: left; font-size: 13px; color: var(--mute); font-weight: 700; padding: 8px 6px; border-bottom: 1px solid var(--line); }
   td { padding: 9px 6px; border-bottom: 1px solid var(--grid); color: var(--ink2); }
   td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
-  .tag { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--g2); color: #0B5E25; }
+  .tag { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--g2); color: #2D44D6; }
   .tag.err { background: var(--warnbg); color: var(--warn); }
   .scrollx { overflow-x: auto; }
   .scrollx td, .scrollx th { white-space: nowrap; }
@@ -201,14 +201,14 @@
     var out = ['<svg viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '">'];
     [0, 0.5, 1].forEach(function (f) {
       var v = top * f, yy = y(v);
-      out.push('<line x1="' + L + '" x2="' + (W - R) + '" y1="' + yy + '" y2="' + yy + '" stroke="' + (f ? '#EEF1EE' : '#C9D3CC') + '" stroke-width="1"/>');
+      out.push('<line x1="' + L + '" x2="' + (W - R) + '" y1="' + yy + '" y2="' + yy + '" stroke="' + (f ? '#EEF0F5' : '#C8CCD8') + '" stroke-width="1"/>');
       out.push('<text class="axis" x="' + (L - 8) + '" y="' + (yy + 4) + '" text-anchor="end">' + fmt(v) + '</text>');
     });
     data.forEach(function (x, i) {
       var cx = L + slot * i + slot / 2, h = Math.max(0, (x.v / top) * ih), yy = T + ih - h;
       if (h > 0) {
         var r = Math.min(4, h, bw / 2), x0 = cx - bw / 2, x1 = cx + bw / 2, yb = T + ih;
-        out.push('<path fill="#0E6B2C" d="M' + x0 + ' ' + yb + ' V' + (yy + r) + ' Q' + x0 + ' ' + yy + ' ' + (x0 + r) + ' ' + yy + ' H' + (x1 - r) + ' Q' + x1 + ' ' + yy + ' ' + x1 + ' ' + (yy + r) + ' V' + yb + ' Z"/>');
+        out.push('<path fill="#3D5AFE" d="M' + x0 + ' ' + yb + ' V' + (yy + r) + ' Q' + x0 + ' ' + yy + ' ' + (x0 + r) + ' ' + yy + ' H' + (x1 - r) + ' Q' + x1 + ' ' + yy + ' ' + x1 + ' ' + (yy + r) + ' V' + yb + ' Z"/>');
       }
       var lastOk = i === data.length - 1 && (i % labelEvery) * slot >= 46;
       if (i % labelEvery === 0 || lastOk) out.push('<text class="axis" x="' + cx + '" y="' + (H - 8) + '" text-anchor="middle">' + x.label + '</text>');
