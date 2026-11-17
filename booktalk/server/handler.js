@@ -356,11 +356,11 @@ async function period(body) {
 // 5) 도란이 목소리: 영어 문장 → mp3 (OpenAI)
 // 도란이 목소리 (OpenAI 기본 보이스 + 말투 지시). 클라이언트는 키만 보낸다.
 const VOICES = {
-  friend_f: { voice: 'marin', en: 'Sound like a cheerful, bubbly young girl about 13 years old talking with a younger friend. Casual, upbeat, playful, natural speed, clear American pronunciation.', ko: '중학생 또래 여자아이처럼 밝고 발랄하게, 친구한테 말하듯 편하게 말해.' },
-  friend_m: { voice: 'cedar', en: 'Sound like an energetic, friendly young boy about 13 years old talking with a younger friend. Casual, fun, confident, natural speed, clear American pronunciation.', ko: '중학생 또래 남자아이처럼 씩씩하고 신나게, 친구한테 말하듯 편하게 말해.' },
+  friend_f: { voice: 'nova', en: 'Sound like a cheerful, bubbly young girl about 13 years old talking with a younger friend. Casual, upbeat, playful, natural speed, clear American pronunciation.', ko: '중학생 또래 여자아이처럼 밝고 발랄하게, 친구한테 말하듯 편하게 말해.' },
+  friend_m: { voice: 'verse', en: 'Sound like an energetic, friendly young boy about 13 years old talking with a younger friend. Casual, fun, confident, natural speed, clear American pronunciation.', ko: '중학생 또래 남자아이처럼 씩씩하고 신나게, 친구한테 말하듯 편하게 말해.' },
   sister:   { voice: 'coral', en: 'Sound like a kind, bright college-age older sister. Warm, soft, encouraging, slightly slow and very clear American pronunciation.', ko: '다정한 대학생 언니·누나처럼 따뜻하고 부드럽게, 또박또박 말해.' },
-  brother:  { voice: 'ash',   en: 'Sound like a relaxed, friendly college-age older brother. Warm, easygoing, encouraging, clear American pronunciation.', ko: '편안한 대학생 형·오빠처럼 다정하고 느긋하게 말해.' },
-  teacher:  { voice: 'coral', en: 'You are Doran, a warm and friendly English reading tutor for Korean elementary school children. Speak clearly, a little slowly, cheerfully, with natural American pronunciation.', ko: '너는 초등학생을 가르치는 다정한 선생님 도란이야. 자연스러운 한국어로 또박또박, 조금 천천히, 밝게 말해.' }
+  brother:  { voice: 'onyx',   en: 'Sound like a relaxed, friendly college-age older brother. Warm, easygoing, encouraging, clear American pronunciation.', ko: '편안한 대학생 형·오빠처럼 다정하고 느긋하게 말해.' },
+  teacher:  { voice: 'sage',  en: 'You are Doran, a warm and friendly English reading tutor for Korean elementary school children. Speak clearly, a little slowly, cheerfully, with natural American pronunciation.', ko: '너는 초등학생을 가르치는 다정한 선생님 도란이야. 자연스러운 한국어로 또박또박, 조금 천천히, 밝게 말해.' }
 };
 
 async function tts(body) {

@@ -5,6 +5,15 @@
 (function () {
   var BT = window.BookTalk;
   var cache = {};
+  // 목소리마다 높낮이·빠르기를 확실히 다르게 (서버 음성은 재생 속도로, 기계음은 pitch로)
+  var TONE = {
+    friend_f: { rate: 1.12, keep: false, pitch: 1.45, brate: 1.0 },   // 높고 빠르게 → 어린 여자아이
+    friend_m: { rate: 1.1, keep: false, pitch: 1.25, brate: 1.0 },    // 조금 높게 → 어린 남자아이
+    sister:   { rate: 1.0, keep: true, pitch: 1.1, brate: 0.92 },
+    brother:  { rate: 0.96, keep: false, pitch: 0.8, brate: 0.9 },    // 조금 낮게
+    teacher:  { rate: 0.92, keep: true, pitch: 1.0, brate: 0.85 }     // 같은 높이로 천천히
+  };
+  function tone() { return TONE[style] || TONE.friend_f; }
   var style = (function () { try { return localStorage.getItem('booktalk.voice') || 'friend_f'; } catch (e) { return 'friend_f'; } })();
   var natural = null;           // null: 아직 모름, true/false
   var player = new Audio();     // 하나를 계속 써야 아이폰·아이패드에서 자동 재생이 막히지 않는다
@@ -36,7 +45,7 @@
       if (!window.speechSynthesis) { finish(t); return; }
       window.speechSynthesis.cancel();
       var u = new SpeechSynthesisUtterance(text);
-      u.lang = /[가-힣]/.test(text) ? 'ko-KR' : 'en-US'; u.rate = 0.92;
+      u.lang = /[가-힣]/.test(text) ? 'ko-KR' : 'en-US'; u.rate = tone().brate; u.pitch = tone().pitch;
       u.onstart = function () { emit('speak'); };
       u.onend = u.onerror = function () { emit('quiet'); finish(t); };
       window.speechSynthesis.speak(u);
@@ -46,6 +55,9 @@
   function play(src) {
     try {
       player.pause(); player.src = src;
+      var tn = tone();
+      player.preservesPitch = player.mozPreservesPitch = player.webkitPreservesPitch = tn.keep;
+      player.defaultPlaybackRate = tn.rate; player.playbackRate = tn.rate;
       var p = player.play();
       if (p && p.catch) p.catch(function () { finish(token); }); // 자동 재생이 막혀도 다음 단계는 진행
     } catch (e) { finish(token); }
