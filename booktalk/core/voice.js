@@ -17,49 +17,80 @@
   var style = (function () { try { return localStorage.getItem('booktalk.voice') || 'friend_f'; } catch (e) { return 'friend_f'; } })();
   var natural = null;           // null: 아직 모름, true/false
   var player = new Audio();     // 하나를 계속 써야 아이폰·아이패드에서 자동 재생이 막히지 않는다
-  var unlocked = false;
+  var priming = false;          // 무음 파일로 '잠금 풀기' 중인지 (실제 음성과 구분)
+  var pending = null;           // 브라우저가 자동 재생을 막아 못 들려준 소리 { src | text }
   // 말하기 시작·끝을 화면에 알린다 (도란이 입 모양 애니메이션용)
   function emit(name) { try { window.dispatchEvent(new Event('booktalk:' + name)); } catch (e) {} }
-  player.addEventListener('playing', function () { if (player.src.indexOf('SUQzBAAAAAAAI1RTU0U') < 0) emit('speak'); });
+  player.addEventListener('playing', function () { if (!priming) emit('speak'); });
   ['ended', 'pause', 'error'].forEach(function (ev) { player.addEventListener(ev, function () { emit('quiet'); }); });
 
-  function unlock() {
-    if (unlocked) return;
-    unlocked = true;
+  var SILENT = 'data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjI5LjEwMAAAAAAAAAAAAAAA//tQxAADB8AhSmxhIIEVCSiJrDCQBTcu3UrAIwUdkRgQbFAZC1CQEwTJ9mjRvBA4UOLD8nKVOWfh+UlK3z/177OXrfOdKl7pyn3Xf//WreyTRUoAWgBgkOAGbZHBgG1OF6zM82DWbZaUmMBptgQhGjsyYqc9ae9XFz280948NMBWInljyzsNRFLPWdnZGWrddDsjK1unuSrVN9jJsK8KuQtQCtMBjCEtImISdNKJOopIpBFpNSMbIHCSRpRR5iakjTiyzLhchUUBwCgyKiweBv/7UsQbg8isVNoMPMjAAAA0gAAABEVFGmgqK////9bP/6XCykxBTUUzLjEwMKqqqqqqqqqqqqqq';
+  // 휴대폰 브라우저는 '누른 순간'에만 소리를 허락하는 경우가 있다.
+  // 화면을 누를 때마다(쉬고 있을 때만) 같은 플레이어로 무음을 틀어 허락을 이어 두고,
+  // 막혀서 못 들려준 소리가 있으면 그 누름으로 바로 들려준다.
+  function onTap() {
+    if (pending) { var pd = pending; pending = null; hidePill(); if (pd.src) play(pd.src); else browserSay(pd.text, token, true); return; }
+    if (!player.paused && !priming) return;
     try {
-      player.src = 'data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjI5LjEwMAAAAAAAAAAAAAAA//tQxAADB8AhSmxhIIEVCSiJrDCQBTcu3UrAIwUdkRgQbFAZC1CQEwTJ9mjRvBA4UOLD8nKVOWfh+UlK3z/177OXrfOdKl7pyn3Xf//WreyTRUoAWgBgkOAGbZHBgG1OF6zM82DWbZaUmMBptgQhGjsyYqc9ae9XFz280948NMBWInljyzsNRFLPWdnZGWrddDsjK1unuSrVN9jJsK8KuQtQCtMBjCEtImISdNKJOopIpBFpNSMbIHCSRpRR5iakjTiyzLhchUUBwCgyKiweBv/7UsQbg8isVNoMPMjAAAA0gAAABEVFGmgqK////9bP/6XCykxBTUUzLjEwMKqqqqqqqqqqqqqq';
+      priming = true; player.src = SILENT;
       var p = player.play();
-      if (p && p.catch) p.catch(function () {});
+      if (p && p.then) p.then(function () { priming = false; }, function () { priming = false; }); else priming = false;
+    } catch (e) { priming = false; }
+  }
+  document.addEventListener('pointerdown', onTap, { capture: true });
+
+  // 소리가 막혔을 때 보여 주는 「눌러서 듣기」 버튼
+  var pill = null;
+  function showPill() {
+    try {
+      if (!pill) {
+        pill = document.createElement('button');
+        pill.type = 'button';
+        pill.textContent = '🔊 눌러서 도란이 말 듣기';
+        pill.setAttribute('style', 'position:fixed;left:50%;bottom:calc(120px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:9999;border:0;border-radius:999px;padding:12px 20px;min-height:48px;background:#171C35;color:#FFFFFF;font:700 16px/1 inherit;box-shadow:0 6px 20px rgba(23,28,53,.25)');
+        pill.addEventListener('click', function (e) { e.stopPropagation(); });   // 실제 재생은 pointerdown(onTap)에서
+      }
+      if (!pill.parentNode) document.body.appendChild(pill);
     } catch (e) {}
   }
-  document.addEventListener('pointerdown', unlock, { once: true, capture: true });
+  function hidePill() { try { if (pill && pill.parentNode) pill.parentNode.removeChild(pill); } catch (e) {} }
 
   var token = 0;          // 새로 말하기 시작하면 이전 말하기(또는 늦게 도착한 음성)를 무시한다
   var onDone = null;      // 지금 말하는 문장이 끝나면 부를 함수
   function finish(t) { if (t !== token) return; var f = onDone; onDone = null; if (f) f(); }
   player.addEventListener('ended', function () { finish(token); });
-  player.addEventListener('error', function () { if (player.src.indexOf('SUQzBAAAAAAAI1RTU0U') < 0) finish(token); });
+  player.addEventListener('error', function () { if (!priming) finish(token); });
 
-  function browserSay(text, t) {
+  function browserSay(text, t, retried) {
     try {
       if (!window.speechSynthesis) { finish(t); return; }
       window.speechSynthesis.cancel();
       var u = new SpeechSynthesisUtterance(text);
       u.lang = /[가-힣]/.test(text) ? 'ko-KR' : 'en-US'; u.rate = tone().brate; u.pitch = tone().pitch;
       u.onstart = function () { emit('speak'); };
-      u.onend = u.onerror = function () { emit('quiet'); finish(t); };
+      u.onend = function () { emit('quiet'); finish(t); };
+      u.onerror = function (e) {
+        emit('quiet');
+        if (e && e.error === 'not-allowed' && !retried && t === token) { pending = { text: text }; showPill(); return; }
+        finish(t);
+      };
       window.speechSynthesis.speak(u);
     } catch (e) { finish(t); }
   }
 
   function play(src) {
     try {
+      priming = false; pending = null; hidePill();
       player.pause(); player.src = src;
       var tn = tone();
       player.preservesPitch = player.mozPreservesPitch = player.webkitPreservesPitch = tn.keep;
       player.defaultPlaybackRate = tn.rate; player.playbackRate = tn.rate;
       var p = player.play();
-      if (p && p.catch) p.catch(function () { finish(token); }); // 자동 재생이 막혀도 다음 단계는 진행
+      if (p && p.catch) p.catch(function (e) {
+        if (e && e.name === 'AbortError') return;                       // 다른 소리로 바뀐 것: 무시
+        if (e && e.name === 'NotAllowedError') { pending = { src: src }; showPill(); return; }   // 자동 재생 막힘 → 한 번 누르면 재생
+        finish(token);
+      });
     } catch (e) { finish(token); }
   }
 
@@ -127,6 +158,7 @@
     stop: function () {
       token++; onDone = null;
       emit('quiet');
+      pending = null; hidePill();
       try { player.pause(); } catch (e) {}
       try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch (e) {}
     },
