@@ -546,7 +546,7 @@ body{display:block;background:#FFFFFF !important}
 </sc-if>
 <sc-if value="{{ err }}" hint-placeholder-val="{{ false }}"><div role="alert" style="background: #FFF1F2; color: #B42318; border-radius: 14px; padding: 10px 12px; font-size: 15px; font-family: 'Noto Sans KR', sans-serif">{{ err }}</div></sc-if>
 </div>
-<div style="padding: 10px 16px 24px; display: flex; flex-direction: column; align-items: center; gap: 10px; border-top: 1px solid #E6E8EF">
+<div style="padding: 8px 16px calc(8px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; align-items: center; gap: 6px; border-top: 1px solid #E6E8EF">
 <div style="display: flex; align-items: center; gap: 28px">
 <button aria-label="힌트 보기" onClick="{{ toggleHint }}" style="width: 48px; height: 48px; border: 0; border-radius: 50%; background: #EDF3FF; color: #3B6BEB; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></button>
 <div style="position: relative; width: 76px; height: 76px; flex: none">
