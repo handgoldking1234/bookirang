@@ -28,6 +28,17 @@ button{font-family:inherit;cursor:pointer}
 .doran.talking img{animation:doranBob .7s ease-in-out infinite}
 .doran.body img{border-radius:0}
 .doran.body.talking{animation:none}
+@keyframes micRing{0%{transform:scale(1);opacity:.5}100%{transform:scale(2);opacity:0}}
+@keyframes micPop{0%{transform:scale(1)}35%{transform:scale(.86)}70%{transform:scale(1.08)}100%{transform:scale(1)}}
+@keyframes micBlink{0%,100%{opacity:1}50%{opacity:.35}}
+.micbtn{position:relative;z-index:2;transition:background .2s,transform .12s;-webkit-tap-highlight-color:transparent}
+.micbtn:active{transform:scale(.9)}
+.micbtn.pop{animation:micPop .35s ease-out}
+.micring{position:absolute;inset:0;border-radius:50%;background:#3B6BEB;animation:micRing 1.5s ease-out infinite;pointer-events:none;z-index:0}
+.micring.b{animation-delay:.75s}
+.miclevel{position:absolute;inset:0;border-radius:50%;background:rgba(59,107,235,.28);transform:scale(1);transition:transform .09s linear;pointer-events:none;z-index:1}
+.recdot{width:10px;height:10px;border-radius:50%;background:#F04438;display:inline-block;animation:micBlink 1s ease-in-out infinite}
+.micbar{width:5px;height:6px;border-radius:3px;background:#3B6BEB;transition:height .09s linear}
 @keyframes doranRingSq{0%{box-shadow:0 0 0 0 rgba(61,90,254,.4)}100%{box-shadow:0 0 0 12px rgba(61,90,254,0)}}
 </style>
 </helmet>
@@ -518,10 +529,19 @@ button{font-family:inherit;cursor:pointer}
 <div style="padding: 10px 16px 24px; display: flex; flex-direction: column; align-items: center; gap: 10px; border-top: 1px solid #E6E8EF">
 <div style="display: flex; align-items: center; gap: 28px">
 <button aria-label="힌트 보기" onClick="{{ toggleHint }}" style="width: 48px; height: 48px; border: 0; border-radius: 50%; background: #EDF3FF; color: #3B6BEB; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></button>
-<button aria-label="누르고 말하기" onClick="{{ speak }}" style="{{ micStyle }}"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg></button>
+<div style="position: relative; width: 76px; height: 76px; flex: none">
+<sc-if value="{{ listening }}" hint-placeholder-val="{{ false }}"><span class="micring"></span><span class="micring b"></span></sc-if>
+<span id="micLevel" class="miclevel"></span>
+<button id="micBtn" class="micbtn" aria-label="{{ micAria }}" onClick="{{ speak }}" style="{{ micStyle }}">
+<sc-if value="{{ micIdle }}" hint-placeholder-val="{{ true }}"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg></sc-if>
+<sc-if value="{{ listening }}" hint-placeholder-val="{{ false }}"><span style="width: 24px; height: 24px; border-radius: 6px; background: #FFFFFF"></span></sc-if>
+<sc-if value="{{ micBusy }}" hint-placeholder-val="{{ false }}"><span style="width: 30px; height: 30px; border-radius: 50%; border: 3px solid rgba(255,255,255,.35); border-top-color: #FFFFFF; animation: spin .8s linear infinite"></span></sc-if>
+</button>
+</div>
 <button aria-label="도란이 말 다시 듣기" onClick="{{ replay }}" style="width: 48px; height: 48px; border: 0; border-radius: 50%; background: #EDF3FF; color: #3B6BEB; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg></button>
 </div>
-<span style="display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap"><span style="font-size: 15px; color: #6B7080">{{ speakLabel }}</span><button onClick="{{ toggleKo }}" aria-pressed="{{ showKoAria }}" style="{{ koChipStyle }}">{{ koChip }}</button></span>
+<sc-if value="{{ listening }}" hint-placeholder-val="{{ false }}"><span role="status" style="display: flex; flex-direction: column; align-items: center; gap: 2px"><span style="display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 800; color: #2C58D0; white-space: nowrap"><span class="recdot"></span>듣고 있어요<span style="display: inline-flex; align-items: center; gap: 3px; height: 22px"><span class="micbar"></span><span class="micbar"></span><span class="micbar"></span><span class="micbar"></span><span class="micbar"></span><span class="micbar"></span><span class="micbar"></span></span></span><span style="font-size: 14px; color: #6B7080; white-space: nowrap">말을 멈추면 자동으로 보내요 · 버튼을 누르면 바로 보내요</span></span></sc-if>
+<sc-if value="{{ micIdleOrBusy }}" hint-placeholder-val="{{ true }}"><span style="display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap"><span style="font-size: 15px; color: #6B7080">{{ speakLabel }}</span><button onClick="{{ toggleKo }}" aria-pressed="{{ showKoAria }}" style="{{ koChipStyle }}">{{ koChip }}</button></span></sc-if>
 <form onSubmit="{{ sendTyped }}" style="width: 100%; display: flex; gap: 8px">
 <label for="typed" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">영어로 입력하기</label>
 <input id="typed" type="text" autocomplete="off" placeholder="말 대신 써도 돼요" style="flex: 1; min-width: 0; min-height: 44px; border: 1px solid #E6E8EF; border-radius: 999px; padding: 0 16px; font-size: 17px; font-family: inherit">
@@ -1173,6 +1193,7 @@ class Component extends DCLogic {
     if (this.state.thinking) { this.setState({ err: '도란이가 대답을 준비하고 있어요. 조금만 기다렸다가 눌러 줘!' }); return; }
     if (!this.state.lessonPlan) { this.notReady(); return; }
     if (this.state.listening) { L.stop(); return; }
+    try { var mbtn = document.getElementById('micBtn'); if (mbtn) { mbtn.classList.remove('pop'); void mbtn.offsetWidth; mbtn.classList.add('pop'); } if (navigator.vibrate) navigator.vibrate(30); } catch (e) {}
     this.setState({ err: '' });
     clearTimeout(this._micWatch);
     this._micWatch = setTimeout(function () {   // 3초 안에 마이크가 안 켜지면 알려 준다
@@ -1185,10 +1206,13 @@ class Component extends DCLogic {
     var words = (lp.words || []).map(function (w) { return w.en; }).concat((lp.goals || []).map(function (g) { return g.en; }));
     L.start({
       words: words,
-      onState: function (st) { self.setState({ listening: st === 'listening', thinking: st === 'thinking' }); },
+      onState: function (st) { if (st !== 'listening') { var rg = document.getElementById('micLevel'); if (rg) rg.style.transform = 'scale(1)'; } self.setState({ listening: st === 'listening', thinking: st === 'thinking' }); },
       onLevel: function (v) { // 목소리 크기 막대 (다시 그리지 않고 높이만 바꾼다)
         var bars = document.querySelectorAll('.lvbar'), w = [0.6, 0.9, 1, 0.85, 0.65];
         for (var i = 0; i < bars.length; i++) bars[i].style.height = Math.max(4, Math.round(22 * Math.min(1, v * w[i] * (0.8 + Math.random() * 0.4)))) + 'px';
+        var ring = document.getElementById('micLevel'); if (ring) ring.style.transform = 'scale(' + (1 + Math.min(1, v) * 0.55).toFixed(3) + ')';
+        var mb = document.querySelectorAll('.micbar'), mw = [0.5, 0.8, 1, 0.9, 1, 0.75, 0.55];
+        for (var j = 0; j < mb.length; j++) mb[j].style.height = Math.max(6, Math.round(22 * Math.min(1, v * mw[j] * (0.7 + Math.random() * 0.6)))) + 'px';
       },
       onText: function (t) { self.setState({ thinking: false }); self.sendKid(t); },
       onError: function (msg) { self.setState({ listening: false, thinking: false, err: msg }); }
@@ -1595,8 +1619,9 @@ class Component extends DCLogic {
       showHint: s.hint, hintText: '이렇게 시작해 봐: ' + s.hintText,
       toggleHint: function () { self.setState({ hint: !s.hint, hintsUsed: s.hint ? s.hintsUsed : s.hintsUsed + 1 }); },
       speak: function () { self.speak(); },
-      listening: !!s.listening,
-      micStyle: 'width:76px;height:76px;border:0;border-radius:50%;color:#FFF;display:flex;align-items:center;justify-content:center;background:' + (s.listening ? O : G) + (s.listening ? ';box-shadow:0 0 0 8px rgba(61,90,254,.18)' : ''),
+      listening: !!s.listening, micBusy: !s.listening && !!s.thinking, micIdle: !s.listening && !s.thinking, micIdleOrBusy: !s.listening,
+      micAria: s.listening ? '다 말했어요 (멈추기)' : '누르고 말하기',
+      micStyle: 'width:76px;height:76px;border:0;border-radius:50%;color:#FFF;display:flex;align-items:center;justify-content:center;background:' + (s.listening ? O : s.thinking ? '#8DB0FF' : G) + ';box-shadow:0 6px 16px rgba(59,107,235,' + (s.listening ? '.45' : '.25') + ')',
       voices: [['friend_f', '🎀', '상큼한 친구', '또래 여자아이처럼 밝고 발랄하게'], ['friend_m', '⚡', '씩씩한 친구', '또래 남자아이처럼 신나게'], ['sister', '🌷', '다정한 언니·누나', '대학생처럼 부드럽고 또박또박'], ['brother', '🧢', '듬직한 형·오빠', '대학생처럼 편안하고 다정하게'], ['teacher', '📚', '선생님', '차분하고 천천히']].map(function (v) { var on = s.voiceKey === v[0]; return { icon: v[1], name: v[2], desc: v[3], on: on ? 'true' : 'false', pick: function () { self.setVoice(v[0]); }, style: 'display:flex;align-items:center;gap:12px;min-height:60px;padding:0 14px;border-radius:14px;' + (on ? 'border:2px solid ' + G + ';background:#EDF3FF;color:#2C58D0' : 'border:1px solid #E6E8EF;background:#FFF;color:#171C35') }; }),
       toggleKo: function () { self.setShowKo(!s.showKo); }, showKoAria: s.showKo ? 'true' : 'false',
       koTrack: 'flex:none;width:48px;height:28px;border-radius:999px;padding:3px;display:flex;background:' + (s.showKo ? G : '#D5D9E3') + ';justify-content:' + (s.showKo ? 'flex-end' : 'flex-start'),
