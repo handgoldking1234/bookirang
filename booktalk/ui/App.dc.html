@@ -1169,9 +1169,18 @@ class Component extends DCLogic {
     var self = this;
     var L = window.BookTalk.listen;
     if (this.state.done) { this.finishTalk(); return; }
-    if (this.state.thinking) return;
+    // 눌렀는데 아무 일도 없으면 아이가 고장 난 줄 안다 → 왜 못 하는지 항상 말해 준다
+    if (this.state.thinking) { this.setState({ err: '도란이가 대답을 준비하고 있어요. 조금만 기다렸다가 눌러 줘!' }); return; }
     if (!this.state.lessonPlan) { this.notReady(); return; }
     if (this.state.listening) { L.stop(); return; }
+    this.setState({ err: '' });
+    clearTimeout(this._micWatch);
+    this._micWatch = setTimeout(function () {   // 3초 안에 마이크가 안 켜지면 알려 준다
+      if (!self.state.listening && !self.state.thinking) {
+        var f = L.info ? L.info() : {};
+        self.setState({ err: '마이크가 켜지지 않았어요. 한 번 더 눌러 주세요. (' + (L.mode ? L.mode() : '') + (f.path ? '·' + f.path : '') + ')' });
+      }
+    }, 3000);
     var lp = this.state.lessonPlan || {};
     var words = (lp.words || []).map(function (w) { return w.en; }).concat((lp.goals || []).map(function (g) { return g.en; }));
     L.start({
