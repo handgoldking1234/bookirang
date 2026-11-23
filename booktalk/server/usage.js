@@ -84,4 +84,28 @@ async function save(rows, ctx) {
   }
 }
 
-module.exports = { record, track, save, claudeCost, ttsCost, sttCost, PRICES };
+// 같은 요청 안의 성공한 기록 중 제공사·모델이 같은 것을 한 줄로 합친다 (실패 기록은 따로 둔다)
+function merge(rows) {
+  const out = [], byKey = {};
+  (rows || []).forEach((r) => {
+    if (r.ok === false) { out.push(r); return; }
+    const k = r.provider + '|' + (r.model || '');
+    const m = byKey[k];
+    if (!m) { byKey[k] = Object.assign({}, r); out.push(byKey[k]); return; }
+    ['input_tokens', 'output_tokens', 'chars', 'seconds', 'cost_usd'].forEach((f) => { if (r[f]) m[f] = (m[f] || 0) + r[f]; });
+    if (r.ms) m.ms = Math.max(m.ms || 0, r.ms);
+  });
+  return out;
+}
+
+// 응답을 보낸 뒤에도 끝까지 하게 맡긴다 (Vercel의 waitUntil). 맡겼으면 true, 이 서버에서 안 되면 false
+function later(promise) {
+  try {
+    const ctx = globalThis[Symbol.for('@vercel/request-context')];
+    const c = ctx && typeof ctx.get === 'function' ? ctx.get() : null;
+    if (c && typeof c.waitUntil === 'function') { c.waitUntil(promise); return true; }
+  } catch (e) {}
+  return false;
+}
+
+module.exports = { record, track, save, merge, later, claudeCost, ttsCost, sttCost, PRICES };

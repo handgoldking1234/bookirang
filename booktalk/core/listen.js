@@ -41,7 +41,7 @@
     });
   }
 
-  // 말이 끝나면 자동으로 녹음을 마친다: 소리 크기를 보고, 말한 뒤 1.3초 조용하면 끝 (8초 동안 아무 말 없으면 끝)
+  // 말이 끝나면 자동으로 녹음을 마친다: 소리 크기를 보고, 말한 뒤 0.9초 조용하면 끝 (8초 동안 아무 말 없으면 끝)
   var vad = null, actx = null;
   // 휴대폰은 누른 순간에 만든 AudioContext만 소리를 읽을 수 있어서, 버튼을 누를 때 미리 만들어 깨워 둔다
   function wakeAudio() {
@@ -69,7 +69,7 @@
         if (now - start < 400) { floor = Math.min(0.04, Math.max(floor, rms)); return; }   // 처음 0.4초로 주변 소음 크기를 잰다 (바로 말해도 너무 높게 잡지 않게)
         var loud = rms > Math.max(0.02, floor * 2.2);
         if (loud) { spoke = true; quietSince = now; }
-        if (spoke && now - quietSince > 1300) BT.listen.stop();
+        if (spoke && now - quietSince > 900) BT.listen.stop();
         else if (!spoke && now - start > 8000) BT.listen.stop();
       }, 100) };
     } catch (e) { vad = null; }

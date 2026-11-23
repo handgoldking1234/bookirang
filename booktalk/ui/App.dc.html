@@ -1169,7 +1169,8 @@ class Component extends DCLogic {
     var a = this.state.analysis, lp = this.state.lessonPlan;
     var talkOnly = msgs.filter(function (m) { return !m.kind; });
     this.api({ task: 'chat', plan: Object.assign({ level: this.state.level }, lp), step: this.state.step, off: this.state.off, deep: this.state.deep || 0,
-      passage: a.passage, title: a.title, level: this.state.level, history: talkOnly, kidTurns: turns })
+      passage: a.passage, title: a.title, level: this.state.level, history: talkOnly, kidTurns: turns,
+      voice: window.BookTalk.voice.style() })   // 도란이 첫마디 목소리를 답과 함께 받아 바로 말한다
       .then(function (r) {
         var list = self.state.messages.slice();
         list[list.length - 1] = Object.assign({}, list[list.length - 1], { fix: r.fix || '', korean: !!r.korean, why: r.why || '', checked: true });
@@ -1180,7 +1181,8 @@ class Component extends DCLogic {
           messages: list, thinking: false, stage: r.stage || self.state.stage, hintText: r.starter || r.hint || self.state.hintText,
           done: !!r.done, step: r.step != null ? r.step : self.state.step, off: r.off || 0, deep: r.deep || 0, goalsUsed: used
         });
-        if (r.ko) { window.BookTalk.voice.say(r.ko, function () { window.BookTalk.voice.say(r.reply); }); } else self.say(r.reply);
+        if (r.ko) { window.BookTalk.voice.say(r.ko, function () { window.BookTalk.voice.say(r.reply); }, r.audio); window.BookTalk.voice.prefetch(r.reply); }
+        else window.BookTalk.voice.say(r.reply, null, r.audio);
       })
       .catch(function (er) { self.setState({ thinking: false, err: '도란이가 대답하지 못했어요: ' + er.message }); });
   }
