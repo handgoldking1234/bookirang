@@ -109,8 +109,9 @@
           if (blob.size < 1200) { state('idle'); opts.onError && opts.onError('잘 듣지 못했어요. 조금 더 크게 말해 볼까?'); return; }
           state('thinking');
           toBase64(blob)
-            .then(function (b64) { return BT.api.call({ task: 'transcribe', audio: b64, mime: type, words: opts.words || [], durationMs: dur }); })
+            .then(function (b64) { info.sttStart = Date.now(); return BT.api.call({ task: 'transcribe', audio: b64, mime: type, words: opts.words || [], durationMs: dur }); })
             .then(function (r) {
+              info.sttMs = Date.now() - info.sttStart;   // 말 → 글자 바꾸는 데 걸린 시간
               state('idle');
               if (!r.text) { opts.onError && opts.onError('잘 듣지 못했어요. 다시 말해 볼까?'); return; }
               opts.onText && opts.onText(r.text);

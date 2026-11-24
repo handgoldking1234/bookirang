@@ -64,7 +64,19 @@ async function callClaude(opts) {
   return r.text;
 }
 
-async function callClaudeOnce({ system, messages, maxTokens = 1024, model, json }) {
+// 대화(fast) 호출은 '생각'을 끈다. 최신 모델은 기본으로 답하기 전에 생각을 해서, 대답 한 번에 몇 초씩 더 걸린다.
+// 모델이 이 설정을 받지 않으면(400) 한 번만 설정 없이 다시 보내고, 이 서버가 켜져 있는 동안은 다시 시도하지 않는다.
+let fastUnsupported = false;
+async function callClaudeOnce({ system, messages, maxTokens = 1024, model, json, fast }) {
+  const useFast = fast && !fastUnsupported;
+  const output = {};
+  if (json) output.format = { type: 'json_schema', schema: json };
+  if (useFast) output.effort = 'low';
+  // temperature는 보내지 않는다: 최신 Claude 모델은 이 설정을 받지 않는다 (보내면 요청이 거절됨)
+  const req = Object.assign({ model, max_tokens: maxTokens, system, messages },
+    Object.keys(output).length ? { output_config: output } : {},
+    useFast ? { thinking: { type: 'disabled' } } : {});
+  const started = Date.now();
   const res = await fetch(API_URL, {
     method: 'POST',
     headers: {
@@ -72,19 +84,22 @@ async function callClaudeOnce({ system, messages, maxTokens = 1024, model, json 
       'x-api-key': OPTS.apiKey,
       'anthropic-version': '2023-06-01'
     },
-    // temperature는 보내지 않는다: 최신 Claude 모델은 이 설정을 받지 않는다 (보내면 요청이 거절됨)
-    body: JSON.stringify(Object.assign({ model, max_tokens: maxTokens, system, messages },
-      json ? { output_config: { format: { type: 'json_schema', schema: json } } } : {}))
+    body: JSON.stringify(req)
   });
   const data = await res.json();
+  const ms = Date.now() - started;
   if (!res.ok) {
     const msg = (data && data.error && data.error.message) || ('Claude API 오류 ' + res.status);
-    usage.record({ provider: 'anthropic', model, ok: false, error: msg });
+    if (useFast && res.status === 400 && /thinking|effort/i.test(msg)) {
+      fastUnsupported = true;
+      return callClaudeOnce({ system, messages, maxTokens, model, json, fast: false });
+    }
+    usage.record({ provider: 'anthropic', model, ok: false, error: msg, ms });
     throw new Error(msg);
   }
   const u = data.usage || {};
   const inTok = (u.input_tokens || 0) + (u.cache_creation_input_tokens || 0) + (u.cache_read_input_tokens || 0);
-  usage.record({ provider: 'anthropic', model: data.model || model, input_tokens: inTok, output_tokens: u.output_tokens || 0, cost_usd: usage.claudeCost(model, inTok, u.output_tokens || 0) });
+  usage.record({ provider: 'anthropic', model: data.model || model, input_tokens: inTok, output_tokens: u.output_tokens || 0, cost_usd: usage.claudeCost(model, inTok, u.output_tokens || 0), ms });
   const call = (data.content || []).find((b) => b.type === 'tool_use');
   if (call && call.input && typeof call.input === 'object') {
     let input = call.input;
@@ -260,14 +275,15 @@ async function chat(body) {
   if (!messages.length) messages.push({ role: 'user', content: '(대화 시작)' });
 
   // 고친 문장은 아이 말만 보면 되므로 도란이 답과 동시에 만든다 (기다리는 시간에 더해지지 않게)
+  const t0 = Date.now();
   const fixP = fixSentence(kidLast, cur.q, p.level || body.level).catch(() => ({ fix: '', why: '' }));
 
   let r;
   try {
-    r = parseJson(await callClaude({ system, messages, maxTokens: 4000, model: OPTS.chatModel, json: SCHEMA.chat }));
+    r = parseJson(await callClaude({ system, messages, maxTokens: 4000, model: OPTS.chatModel, json: SCHEMA.chat, fast: true }));
   } catch (e) {
     // 형식이 깨지면 한 번만 다시 (더 보수적으로)
-    r = parseJson(await callClaude({ system, messages, maxTokens: 4000, model: OPTS.chatModel, json: SCHEMA.chat }));
+    r = parseJson(await callClaude({ system, messages, maxTokens: 4000, model: OPTS.chatModel, json: SCHEMA.chat, fast: true }));
   }
   const onTopic = r.onTopic !== false;
   let advance = !!r.advance;
@@ -295,6 +311,7 @@ async function chat(body) {
     ? tts({ text: first, voice: body.voice }).then((a) => ({ text: first, audio: a.audio, mime: a.mime })).catch(() => null)
     : Promise.resolve(null);
   const glossP = ko ? Promise.resolve('') : glossKo(reply).catch(() => '');
+  const t1 = Date.now();
   const [fx, gloss, audio] = await Promise.all([fixP, glossP, audioP]);
 
   const out = {
@@ -304,6 +321,7 @@ async function chat(body) {
     stage: done ? '마무리' : qs[newStep].stage, hint: qs[newStep].hint || ''
   };
   if (audio) out.audio = audio;
+  out.timing = { answer: t1 - t0, voice: Date.now() - t1 };   // 걸린 시간(ms): 도란이 답 / 첫마디 목소리·번역
   return out;
 }
 
@@ -329,14 +347,14 @@ async function fixSentence(kidText, question, level) {
     'why: fix가 있으면 왜 그렇게 말하면 좋은지 초등학생이 이해할 한국어 1~2문장, 없으면 빈 문자열.\n' +
     'JSON 하나만 출력: {"fix":"","why":""}';
   return parseJson(await callClaude({ system: '너는 초등학생의 영어 문장을 다정하게 다듬어 주는 선생님이야. 반드시 JSON 하나만 출력해.',
-    messages: [{ role: 'user', content: prompt }], maxTokens: 1500, model: OPTS.chatModel, json: SCHEMA.fix }));
+    messages: [{ role: 'user', content: prompt }], maxTokens: 1500, model: OPTS.chatModel, json: SCHEMA.fix, fast: true }));
 }
 
 // 도란이 영어 답 → 초등학생 말투 한국어 번역
 async function glossKo(reply) {
   const r = parseJson(await callClaude({ system: '너는 영어를 초등학생 말투의 자연스러운 한국어로 옮기는 번역가야. 반드시 JSON 하나만 출력해.',
     messages: [{ role: 'user', content: '다음 영어를 한국어로 번역해. {"ko":"번역"} 형식으로:\n' + String(reply).slice(0, 600) }],
-    maxTokens: 1500, model: OPTS.chatModel, json: SCHEMA.gloss }));
+    maxTokens: 1500, model: OPTS.chatModel, json: SCHEMA.gloss, fast: true }));
   return String(r.ko || '');
 }
 
@@ -359,7 +377,7 @@ async function chatLegacy(body) {
     content: m.text
   }));
   if (!messages.length || messages[0].role !== 'user') messages.unshift({ role: 'user', content: '(대화 시작)' });
-  const text = await callClaude({ system, messages, maxTokens: 4000, model: OPTS.chatModel, json: SCHEMA.chatLegacy });
+  const text = await callClaude({ system, messages, maxTokens: 4000, model: OPTS.chatModel, json: SCHEMA.chatLegacy, fast: true });
   return parseJson(text);
 }
 
