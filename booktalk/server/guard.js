@@ -65,6 +65,25 @@ async function todayUsage(ip, childId) {
   }
 }
 
+// 사용량 확인 결과를 잠깐 기억해 두고 다시 쓴다 (대화 한 번마다 Supabase에 묻느라 느려지지 않게).
+// 한도의 90% 아래로 넉넉할 때만, 최대 60초 동안 재사용한다. 그동안 통과시킨 요청 수는 더해서 센다.
+const CACHE_MS = 60 * 1000;
+const cache = new Map();
+async function usageCached(ip, childId, roomy) {
+  const key = todayStartIso() + '|' + ip + '|' + (childId || '');
+  const hit = cache.get(key);
+  if (hit && Date.now() - hit.at < CACHE_MS && roomy(hit.u)) {
+    hit.u.ip += 1; hit.u.child += 1;
+    return hit.u;
+  }
+  const u = await todayUsage(ip, childId);
+  if (u) {
+    if (cache.size > 2000) cache.clear();
+    cache.set(key, { at: Date.now(), u: Object.assign({}, u) });
+  }
+  return u;
+}
+
 // 통과하면 null, 막으면 { status, message, reason }
 async function check(req, body) {
   if (!originAllowed(req)) return { status: 403, message: '허용되지 않은 곳에서 온 요청이에요', reason: 'origin' };
@@ -78,7 +97,8 @@ async function check(req, body) {
   const krwMax = num(process.env.LIMIT_DAILY_KRW, 20000);
   const rate = Number(process.env.USD_KRW) || 1400;
 
-  const u = await todayUsage(clientIp(req), body.cid);
+  const u = await usageCached(clientIp(req), body.cid, (x) =>
+    (krwMax <= 0 || x.costUsd * rate < krwMax * 0.9) && (ipMax <= 0 || x.ip < ipMax * 0.9) && (childMax <= 0 || x.child < childMax * 0.9));
   if (!u) return null;
   if (krwMax > 0 && u.costUsd * rate >= krwMax) return { status: 429, message: '오늘 준비한 AI 사용량을 모두 썼어요. 내일 다시 만나요!', reason: 'daily-budget' };
   if (ipMax > 0 && u.ip >= ipMax) return { status: 429, message: '오늘 이 곳에서 너무 많이 사용했어요. 내일 다시 만나요!', reason: 'ip-limit' };

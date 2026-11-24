@@ -34,7 +34,7 @@ button{font-family:inherit;cursor:pointer}
 .micring{position:absolute;inset:0;border-radius:50%;background:#3B6BEB;animation:micRing 1.5s ease-out infinite;pointer-events:none;z-index:0}
 .micring.b{animation-delay:.75s}
 .miclevel{position:absolute;inset:0;border-radius:50%;background:rgba(59,107,235,.28);transform:scale(1);transition:transform .09s linear;pointer-events:none;z-index:1}
-.recdot{width:10px;height:10px;border-radius:50%;background:#F04438;display:inline-block;animation:micBlink 1s ease-in-out infinite}
+.recdot{width:10px;height:10px;border-radius:50%;background:#F04438;display:inline-block}
 .micbar{width:5px;height:6px;border-radius:3px;background:#3B6BEB;transition:height .09s linear}
 @keyframes doranRingSq{0%{box-shadow:0 0 0 0 rgba(61,90,254,.4)}100%{box-shadow:0 0 0 12px rgba(61,90,254,0)}}
 </style>
@@ -1262,8 +1262,10 @@ class Component extends DCLogic {
     this.setState({ messages: msgs, kidTurns: turns, thinking: true, hint: false, err: '' });
     var a = this.state.analysis, lp = this.state.lessonPlan;
     var talkOnly = msgs.filter(function (m) { return !m.kind; });
+    var sentAt = Date.now();
     this.api({ task: 'chat', plan: Object.assign({ level: this.state.level }, lp), step: this.state.step, off: this.state.off, deep: this.state.deep || 0,
-      passage: a.passage, title: a.title, level: this.state.level, history: talkOnly, kidTurns: turns })
+      passage: a.passage, title: a.title, level: this.state.level, history: talkOnly, kidTurns: turns,
+      voice: window.BookTalk.voice.style() })   // 도란이 첫마디 목소리를 답과 함께 받아 바로 말한다
       .then(function (r) {
         var list = self.state.messages.slice();
         list[list.length - 1] = Object.assign({}, list[list.length - 1], { fix: r.fix || '', korean: !!r.korean, why: r.why || '', checked: true });
@@ -1274,7 +1276,12 @@ class Component extends DCLogic {
           messages: list, thinking: false, stage: r.stage || self.state.stage, hintText: r.starter || r.hint || self.state.hintText,
           done: !!r.done, step: r.step != null ? r.step : self.state.step, off: r.off || 0, deep: r.deep || 0, goalsUsed: used
         });
-        if (r.ko) { window.BookTalk.voice.say(r.ko, function () { window.BookTalk.voice.say(r.reply); }); } else self.say(r.reply);
+        if (/[?&]debug/.test(location.search)) {   // 주소 끝에 ?debug 를 붙이면 단계별 걸린 시간을 보여 준다
+          var li = window.BookTalk.listen.info ? window.BookTalk.listen.info() : {}, sec = function (v) { return v != null ? (v / 1000).toFixed(1) + '초' : '-'; };
+          self.setState({ err: '⏱ 말→글자 ' + sec(li.sttMs) + ' · 도란이 답 ' + sec(r.timing && r.timing.answer) + ' · 첫마디 목소리 ' + sec(r.timing && r.timing.voice) + ' · 답 받기까지 ' + sec(Date.now() - sentAt) });
+        }
+        if (r.ko) { window.BookTalk.voice.say(r.ko, function () { window.BookTalk.voice.say(r.reply); }, r.audio); window.BookTalk.voice.prefetch(r.reply); }
+        else window.BookTalk.voice.say(r.reply, null, r.audio);
       })
       .catch(function (er) { self.setState({ thinking: false, err: '도란이가 대답하지 못했어요: ' + er.message }); });
   }

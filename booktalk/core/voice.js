@@ -106,21 +106,44 @@
     return out.map(function (c) { return c.length > 590 ? c.slice(0, 590) : c; });
   }
 
+  // 같은 문장을 미리 만드는 중이면 그 요청을 같이 기다린다 (두 번 만들지 않게)
+  var inflight = {};
+  function fetchAudio(text) {
+    var key = style + '|' + text;
+    if (cache[key]) return Promise.resolve(cache[key]);
+    if (!inflight[key]) {
+      inflight[key] = BT.api.call({ task: 'tts', text: text, voice: style })
+        .then(function (r) { cache[key] = 'data:' + (r.mime || 'audio/mpeg') + ';base64,' + r.audio; delete inflight[key]; return cache[key]; },
+          function (e) { delete inflight[key]; throw e; });
+    }
+    return inflight[key];
+  }
+
   function speakOne(text, t, done) {
     onDone = done || null;
     if (cache[style + '|' + text]) { play(cache[style + '|' + text]); return; }
     check().then(function (ok) {
       if (t !== token) return;
       if (!ok) { browserSay(text, t); return; }
-      BT.api.call({ task: 'tts', text: text, voice: style })
-        .then(function (r) { cache[style + '|' + text] = 'data:' + (r.mime || 'audio/mpeg') + ';base64,' + r.audio; if (t === token) play(cache[style + '|' + text]); })
+      fetchAudio(text)
+        .then(function (src) { if (t === token) play(src); })
         .catch(function () { if (t === token) browserSay(text, t); });
     });
   }
 
   function prefetch(text) {
     if (cache[style + '|' + text] || natural !== true) return;
-    BT.api.call({ task: 'tts', text: text, voice: style }).then(function (r) { cache[style + '|' + text] = 'data:' + (r.mime || 'audio/mpeg') + ';base64,' + r.audio; }).catch(function () {});
+    fetchAudio(text).catch(function () {});
+  }
+
+  // 말할 글의 앞부분: 첫 문장(너무 짧으면 다음 문장까지). 서버(firstPart)와 같은 규칙
+  function headOf(text) {
+    var parts = text.match(/[^.!?]+[.!?]+["')\]]*|[^.!?]+$/g) || [text], out = '';
+    for (var i = 0; i < parts.length; i++) {
+      out = out ? out + ' ' + parts[i].trim() : parts[i].trim();
+      if (out.length >= 20) break;
+    }
+    return out || text;
   }
 
   function check() {
@@ -131,15 +154,30 @@
   }
 
   BT.voice = {
-    // 한 문장 말하기. done: 다 말하면(또는 멈추면 안 부름) 호출
-    say: function (text, done) {
-      text = String(text || '').trim();
+    // 말하기. done: 다 말하면(또는 멈추면 안 부름) 호출
+    // first: 서버가 대화 답과 함께 보내 준 첫 부분 목소리 { text, audio, mime } (있으면 기다리지 않고 바로 말한다)
+    // 서버 목소리일 때는 앞부분을 먼저 말하고, 그동안 나머지 목소리를 만들어 이어서 말한다.
+    say: function (text, done, first) {
+      text = String(text || '').replace(/\s+/g, ' ').trim();
       if (!text) { if (done) done(); return; }
       BT.voice.stop();
       var t = ++token;
+      if (first && first.audio) natural = true;
       if (text.length > 590) { BT.voice.read(text, done); return; }
+      if (natural === true) {
+        var head = first && first.text && text.indexOf(first.text) === 0 ? first.text : headOf(text);
+        if (first && first.audio && head === first.text) cache[style + '|' + head] = 'data:' + (first.mime || 'audio/mpeg') + ';base64,' + first.audio;
+        var rest = text.slice(head.length).trim();
+        if (rest) {
+          prefetch(rest);
+          speakOne(head, t, function () { if (t === token) speakOne(rest, t, done); });
+          return;
+        }
+      }
       speakOne(text, t, done);
     },
+    // 곧 말할 문장의 목소리를 미리 만들어 둔다
+    prefetch: function (text) { text = String(text || '').replace(/\s+/g, ' ').trim(); if (text) prefetch(text.length > 590 ? text.slice(0, 590) : headOf(text)); },
     // 긴 글 읽어 주기: 조각을 차례로 읽고, 다 읽으면 done
     read: function (text, done) {
       BT.voice.stop();
