@@ -46,6 +46,7 @@ const SCHEMA = {
   chat: obj({ reply: S.str, starter: S.str, ko: S.str, onTopic: S.bool, advance: S.bool, korean: S.bool,
     usedGoals: { type: 'array', items: { type: 'integer' } } }),
   fix: obj({ fix: S.str, why: S.str }),
+  word: obj({ ok: S.bool, word: S.str, ipa: S.str, pos: S.str, ko: S.str, example: S.str, exampleKo: S.str }),
   gloss: obj({ ko: S.str }),
   period: obj({ summary: S.str, strengths: { type: 'array', items: S.str }, improve: { type: 'array', items: S.str }, nextPlan: S.str, parentTip: S.str }),
   chatLegacy: obj({ reply: S.str, fix: S.str, stage: S.str, hint: S.str, done: S.bool }),
@@ -358,6 +359,26 @@ async function glossKo(reply) {
   return String(r.ko || '');
 }
 
+// 3-1) 단어 카드: 아이가 누른 낱말 → 기본형, 발음 기호, 뜻, 쉬운 예문 (대화 중에 바로 떠야 해서 생각 없이 빠르게)
+async function word(body) {
+  const w = String(body.word || '').trim().replace(/[’]/g, "'");
+  if (!/^[A-Za-z][A-Za-z'-]{0,30}$/.test(w)) throw new Error('영어 낱말이 아니에요');
+  const sentence = String(body.sentence || '').replace(/\s+/g, ' ').slice(0, 300);
+  const prompt =
+    `아이 레벨: ${levelText(body.level)}\n누른 낱말: "${w}"\n` + (sentence ? `이 낱말이 나온 문장: "${sentence}"\n` : '') +
+    '초등학생 영어 단어 카드를 만들어.\n' +
+    'word: 사전에 실리는 기본형 소문자 (built→build, kids→kid, you\'ll→you\'ll 그대로, 고유명사는 원래 대문자).\n' +
+    'ipa: word의 미국식 발음 기호 (슬래시 포함, 예: /bɪld/).\npos: 품사 한국어 한 낱말 (명사, 동사, 형용사 등).\n' +
+    'ko: 문장 속 뜻에 맞는 쉬운 한국어 뜻 (짧게, 쉼표로 2개까지).\n' +
+    'example: word를 그대로 넣은 쉬운 영어 예문 1개 (12단어 이내, 레벨에 맞게, 아이 생활과 가까운 내용).\nexampleKo: 예문의 자연스러운 한국어 번역.\n' +
+    '영어 낱말이 아니면 ok=false로 하고 나머지는 빈 문자열.\nJSON 하나만 출력.';
+  const r = parseJson(await callClaude({ system: '너는 초등학생용 영어 단어장을 만드는 선생님이야. 반드시 JSON 하나만 출력해.',
+    messages: [{ role: 'user', content: prompt }], maxTokens: 1000, model: OPTS.chatModel, json: SCHEMA.word, fast: true }));
+  if (r.ok === false || !r.word) throw new Error('뜻을 찾지 못했어요');
+  return { word: String(r.word).slice(0, 40), ipa: String(r.ipa || '').slice(0, 60), pos: String(r.pos || '').slice(0, 10),
+    ko: String(r.ko || '').slice(0, 60), example: String(r.example || '').slice(0, 160), exampleKo: String(r.exampleKo || '').slice(0, 160) };
+}
+
 // 계획표 없이 부르는 예전 방식 (하위 호환)
 async function chatLegacy(body) {
   const { passage, title, level, history, kidTurns } = body;
@@ -502,6 +523,7 @@ async function handleTask(body, options) {
   if (body.task === 'analyze') return analyze(body);
   if (body.task === 'plan') return plan(body);
   if (body.task === 'chat') return chat(body);
+  if (body.task === 'word') return word(body);
   if (body.task === 'report') return report(body);
   if (body.task === 'period') return period(body);
   throw new Error('알 수 없는 요청이에요');

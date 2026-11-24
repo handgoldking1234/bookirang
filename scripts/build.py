@@ -35,6 +35,7 @@ body{{display:block;background:#FFFFFF !important}}
 <script src="booktalk/core/listen.js"></script>
 <script src="booktalk/core/topics.js"></script>
 <script src="booktalk/core/parent.js"></script>
+<script src="booktalk/core/words.js"></script>
 <template id="tpl">
 {body.strip()}
 </template>

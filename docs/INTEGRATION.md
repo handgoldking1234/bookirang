@@ -15,6 +15,7 @@
 | `booktalk/core/voice.js` | 도란이 목소리 (OpenAI 음성, 없으면 브라우저 음성) | 그대로 복사 |
 | `booktalk/core/listen.js` | 아이 말 알아듣기 (녹음 → OpenAI 음성 인식, 없으면 브라우저 인식). 녹음은 글자로 바꾼 뒤 버림 | 그대로 복사 |
 | `booktalk/core/topics.js` | 오늘의 주제 28개, 학년별 교과서 단원 | 그대로 복사, `BookTalkHost.topics` / `BookTalkHost.textbook`으로 바꿔 넣기 가능 |
+| `booktalk/core/words.js` | 단어 카드(낱말 뜻·발음 기호·예문 찾기, 한 번 찾은 낱말은 기억)와 단어장·복습 (`booktalk.<아이id>.words`), 발음 확인 점수 | 그대로 복사 |
 | `booktalk/ui/App.dc.html` | 화면 원본 | 하루5분 화면 방식(React 등)에 맞게 옮김 |
 | `api/booktalk.js` | Vercel 어댑터 | 하루5분 서버 방식에 맞게 몇 줄만 작성 |
 | `index.html`, `scripts/` | 북이랑 단독 앱 껍데기 | 옮기지 않음 |
